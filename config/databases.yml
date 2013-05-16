@@ -1,0 +1,9 @@
+all:
+  schema_saf:
+    class: sfDoctrineDatabase
+    param:
+      dsn: oracle://SAF:safdes@10.2.101.107/(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.2.101.107)(PORT=1521)))(CONNECT_DATA=(SID=OPCCODUP)))
+  schema_saf_prueba:
+    class: sfDoctrineDatabase
+    param:
+      dsn: oracle://SAF_PRUEBA:safdes@10.2.101.107/(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=10.2.101.107)(PORT=1521)))(CONNECT_DATA=(SID=OPCCODUP)))

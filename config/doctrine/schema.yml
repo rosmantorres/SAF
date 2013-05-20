@@ -365,3 +365,17 @@ CRONOLOGIA:
     resp_mesa_rep: { notnull: true, type: string(5) }
     resp_campo_rep: { notnull: true, type: string(11) }
     kva_reparacion: { notnull: true, type: integer(7) }
+
+CAUSA:
+  connection: schema_siod
+  tableName: CAUSA
+  columns:
+    cod_causa: { type: integer(3), primary: true }
+    desc_causa: { notnull: true, type: string(50) }
+      
+MATERIAL:
+  connection: schema_siod
+  tableName: MATERIAL
+  columns:
+    cod_material: { type: integer(3), primary: true }
+    desc_material: { notnull: true, type: string(50) }

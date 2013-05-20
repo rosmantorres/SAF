@@ -290,3 +290,78 @@ AVERIA:
     carga_recuperada: { type: string(1) }
     kva_afect_actual: { type: integer(7) }
     cant_fases_afect: { type: integer(1) }
+    
+INTERRUPCIONES:
+  connection: schema_siod
+  tableName: INTERRUPCIONES
+  columns:
+    num_f328: { type: integer(7), primary: true }
+    nivel_sistema: { notnull: true, type: integer(1) }
+    cod_sistema: { notnull: true, type: integer(5) }
+    fecha_hora_ini: { notnull: true, type: timestamp(7) }
+    duracion_max: { notnull: true, type: integer(5) }
+    kva_interrump: { notnull: true, type: integer(7) }
+    mvamin: { notnull: true, type: decimal(7) }
+    cod_cuadricula: { notnull: true, type: string(5) }
+    cod_ubicacion: { notnull: true, type: integer(5) }
+    num_oper_int: { notnull: true, type: integer(2) }
+    tipo_alarma: { notnull: true, type: integer(1) }
+    cod_oper_alarma: { notnull: true, type: integer(1) }
+    cod_oper_protec: { notnull: true, type: integer(1) }
+    voltaje: { notnull: true, type: integer(2) }
+    cod_material: { notnull: true, type: integer(3) }
+    cod_causa: { notnull: true, type: integer(3) }
+    resp_campo: { notnull: true, type: string(11) }
+    resp_mesa_inic: { notnull: true, type: string(5) }
+    resp_mesa_fin: { notnull: true, type: string(5) }
+    cod_unidad_oper: { notnull: true, type: string(8) }
+    mod_red: { notnull: true, type: string(1) }
+    ubicacion_tecnica: { notnull: true, type: string(30) }
+    fecha_transf: { notnull: true, type: timestamp(7) }
+    tipo_red: { notnull: false, type: integer(1) }
+    distrito: { notnull: true, type: integer(2) }
+    ind_tipo_equipo: { type: integer(1) }
+    cod_equipo: { type: integer(6) }
+    ind_tramo: { type: integer(1) }
+    cod_tramo: { type: integer(5) }
+    num_proposicion: { type: integer(11) }
+    trabajo_realizado: { type: string(2000) }
+    direccion: { type: string(1000) }
+    tamano: { type: integer(3) }
+    unidades: { type: integer(6) }
+    costo: { type: decimal(12) }
+    horas_hombre: { type: integer(6) }
+    cod_marca: { type: string(3) }
+    climatologia: { type: integer(1) }
+    num_reclamo: { type: string(12) }
+    n_mem_cco: { type: string(10) }
+    num_roe: { type: integer(7) }
+    num_averia: { type: integer(9) }
+    cant_personas: { type: integer(3) }
+    tipo_falla: { type: integer(2) }
+    cant_fases_afect: { type: integer(1) }
+
+CRONOLOGIA:
+  connection: schema_siod
+  tableName: CRONOLOGIA
+  columns:
+    num_f328: { type: integer(7), primary: true }
+    fecha_asig: { notnull: true, type: timestamp(7) }
+    resp_mesa_asig: { notnull: true, type: string(5) }
+    resp_campo_asig: { notnull: true, type: string(11) }
+    kva_asig: { notnull: true, type: integer(7) }
+    fecha_lleg: { type: timestamp(7) }
+    resp_mesa_lleg: { type: string(5) }
+    resp_campo_lleg: { type: string(11) }
+    fecha_loc_grue: { type: timestamp(7) }
+    resp_mesa_loc_grue: { type: string(5) }
+    resp_campo_loc_grue: { type: string(11) }
+    kva_loc_grue: { type: integer(7) }
+    fecha_loc_fina: { type: timestamp(7) }
+    resp_mesa_loc_fina: { type: string(5) }
+    resp_campo_loc_fina: { type: string(11) }
+    kva_loc_fina: { type: integer(7) }
+    fecha_reparacion: { notnull: true, type: timestamp(7) }
+    resp_mesa_rep: { notnull: true, type: string(5) }
+    resp_campo_rep: { notnull: true, type: string(11) }
+    kva_reparacion: { notnull: true, type: integer(7) }

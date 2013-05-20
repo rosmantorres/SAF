@@ -15,3 +15,21 @@
 #     password: changeme
 #     name:     Kris Wallsmith
 #     email:    kris.wallsmith@symfony-project.com
+
+# data/fixtures/SAF_AGENDA_CONVOCATORIA.yml
+SAF_AGENDA_CONVOCATORIA:
+  agenda_uno:
+    departamento: IOD
+    f_inicio_consulta: '2013-05-16'
+    f_fin_consulta: '2013-05-20'
+    observacion: No hay ninguna observacion.
+    
+# data/fixtures/SAF_CONVOCATORIA_CAF.yml
+SAF_CONVOCATORIA_CAF:
+  convocatoria_uno:
+    SAF_AGENDA_CONVOCATORIA: agenda_uno
+    asunto: no hay asunto
+    hora_ini: '2013-05-20 09:00:00'
+    hora_fin: '2013-05-20 12:00:00'
+    lugar: piso 1 
+    observacion: no hay observacion

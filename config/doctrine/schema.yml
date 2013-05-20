@@ -234,4 +234,12 @@ SAF_VARIO:
       local: id
       foreign: id_compromiso
       type: many
-
+      
+# A partir de aqui son tablas ya creadas por CORPOELEC en el schema SIOD
+UNIDAD_SOPORTES:
+  connection: schema_siod
+  tableName: UNIDAD_SOPORTES
+  columns:
+    cod_unidad: { type: integer(1), primary: true }
+    descripcion: { notnull: true, type: string(40) }
+    ind_atencion_soporte: { notnull: true, type: string(1) }

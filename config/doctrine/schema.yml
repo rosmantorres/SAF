@@ -243,3 +243,50 @@ UNIDAD_SOPORTES:
     cod_unidad: { type: integer(1), primary: true }
     descripcion: { notnull: true, type: string(40) }
     ind_atencion_soporte: { notnull: true, type: string(1) }
+    
+AVERIA:
+  connection: schema_siod
+  tableName: AVERIA
+  columns:
+    num_averia: { type: integer(9), primary: true }
+    fecha_origen: { notnull: true, type: timestamp(7) }
+    distrito: { notnull: true, type: integer(2) }
+    descripcion: { notnull: false, type: string(4000) }
+    edo_averia: { notnull: true, type: string(2) }
+    compania: { notnull: true, type: integer(2) }
+    sector_afectado: { type: string(100) }
+    cod_nivel: { type: integer(2) }
+    cod_sistema: { type: integer(5) }
+    voltaje: { type: integer(3) }
+    cod_cuadricula: { type: string(5) }
+    cod_ubicacion: { type: integer(5) }
+    duracion_maxima: { type: integer(5) }
+    kva_interrump: { type: integer(7) }
+    cod_material: { type: integer(3) }
+    cod_causa: { type: integer(3) }
+    ind_tipo_equipo: { type: integer(1) }
+    cod_equipo: { type: integer(6) }
+    ind_tipo_tramo: { type: integer(1) }
+    cod_tramo: { type: integer(5) }
+    num_rec: { type: string(12) }
+    cod_unidad_oper: { type: string(3) }
+    mva_min: { type: decimal(7) }
+    cod_oper_mesa: { type: string(5) }
+    hr_est_rest_serv: { type: timestamp(7) }
+    fch_inicio: { type: timestamp(7) }
+    cod_mesa: { type: integer(2) }
+    cod_oper_revisado: { type: string(5) }
+    ind_reconocido: { type: string(1) }
+    cond_registro: { type: string(1) }
+    ind_color: { type: integer(1) }
+    mesa_actual: { type: integer(2) }
+    tamano: { type: integer(3) }
+    unidades: { type: integer(6) }
+    cod_marca: { type: string(3) }
+    tipo_falla: { type: integer(2) }
+    cod_oper_mesa_act: { type: string(5) }
+    descripcion1: { type: string(4000) }
+    descripcion2: { type: string(4000) }
+    carga_recuperada: { type: string(1) }
+    kva_afect_actual: { type: integer(7) }
+    cant_fases_afect: { type: integer(1) }

@@ -276,3 +276,11 @@ OPERADORES:
   columns:
     cod_operador: { type: integer(8), primary: true }
     desc_operador: { notnull: true, type: string(30) }
+
+HIST_PROPOSICIONES:
+  connection: schema_simip
+  tableName: HIST_PROPOSICIONES
+  columns:
+    cod_proposicion: { notnull: true, type: integer(6) }
+    oper_cod_operador_resp: { notnull: true, type: integer(8) }
+    oper_cod_operador_asig: { notnull: true, type: integer(8) }

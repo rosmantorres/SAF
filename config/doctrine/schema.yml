@@ -269,6 +269,13 @@ CRONOLOGIA:
     fecha_reparacion: { notnull: true, type: timestamp(7) }
     resp_mesa_rep: { notnull: true, type: string(5) }
 
+CRONOLOGIA_CUADRILLA_INT:
+  connection: schema_siod
+  tableName: CRONOLOGIA_CUADRILLA_INT
+  columns:
+    num_f328: { type: integer(7), primary: true }
+    cod_cuad_cont: { type: string(11), primary: true }
+
 # A partir de aqui son tablas ya creadas por CORPOELEC en el schema SIMIP
 OPERADORES:
   connection: schema_simip
@@ -284,3 +291,11 @@ HIST_PROPOSICIONES:
     cod_proposicion: { notnull: true, type: integer(6) }
     oper_cod_operador_resp: { notnull: true, type: integer(8) }
     oper_cod_operador_asig: { notnull: true, type: integer(8) }
+
+CIRCUITOS:
+  connection: schema_simip
+  tableName: CIRCUITOS
+  columns:
+    cod_cto: { type: integer(4), primary: true }
+    bar_cod_barra: { notnull: true, type: integer(4) }
+    desc_cto: { notnull: true, type: string(30) }

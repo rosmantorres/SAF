@@ -268,3 +268,11 @@ CRONOLOGIA:
     num_f328: { type: integer(7), primary: true }
     fecha_reparacion: { notnull: true, type: timestamp(7) }
     resp_mesa_rep: { notnull: true, type: string(5) }
+
+# A partir de aqui son tablas ya creadas por CORPOELEC en el schema SIMIP
+OPERADORES:
+  connection: schema_simip
+  tableName: OPERADORES
+  columns:
+    cod_operador: { type: integer(8), primary: true }
+    desc_operador: { notnull: true, type: string(30) }

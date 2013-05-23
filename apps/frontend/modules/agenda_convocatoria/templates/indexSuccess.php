@@ -1,4 +1,4 @@
-<h1>Saf agenda convocatori as List</h1>
+<h1>Lista de agendas para convocatoria</h1>
 
 <table class="table table-hover">
   <thead>

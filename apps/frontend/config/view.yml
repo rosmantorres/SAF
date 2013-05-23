@@ -14,7 +14,7 @@ default:
 
   stylesheets:    [bootstrap.css, bootstrap.min.css]
 
-  javascripts:    []
+  javascripts:    [jquery.js, bootstrap.min.js]
 
   has_layout:     true
   layout:         layout

@@ -7,13 +7,23 @@
  */
 class INTERRUPCIONESTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object INTERRUPCIONESTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('INTERRUPCIONES');
-    }
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object INTERRUPCIONESTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('INTERRUPCIONES');
+  }
+
+  public function getInterrupciones()
+  {
+    $query = $this->createQuery()
+            ->limit(5);
+
+    return $query->execute();
+  }
+
 }

@@ -1,6 +1,6 @@
 <h1>Nueva agenda convocatoria</h1>
 
-<?php include_partial('form', array('form' => $form)) ?>
+<?php echo $form;  //include_partial('form', array('form' => $form)) ?>
 
 <label>Fecha de inicio</label>
 <input type="date" value="">

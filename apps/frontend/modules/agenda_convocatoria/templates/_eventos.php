@@ -6,16 +6,18 @@
   <thead>
     <tr>
       <th>NUM_F328</th>
-      <th>...</th>
-      <th>check</th>
+      <th>Nivel</th>
+      <th>Cod Sist</th>
     </tr>
   </thead>
   <tbody>
+    <?php foreach($eventos as $evento): ?>
     <tr class="success">
-      <td>PROGRAMADA</td>
-      <td>...</td>
-      <td>...</td>
+      <td><?php echo $evento->getNumF328() ?></td>
+      <td><?php echo $evento->getNivelSistema() ?></td>
+      <td><?php echo $evento->getCodSistema() ?></td>
     </tr>
+    <?php endforeach ?>
     <tr class="error">
       <td>IMPREVISTA</td>
       <td>...</td>

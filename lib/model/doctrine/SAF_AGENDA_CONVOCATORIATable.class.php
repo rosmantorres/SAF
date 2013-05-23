@@ -7,13 +7,24 @@
  */
 class SAF_AGENDA_CONVOCATORIATable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_AGENDA_CONVOCATORIATable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA');
-    }
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_AGENDA_CONVOCATORIATable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA');
+  }
+
+  /**
+   * @return coleccion de objetos SAF_AGENDA_CONVOCATORIA
+   */
+  public function getAgendas()
+  {
+    // $this = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+    return $this->createQuery('a')->execute();
+  }
+
 }

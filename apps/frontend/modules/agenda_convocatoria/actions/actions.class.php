@@ -12,9 +12,7 @@ class agenda_convocatoriaActions extends sfActions
 {
   public function executeIndex(sfWebRequest $request)
   {
-    $this->saf_agenda_convocatori_as = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
-      ->createQuery('a')
-      ->execute();
+    $this->saf_agenda_convocatori_as = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();
   }
 
   public function executeShow(sfWebRequest $request)

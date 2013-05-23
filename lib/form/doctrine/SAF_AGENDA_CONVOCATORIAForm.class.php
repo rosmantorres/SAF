@@ -13,8 +13,7 @@ class SAF_AGENDA_CONVOCATORIAForm extends BaseSAF_AGENDA_CONVOCATORIAForm
   public function configure()
   {
     unset(
-      $this['created_at'], $this['updated_at'],
-      $this['f_inicio_consulta'], $this['f_fin_consulta']
+      $this['created_at'], $this['updated_at']
     );
   }
 }

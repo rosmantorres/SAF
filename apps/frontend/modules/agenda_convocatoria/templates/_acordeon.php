@@ -1,11 +1,8 @@
 <!-- 
  Elemento parcial - Acordeón Interno, el cual lleva el contenido
  Este acordeon interno se debe incluir en un cuerpo de acordeon, 
- <div class="accordion" id="accordion2">
+ <div class="accordion" id="accordion">
 -->
-
-<!-- var _cabecera -->
-<!-- var _contenido -->
 
 <!-- ACORDEON INTERNO -->
 <div class="accordion-group">

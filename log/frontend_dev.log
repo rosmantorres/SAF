@@ -2250,3 +2250,119 @@ May 23 18:28:02 symfony [info] {sfWebDebugLogger} Component "agenda_convocatoria
 May 23 18:28:02 symfony [info] {sfWebDebugLogger} Database (Doctrine) 4.82 ms (3)
 May 23 18:28:02 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_eventos" 3.38 ms (2)
 May 23 18:28:02 symfony [info] {sfWebResponse} Send content (48370 o)
+May 23 18:46:31 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 18:46:31 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 18:46:31 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 18:46:31 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 18:46:31 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 18:46:31 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:46:31 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:46:31 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 18:46:31 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:46:31 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:46:31 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:46:31 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:46:31 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:46:31 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:46:31 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:46:31 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:46:31 symfony [info] {main} Get slot "title"
+May 23 18:46:31 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 18:46:31 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Configuration 6.06 ms (13)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Factories 22.47 ms (1)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/new" 21.34 ms (1)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/new" 821.49 ms (1)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_acordeon" 774.10 ms (2)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Component "agenda_convocatoria/eventos" 765.52 ms (2)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Database (Doctrine) 4.47 ms (3)
+May 23 18:46:31 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_eventos" 3.47 ms (2)
+May 23 18:46:31 symfony [info] {sfWebResponse} Send content (59187 o)
+May 23 18:46:36 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 18:46:36 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 18:46:36 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 18:46:36 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 18:46:36 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 18:46:36 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:46:36 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:46:36 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 18:46:36 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:46:36 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:46:36 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:46:36 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:46:36 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:46:36 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:46:36 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:46:36 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:46:36 symfony [info] {main} Get slot "title"
+May 23 18:46:36 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 18:46:36 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Configuration 3.63 ms (13)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Factories 20.09 ms (1)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/new" 20.07 ms (1)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/new" 443.69 ms (1)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_acordeon" 423.39 ms (2)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Component "agenda_convocatoria/eventos" 415.90 ms (2)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Database (Doctrine) 4.99 ms (3)
+May 23 18:46:36 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_eventos" 3.92 ms (2)
+May 23 18:46:36 symfony [info] {sfWebResponse} Send content (59155 o)
+May 23 18:54:56 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 18:54:56 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 18:54:56 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 18:54:56 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 18:55:09 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 18:55:09 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 18:55:09 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 18:55:09 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 18:55:09 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 18:55:09 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:55:09 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:55:09 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 18:55:09 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:55:09 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:55:09 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:55:09 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:55:09 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:55:09 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:55:09 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:55:09 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:55:09 symfony [info] {main} Get slot "title"
+May 23 18:55:09 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 18:55:09 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Configuration 6.83 ms (13)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Factories 35.13 ms (1)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/new" 27.89 ms (1)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/new" 429.55 ms (1)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_acordeon" 410.78 ms (2)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Component "agenda_convocatoria/eventos" 403.43 ms (2)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Database (Doctrine) 4.17 ms (3)
+May 23 18:55:09 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_eventos" 3.48 ms (2)
+May 23 18:55:09 symfony [info] {sfWebResponse} Send content (56243 o)
+May 23 18:57:35 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 18:57:35 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 18:57:35 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 18:57:35 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 18:57:35 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 18:57:35 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:57:35 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:57:35 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 18:57:35 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:57:35 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:57:35 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_acordeon.php"
+May 23 18:57:35 symfony [info] {main} Call "agenda_convocatoria->executeEventos()"
+May 23 18:57:35 symfony [info] {Doctrine_Connection_Oracle} query : SELECT a.* FROM ( SELECT i.num_f328 AS i__num_f328, i.nivel_sistema AS i__nivel_sistema, i.cod_sistema AS i__cod_sistema, i.fecha_hora_ini AS i__fecha_hora_ini, i.kva_interrump AS i__kva_interrump, i.mvamin AS i__mvamin, i.cod_causa AS i__cod_causa, i.distrito AS i__distrito, i.num_proposicion AS i__num_proposicion, i.trabajo_realizado AS i__trabajo_realizado, i.climatologia AS i__climatologia, i.num_roe AS i__num_roe, i.num_averia AS i__num_averia FROM INTERRUPCIONES i ) a WHERE ROWNUM <= 5 - ()
+May 23 18:57:35 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_eventos.php"
+May 23 18:57:35 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:57:35 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 18:57:35 symfony [info] {main} Get slot "title"
+May 23 18:57:35 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 18:57:35 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Configuration 6.13 ms (13)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Factories 23.33 ms (1)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/new" 18.98 ms (1)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/new" 437.52 ms (1)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_acordeon" 413.89 ms (2)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Component "agenda_convocatoria/eventos" 405.25 ms (2)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Database (Doctrine) 4.49 ms (3)
+May 23 18:57:35 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_eventos" 3.95 ms (2)
+May 23 18:57:35 symfony [info] {sfWebResponse} Send content (59187 o)

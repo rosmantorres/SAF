@@ -1,0 +1,94 @@
+May 23 13:24:17 symfony [info] {sfPatternRouting} Match route "default_index" (/:module) for /agenda_convocatoria with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'index',)
+May 23 13:24:17 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:24:17 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:24:17 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeIndex()"
+May 23 13:24:18 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 13:24:18 symfony [info] {Doctrine_Connection_Oracle} query : SELECT s.id AS s__id, s.departamento AS s__departamento, s.f_inicio_consulta AS s__f_inicio_consulta, s.f_fin_consulta AS s__f_fin_consulta, s.observacion AS s__observacion, s.created_at AS s__created_at, s.updated_at AS s__updated_at FROM SAF_AGENDA_CONVOCATORIA s - ()
+May 23 13:24:18 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/indexSuccess.php"
+May 23 13:24:18 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:24:18 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:24:18 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 13:24:18 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:24:18 symfony [info] {sfWebDebugLogger} Configuration 158.78 ms (10)
+May 23 13:24:18 symfony [info] {sfWebDebugLogger} Factories 82.93 ms (1)
+May 23 13:24:18 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/index" 507.17 ms (1)
+May 23 13:24:18 symfony [info] {sfWebDebugLogger} Database (Doctrine) 18.95 ms (2)
+May 23 13:24:18 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/index" 33.14 ms (1)
+May 23 13:24:18 symfony [info] {sfWebResponse} Send content (32981 o)
+May 23 13:25:11 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/new with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'new',)
+May 23 13:25:11 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:25:11 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:25:11 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeNew()"
+May 23 13:25:11 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 13:25:11 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_form.php"
+May 23 13:25:11 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:25:11 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:25:11 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 13:25:11 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:25:11 symfony [info] {sfWebDebugLogger} Configuration 5.67 ms (9)
+May 23 13:25:11 symfony [info] {sfWebDebugLogger} Factories 23.49 ms (1)
+May 23 13:25:11 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/new" 18.70 ms (1)
+May 23 13:25:11 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/new" 34.11 ms (1)
+May 23 13:25:11 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_form" 25.02 ms (1)
+May 23 13:25:11 symfony [info] {sfWebResponse} Send content (56357 o)
+May 23 13:28:20 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/create with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'create',)
+May 23 13:28:20 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:28:20 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:28:20 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeCreate()"
+May 23 13:28:20 symfony [info] {agenda_convocatoriaActions} Change template to "CURRENT/new"
+May 23 13:28:20 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 13:28:20 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_form.php"
+May 23 13:28:20 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:28:20 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:28:20 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 13:28:20 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:28:20 symfony [info] {sfWebDebugLogger} Configuration 4.69 ms (9)
+May 23 13:28:20 symfony [info] {sfWebDebugLogger} Factories 23.76 ms (1)
+May 23 13:28:20 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/create" 21.21 ms (1)
+May 23 13:28:20 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/create" 33.62 ms (1)
+May 23 13:28:20 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_form" 24.62 ms (1)
+May 23 13:28:20 symfony [info] {sfWebResponse} Send content (59212 o)
+May 23 13:40:53 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/create with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'create',)
+May 23 13:40:53 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:40:53 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:40:53 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeCreate()"
+May 23 13:40:53 symfony [info] {agenda_convocatoriaActions} Change template to "CURRENT/new"
+May 23 13:40:53 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/newSuccess.php"
+May 23 13:40:53 symfony [info] {sfPartialView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/_form.php"
+May 23 13:40:53 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:40:53 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:40:53 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 13:40:53 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:40:53 symfony [info] {sfWebDebugLogger} Configuration 4.39 ms (9)
+May 23 13:40:53 symfony [info] {sfWebDebugLogger} Factories 23.50 ms (1)
+May 23 13:40:53 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/create" 20.06 ms (1)
+May 23 13:40:53 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/create" 34.30 ms (1)
+May 23 13:40:53 symfony [info] {sfWebDebugLogger} Partial "agenda_convocatoria/_form" 25.28 ms (1)
+May 23 13:40:53 symfony [info] {sfWebResponse} Send content (59212 o)
+May 23 13:40:55 symfony [info] {sfPatternRouting} Match route "default" (/:module/:action/*) for /agenda_convocatoria/create with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'create',)
+May 23 13:40:55 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:40:55 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:40:55 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeCreate()"
+May 23 13:40:55 symfony [err] {sfError404Exception} This request has been forwarded to a 404 error page by the action "agenda_convocatoria/create".
+May 23 13:40:55 symfony [info] {sfWebResponse} Send status "HTTP/1.1 404 Not Found"
+May 23 13:40:55 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:40:55 symfony [info] {sfWebDebugLogger} Configuration 5.46 ms (8)
+May 23 13:40:55 symfony [info] {sfWebDebugLogger} Factories 24.23 ms (1)
+May 23 13:40:55 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/create" 19.06 ms (1)
+May 23 13:41:02 symfony [info] {sfPatternRouting} Match route "default_index" (/:module) for /agenda_convocatoria with parameters array (  'module' => 'agenda_convocatoria',  'action' => 'index',)
+May 23 13:41:02 symfony [info] {sfFilterChain} Executing filter "sfRenderingFilter"
+May 23 13:41:02 symfony [info] {sfFilterChain} Executing filter "sfExecutionFilter"
+May 23 13:41:02 symfony [info] {agenda_convocatoriaActions} Call "agenda_convocatoriaActions->executeIndex()"
+May 23 13:41:02 symfony [info] {Doctrine_Connection_Oracle} exec : ALTER SESSION SET NLS_DATE_FORMAT = "YYYY-MM-DD HH24:MI:SS" - ()
+May 23 13:41:02 symfony [info] {Doctrine_Connection_Oracle} query : SELECT s.id AS s__id, s.departamento AS s__departamento, s.f_inicio_consulta AS s__f_inicio_consulta, s.f_fin_consulta AS s__f_fin_consulta, s.observacion AS s__observacion, s.created_at AS s__created_at, s.updated_at AS s__updated_at FROM SAF_AGENDA_CONVOCATORIA s - ()
+May 23 13:41:02 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\modules/agenda_convocatoria/templates/indexSuccess.php"
+May 23 13:41:02 symfony [info] {sfPHPView} Decorate content with "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:41:02 symfony [info] {sfPHPView} Render "C:\development\sfprojects\SAF\apps\frontend\templates/layout.php"
+May 23 13:41:02 symfony [info] {sfWebResponse} Send status "HTTP/1.1 200 OK"
+May 23 13:41:02 symfony [info] {sfWebResponse} Send header "Content-Type: text/html; charset=utf-8"
+May 23 13:41:02 symfony [info] {sfWebDebugLogger} Configuration 5.75 ms (9)
+May 23 13:41:02 symfony [info] {sfWebDebugLogger} Factories 24.10 ms (1)
+May 23 13:41:02 symfony [info] {sfWebDebugLogger} Action "agenda_convocatoria/index" 398.97 ms (1)
+May 23 13:41:02 symfony [info] {sfWebDebugLogger} Database (Doctrine) 3.06 ms (2)
+May 23 13:41:02 symfony [info] {sfWebDebugLogger} View "Success" for "agenda_convocatoria/index" 8.93 ms (1)
+May 23 13:41:02 symfony [info] {sfWebResponse} Send content (32974 o)

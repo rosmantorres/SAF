@@ -12,9 +12,26 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property string $clasificado_en
  * @property integer $id_agenda
  * @property integer $id_convocatoria
+ * @property string $status
  * @property integer $c_eveno_t
  * @property integer $c_evento_d
- * @property string $status
+ * @property timestamp $f_hora_ini
+ * @property timestamp $f_hora_rep
+ * @property string $region
+ * @property string $circuito
+ * @property integer $cod_nivel
+ * @property integer $kva_int
+ * @property integer $mva_min
+ * @property integer $num_averia
+ * @property string $desc_averia
+ * @property string $tipo_falla
+ * @property string $operador
+ * @property string $cuadrilla
+ * @property string $climatologia
+ * @property string $trabajo_realizado
+ * @property integer $num_roe
+ * @property string $programador
+ * @property string $operador_resp
  * @property SAF_AGENDA_CONVOCATORIA $SAF_AGENDA_CONVOCATORIA
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
  * @property Doctrine_Collection $SAF_VARIO
@@ -26,9 +43,26 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method string                  getClasificadoEn()           Returns the current record's "clasificado_en" value
  * @method integer                 getIdAgenda()                Returns the current record's "id_agenda" value
  * @method integer                 getIdConvocatoria()          Returns the current record's "id_convocatoria" value
+ * @method string                  getStatus()                  Returns the current record's "status" value
  * @method integer                 getCEvenoT()                 Returns the current record's "c_eveno_t" value
  * @method integer                 getCEventoD()                Returns the current record's "c_evento_d" value
- * @method string                  getStatus()                  Returns the current record's "status" value
+ * @method timestamp               getFHoraIni()                Returns the current record's "f_hora_ini" value
+ * @method timestamp               getFHoraRep()                Returns the current record's "f_hora_rep" value
+ * @method string                  getRegion()                  Returns the current record's "region" value
+ * @method string                  getCircuito()                Returns the current record's "circuito" value
+ * @method integer                 getCodNivel()                Returns the current record's "cod_nivel" value
+ * @method integer                 getKvaInt()                  Returns the current record's "kva_int" value
+ * @method integer                 getMvaMin()                  Returns the current record's "mva_min" value
+ * @method integer                 getNumAveria()               Returns the current record's "num_averia" value
+ * @method string                  getDescAveria()              Returns the current record's "desc_averia" value
+ * @method string                  getTipoFalla()               Returns the current record's "tipo_falla" value
+ * @method string                  getOperador()                Returns the current record's "operador" value
+ * @method string                  getCuadrilla()               Returns the current record's "cuadrilla" value
+ * @method string                  getClimatologia()            Returns the current record's "climatologia" value
+ * @method string                  getTrabajoRealizado()        Returns the current record's "trabajo_realizado" value
+ * @method integer                 getNumRoe()                  Returns the current record's "num_roe" value
+ * @method string                  getProgramador()             Returns the current record's "programador" value
+ * @method string                  getOperadorResp()            Returns the current record's "operador_resp" value
  * @method SAF_AGENDA_CONVOCATORIA getSAFAGENDACONVOCATORIA()   Returns the current record's "SAF_AGENDA_CONVOCATORIA" value
  * @method SAF_CONVOCATORIA_CAF    getSAFCONVOCATORIACAF()      Returns the current record's "SAF_CONVOCATORIA_CAF" value
  * @method Doctrine_Collection     getSAFVARIO()                Returns the current record's "SAF_VARIO" collection
@@ -39,9 +73,26 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setClasificadoEn()           Sets the current record's "clasificado_en" value
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
  * @method SAF_EVENTO              setIdConvocatoria()          Sets the current record's "id_convocatoria" value
+ * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
  * @method SAF_EVENTO              setCEvenoT()                 Sets the current record's "c_eveno_t" value
  * @method SAF_EVENTO              setCEventoD()                Sets the current record's "c_evento_d" value
- * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
+ * @method SAF_EVENTO              setFHoraIni()                Sets the current record's "f_hora_ini" value
+ * @method SAF_EVENTO              setFHoraRep()                Sets the current record's "f_hora_rep" value
+ * @method SAF_EVENTO              setRegion()                  Sets the current record's "region" value
+ * @method SAF_EVENTO              setCircuito()                Sets the current record's "circuito" value
+ * @method SAF_EVENTO              setCodNivel()                Sets the current record's "cod_nivel" value
+ * @method SAF_EVENTO              setKvaInt()                  Sets the current record's "kva_int" value
+ * @method SAF_EVENTO              setMvaMin()                  Sets the current record's "mva_min" value
+ * @method SAF_EVENTO              setNumAveria()               Sets the current record's "num_averia" value
+ * @method SAF_EVENTO              setDescAveria()              Sets the current record's "desc_averia" value
+ * @method SAF_EVENTO              setTipoFalla()               Sets the current record's "tipo_falla" value
+ * @method SAF_EVENTO              setOperador()                Sets the current record's "operador" value
+ * @method SAF_EVENTO              setCuadrilla()               Sets the current record's "cuadrilla" value
+ * @method SAF_EVENTO              setClimatologia()            Sets the current record's "climatologia" value
+ * @method SAF_EVENTO              setTrabajoRealizado()        Sets the current record's "trabajo_realizado" value
+ * @method SAF_EVENTO              setNumRoe()                  Sets the current record's "num_roe" value
+ * @method SAF_EVENTO              setProgramador()             Sets the current record's "programador" value
+ * @method SAF_EVENTO              setOperadorResp()            Sets the current record's "operador_resp" value
  * @method SAF_EVENTO              setSAFAGENDACONVOCATORIA()   Sets the current record's "SAF_AGENDA_CONVOCATORIA" value
  * @method SAF_EVENTO              setSAFCONVOCATORIACAF()      Sets the current record's "SAF_CONVOCATORIA_CAF" value
  * @method SAF_EVENTO              setSAFVARIO()                Sets the current record's "SAF_VARIO" collection
@@ -81,6 +132,11 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'notnull' => false,
              'type' => 'integer',
              ));
+        $this->hasColumn('status', 'string', 50, array(
+             'notnull' => false,
+             'type' => 'string',
+             'length' => 50,
+             ));
         $this->hasColumn('c_eveno_t', 'integer', null, array(
              'notnull' => false,
              'type' => 'integer',
@@ -89,8 +145,66 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'notnull' => false,
              'type' => 'integer',
              ));
-        $this->hasColumn('status', 'string', 50, array(
-             'notnull' => false,
+        $this->hasColumn('f_hora_ini', 'timestamp', 7, array(
+             'type' => 'timestamp',
+             'length' => 7,
+             ));
+        $this->hasColumn('f_hora_rep', 'timestamp', 7, array(
+             'type' => 'timestamp',
+             'length' => 7,
+             ));
+        $this->hasColumn('region', 'string', 100, array(
+             'type' => 'string',
+             'length' => 100,
+             ));
+        $this->hasColumn('circuito', 'string', 100, array(
+             'type' => 'string',
+             'length' => 100,
+             ));
+        $this->hasColumn('cod_nivel', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('kva_int', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('mva_min', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('num_averia', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('desc_averia', 'string', 4000, array(
+             'type' => 'string',
+             'length' => 4000,
+             ));
+        $this->hasColumn('tipo_falla', 'string', 50, array(
+             'type' => 'string',
+             'length' => 50,
+             ));
+        $this->hasColumn('operador', 'string', 50, array(
+             'type' => 'string',
+             'length' => 50,
+             ));
+        $this->hasColumn('cuadrilla', 'string', 50, array(
+             'type' => 'string',
+             'length' => 50,
+             ));
+        $this->hasColumn('climatologia', 'string', 50, array(
+             'type' => 'string',
+             'length' => 50,
+             ));
+        $this->hasColumn('trabajo_realizado', 'string', 4000, array(
+             'type' => 'string',
+             'length' => 4000,
+             ));
+        $this->hasColumn('num_roe', 'integer', null, array(
+             'type' => 'integer',
+             ));
+        $this->hasColumn('programador', 'string', 50, array(
+             'type' => 'string',
+             'length' => 50,
+             ));
+        $this->hasColumn('operador_resp', 'string', 50, array(
              'type' => 'string',
              'length' => 50,
              ));

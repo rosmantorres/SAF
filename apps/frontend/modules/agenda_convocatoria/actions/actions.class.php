@@ -10,6 +10,14 @@
  */
 class agenda_convocatoriaActions extends sfActions
 {
+  public function executeFiltrar(sfWebRequest $request)
+  {
+    $fechas_filtro = $request->getParameter('saf_agenda_convocatoria');
+    $f_ini_filtro = $fechas_filtro['f_ini'];
+    $f_fin_filtro = $fechas_filtro['f_fin'];
+    $this->eventos = Doctrine::getTable('INTERRUPCIONES')->getInterrupciones($f_ini_filtro,$f_fin_filtro);    
+  }
+  
   public function executeIndex(sfWebRequest $request)
   {
     $this->saf_agenda_convocatori_as = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();

@@ -18,10 +18,16 @@ class INTERRUPCIONESTable extends Doctrine_Table
     return Doctrine_Core::getTable('INTERRUPCIONES');
   }
 
-  public function getInterrupciones()
+  public function getInterrupciones($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()
-            ->limit(5);
+            ->where('fecha_hora_ini >= ?',  $fecha_inicial)
+            ->andWhere('fecha_hora_ini <= ?', $fecha_final)
+            ->andWhere('mvamin > ?',999)
+            ->andWhere('climatologia = ?',1)
+            ->andWhereIn('nivel_sistema',array(6,7,8))
+            ->andWhereNotIn('cod_causa', array (901,902,903,904))
+            ->orderBy('num_f328');
 
     return $query->execute();
   }

@@ -102,6 +102,27 @@ SAF_EVENTO:
     c_eveno_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }
     status: { notnull: false, type: string(50) }
+  relations:
+    SAF_AGENDA_CONVOCATORIA:
+      local: id_agenda
+      foreign: id
+      type: one
+    SAF_CONVOCATORIA_CAF:
+      local: id_convocatoria
+      foreign: id
+      type: one
+    SAF_VARIO:
+      local: id
+      foreign: id_evento
+      type: many
+    SAF_FOTO:
+      local: id
+      foreign: id_evento
+      type: many
+    SAF_R1000_MVAMIN:
+      local: id
+      foreign: id_evento
+      type: many
       
 SAF_FOTO:
   connection: schema_saf

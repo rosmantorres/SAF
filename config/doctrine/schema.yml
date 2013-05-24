@@ -89,7 +89,7 @@ SAF_CONVOCATORIA_CAF:
       local: id
       foreign: id_convocatoria
       type: many
-      
+    
 SAF_EVENTO:
   connection: schema_saf
   tableName: SAF_EVENTO
@@ -98,10 +98,27 @@ SAF_EVENTO:
     descripcion: { notnull: true, type: string(500) }
     clasificado_en: { notnull: true, type: string(50) }
     id_agenda: { notnull: false, type: integer }
-    id_convocatoria: { notnull: false, type: integer }
+    id_convocatoria: { notnull: false, type: integer }    
+    status: { notnull: false, type: string(50) }
     c_eveno_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }
-    status: { notnull: false, type: string(50) }
+    f_hora_ini: { type: timestamp(7) }
+    f_hora_rep: { type: timestamp(7) }
+    region: { type: string(100) }
+    circuito: { type: string(100) }
+    cod_nivel: { type: integer }
+    kva_int: { type: integer }
+    mva_min: { type: integer }
+    num_averia: { type: integer }
+    desc_averia: { type: string(4000) }
+    tipo_falla: { type: string(50) }
+    operador: { type: string(50) }
+    cuadrilla: { type: string(50) }
+    climatologia: { type: string(50) }
+    trabajo_realizado: { type: string(4000) }
+    num_roe: { type: integer }
+    programador: { type: string(50) }
+    operador_resp: { type: string(50) }
   relations:
     SAF_AGENDA_CONVOCATORIA:
       local: id_agenda

@@ -15,7 +15,17 @@ class agenda_convocatoriaActions extends sfActions
     $fechas_filtro = $request->getParameter('saf_agenda_convocatoria');
     $f_ini_filtro = $fechas_filtro['f_ini'];
     $f_fin_filtro = $fechas_filtro['f_fin'];
-    $this->eventos = Doctrine::getTable('INTERRUPCIONES')->getInterrupciones($f_ini_filtro,$f_fin_filtro);    
+    $interrupciones = Doctrine::getTable('INTERRUPCIONES')->getInterrupciones($f_ini_filtro,$f_fin_filtro);    
+    if($interrupciones)
+    {
+      foreach ($interrupciones as $interrupcion)
+      {
+        $mi_averia = Doctrine_Core::getTable('AVERIA')->find($interrupcion->getNumAveria());
+        $mi_cronologia = Doctrine_Core::getTable('CRONOLOGIA')->find($interrupcion->getNumF328());
+        //$mi_cronologia_cuadrilla = Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')->find($interrupcion->getNumF328());
+        $this->evento = $interrupcion;
+      }
+    }
   }
   
   public function executeIndex(sfWebRequest $request)

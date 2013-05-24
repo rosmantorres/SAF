@@ -17,9 +17,9 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property string $status
  * @property SAF_AGENDA_CONVOCATORIA $SAF_AGENDA_CONVOCATORIA
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
- * @property Doctrine_Collection $SAF_FOTO
- * @property Doctrine_Collection $Razones_1000MvaMin
  * @property Doctrine_Collection $SAF_VARIO
+ * @property Doctrine_Collection $SAF_FOTO
+ * @property Doctrine_Collection $SAF_R1000_MVAMIN
  * 
  * @method integer                 getId()                      Returns the current record's "id" value
  * @method string                  getDescripcion()             Returns the current record's "descripcion" value
@@ -31,9 +31,9 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method string                  getStatus()                  Returns the current record's "status" value
  * @method SAF_AGENDA_CONVOCATORIA getSAFAGENDACONVOCATORIA()   Returns the current record's "SAF_AGENDA_CONVOCATORIA" value
  * @method SAF_CONVOCATORIA_CAF    getSAFCONVOCATORIACAF()      Returns the current record's "SAF_CONVOCATORIA_CAF" value
- * @method Doctrine_Collection     getSAFFOTO()                 Returns the current record's "SAF_FOTO" collection
- * @method Doctrine_Collection     getRazones1000MvaMin()       Returns the current record's "Razones_1000MvaMin" collection
  * @method Doctrine_Collection     getSAFVARIO()                Returns the current record's "SAF_VARIO" collection
+ * @method Doctrine_Collection     getSAFFOTO()                 Returns the current record's "SAF_FOTO" collection
+ * @method Doctrine_Collection     getSAFR1000MVAMIN()          Returns the current record's "SAF_R1000_MVAMIN" collection
  * @method SAF_EVENTO              setId()                      Sets the current record's "id" value
  * @method SAF_EVENTO              setDescripcion()             Sets the current record's "descripcion" value
  * @method SAF_EVENTO              setClasificadoEn()           Sets the current record's "clasificado_en" value
@@ -44,9 +44,9 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
  * @method SAF_EVENTO              setSAFAGENDACONVOCATORIA()   Sets the current record's "SAF_AGENDA_CONVOCATORIA" value
  * @method SAF_EVENTO              setSAFCONVOCATORIACAF()      Sets the current record's "SAF_CONVOCATORIA_CAF" value
- * @method SAF_EVENTO              setSAFFOTO()                 Sets the current record's "SAF_FOTO" collection
- * @method SAF_EVENTO              setRazones1000MvaMin()       Sets the current record's "Razones_1000MvaMin" collection
  * @method SAF_EVENTO              setSAFVARIO()                Sets the current record's "SAF_VARIO" collection
+ * @method SAF_EVENTO              setSAFFOTO()                 Sets the current record's "SAF_FOTO" collection
+ * @method SAF_EVENTO              setSAFR1000MVAMIN()          Sets the current record's "SAF_R1000_MVAMIN" collection
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -107,15 +107,15 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'local' => 'id_convocatoria',
              'foreign' => 'id'));
 
+        $this->hasMany('SAF_VARIO', array(
+             'local' => 'id',
+             'foreign' => 'id_evento'));
+
         $this->hasMany('SAF_FOTO', array(
              'local' => 'id',
              'foreign' => 'id_evento'));
 
-        $this->hasMany('SAF_R1000_MVAMIN as Razones_1000MvaMin', array(
-             'local' => 'id',
-             'foreign' => 'id_evento'));
-
-        $this->hasMany('SAF_VARIO', array(
+        $this->hasMany('SAF_R1000_MVAMIN', array(
              'local' => 'id',
              'foreign' => 'id_evento'));
     }

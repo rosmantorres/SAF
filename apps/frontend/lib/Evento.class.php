@@ -41,7 +41,7 @@ class Evento
     $evento->setMvaMin($interrupcion->getMvamin());
     $evento->setNumAveria($interrupcion->getNumAveria());
     $evento->setDescAveria($mi_averia->getDescripcion());
-    $evento->setTipoFalla($interrupcion->getCodCausa());
+    $evento->setTipoFalla($this->getTipoFalla($interrupcion->getCodCausa()));
     $evento->setClimatologia($interrupcion->getClimatologia());
     $evento->setTrabajoRealizado($interrupcion->getTrabajoRealizado());
     $evento->setNumRoe($interrupcion->getNumRoe());
@@ -57,7 +57,7 @@ class Evento
 
     //$evento->setProgramador() = ;
     //$evento->setOperadorResp() = ;
-    
+
     return $evento;
   }
 
@@ -70,31 +70,52 @@ class Evento
   public function getRegion($num_distrito)
   {
     $region = '';
-    
+
     switch ($num_distrito) {
-      case 1: 
-        $region = 'Este';        
+      case 1:
+        $region = 'Este';
         break;
       case 2:
-        $region = 'Oeste';        
+        $region = 'Oeste';
         break;
       case 3:
-        $region = 'Vargas';        
+        $region = 'Vargas';
         break;
       case 4:
-        $region = 'Los Teques';        
+        $region = 'Los Teques';
         break;
       case 5:
-        $region = 'Guarenas-Guatire';        
+        $region = 'Guarenas-Guatire';
         break;
       case 7:
-        $region = 'Centro';        
+        $region = 'Centro';
         break;
       default:
         break;
     }
-    
+
     return $region;
+  }
+
+  /**
+   * Método que retorna el tipo de falla segun su cod de cuasa de la interrupción
+   * 
+   * @param Integer $cod_cuasa El cod_cuasa de la interrupcion
+   * @return string
+   */
+  public function getTipoFalla($cod_cuasa)
+  {
+    $tipo_falla = 'IMPREVISTA';
+    
+    switch ($cod_cuasa) {
+      case ($cod_cuasa >=900 and $cod_cuasa <= 903):
+        $tipo_falla = 'PROGRAMADA';
+        break;
+      default:        
+        break;
+    }
+    
+    return $tipo_falla;
   }
 
 }

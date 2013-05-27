@@ -10,10 +10,17 @@ require_once dirname(__FILE__) . '/../bootstrap/unit.php';
 require_once dirname(__FILE__) . '/../../apps/frontend/lib/Evento.class.php';
 
 // Cantidad de pruebas unitarias
-$t = new lime_test(4);
+$t = new lime_test(7);
 
 // Pruebas unitarias
-$t->pass('Esta prueba siempre pasa');
+$t->pass('Comenzaremos las pruebas para la clase Evento');
+
+// Pruebas para el método ::getRegion()
 $t->is(Evento::getRegion(1), 'Este', '::getRegion() Este es la region del distrito 1');
 $t->isnt(Evento::getRegion(1), 'Oeste', '::getRegion() Oeste no es la region del distrito 1');
 $t->is(Evento::getRegion(6), '', '::getRegion() No existe region para el distrito 6');
+
+// Pruebas para el método ::getTipoFalla()
+$t->is(Evento::getTipoFalla(100), 'IMPREVISTA', '::getTipoFalla() Falla distinta a 900, 901, 902 o 903 es una IMPREVISTA');
+$t->is(Evento::getTipoFalla(904), 'IMPREVISTA', '::getTipoFalla() Falla distinta a 900, 901, 902 o 903 es una IMPREVISTA');
+$t->isnt(Evento::getTipoFalla(903), 'IMPREVISTA', '::getTipoFalla() Falla igual a 900, 901, 902 o 903  no es una IMPREVISTA');

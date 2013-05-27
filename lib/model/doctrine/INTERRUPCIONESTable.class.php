@@ -18,6 +18,14 @@ class INTERRUPCIONESTable extends Doctrine_Table
     return Doctrine_Core::getTable('INTERRUPCIONES');
   }
 
+  /**
+   * Método que retorna una coleccion de objetos del modelo INTERRUPCIONES del
+   * schema SIOD, segun varios criterios de seleccion en un rango de fecha.
+   * 
+   * @param String $fecha_inicial Formato del String YYYY-MM-DD
+   * @param String $fecha_final Formato del String YYYY-MM-DD
+   * @return Doctrine_Collection INTERRUPCIONES
+   */
   public function getInterrupciones($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()

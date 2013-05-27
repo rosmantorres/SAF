@@ -18,4 +18,19 @@ class CRONOLOGIA_CUADRILLA_INTTable extends Doctrine_Table
     return Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT');
   }
   
+  /**
+   * Método que retorna un objeto del modelo CRONOLOGIA_CUADRILLA_INT del schema
+   * SIOD, si el numero f328 es igual al de la interrupcion.
+   * 
+   * @param Integer $num_f328
+   * @return CRONOLOGIA_CUADRILLA_INTEGER
+   */
+  public function getCuadrilla($num_f328)
+  {
+    $query = $this->createQuery()
+            ->where('num_f328 = ?', $num_f328);
+    
+    return $query->fetchOne();
+  }
+  
 }

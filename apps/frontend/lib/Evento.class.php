@@ -64,7 +64,7 @@ class Evento
   /**
    * Método que retorna el nombre de la region segun su id del distrito.
    * 
-   * @param Integer $num_distrito Disrito que aparece en la Interrupcion
+   * @param integer $num_distrito Disrito que aparece en la Interrupcion
    * @return string
    */
   public function getRegion($num_distrito)
@@ -100,7 +100,7 @@ class Evento
   /**
    * Método que retorna el tipo de falla segun su cod de cuasa de la interrupción
    * 
-   * @param Integer $cod_cuasa El cod_cuasa de la interrupcion
+   * @param integer $cod_cuasa El cod_cuasa de la interrupcion
    * @return string
    */
   public function getTipoFalla($cod_cuasa)
@@ -116,6 +116,36 @@ class Evento
     }
     
     return $tipo_falla;
+  }
+  
+  /**
+   * Método que retorna la climatologia segun el cod_causa de la interrupcion
+   * 
+   * @param integer $cod_clima
+   * @return string
+   */
+  public function getClimatologia($cod_causa)
+  {
+    $climatologia = '';
+    
+    switch ($cod_causa) {
+      case 1:
+        $climatologia = 'Seco';
+        break;
+      case 2:
+        $climatologia = 'Lluvia';
+        break;
+      case 3:
+        $climatologia = 'Tormenta - Viento fuerte';
+        break;
+      case 4:
+        $climatologia = 'Neblina';
+        break;
+      default:
+        break;
+    }
+    
+    return $climatologia;
   }
 
 }

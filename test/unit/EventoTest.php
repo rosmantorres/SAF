@@ -10,7 +10,7 @@ require_once dirname(__FILE__) . '/../bootstrap/unit.php';
 require_once dirname(__FILE__) . '/../../apps/frontend/lib/Evento.class.php';
 
 // Cantidad de pruebas unitarias
-$t = new lime_test(7);
+$t = new lime_test(10);
 
 // Pruebas unitarias
 $t->pass('Comenzaremos las pruebas para la clase Evento');
@@ -24,3 +24,8 @@ $t->is(Evento::getRegion(6), '', '::getRegion() No existe region para el distrit
 $t->is(Evento::getTipoFalla(100), 'IMPREVISTA', '::getTipoFalla() Falla distinta a 900, 901, 902 o 903 es una IMPREVISTA');
 $t->is(Evento::getTipoFalla(904), 'IMPREVISTA', '::getTipoFalla() Falla distinta a 900, 901, 902 o 903 es una IMPREVISTA');
 $t->isnt(Evento::getTipoFalla(903), 'IMPREVISTA', '::getTipoFalla() Falla igual a 900, 901, 902 o 903  no es una IMPREVISTA');
+
+// Pruebas para el método ::getClimatologia()
+$t->is(Evento::getClimatologia(100), '', '::getClimatologia() No hay climatologia para este cod_causa');
+$t->isnt(Evento::getClimatologia(1), 'Lluvia', '::getClimatologia() El cod_causa 1 no es Lluvia');
+$t->is(Evento::getClimatologia(2), 'Lluvia', '::getClimatologia() El cod_causa 2 es Lluvia');

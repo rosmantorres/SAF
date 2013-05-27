@@ -12,7 +12,8 @@ class agenda_convocatoriaActions extends sfActions
 {
   public function executeIndex(sfWebRequest $request)
   {
-    $this->saf_agenda_convocatori_as = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();    
+    $this->saf_agenda_convocatori_as = 
+            Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();    
   }
 
   public function executeNew(sfWebRequest $request)
@@ -25,46 +26,16 @@ class agenda_convocatoriaActions extends sfActions
     $fechas_filtro = $request->getParameter('saf_agenda_convocatoria');
     $f_ini_filtro = $fechas_filtro['f_ini'];
     $f_fin_filtro = $fechas_filtro['f_fin'];
-    $interrupciones = Doctrine::getTable('INTERRUPCIONES')->getInterrupciones($f_ini_filtro,$f_fin_filtro);    
+    $interrupciones = Doctrine::getTable('INTERRUPCIONES')
+            ->getInterrupciones($f_ini_filtro,$f_fin_filtro);
     $array_eventos = array();
+    
     if($interrupciones)
-    {      
+    {    
       foreach ($interrupciones as $interrupcion)
-      {
-        $mi_averia = Doctrine_Core::getTable('AVERIA')->find($interrupcion->getNumAveria());
-        $mi_cronologia = Doctrine_Core::getTable('CRONOLOGIA')->find($interrupcion->getNumF328());
-        //$mi_cronologia_cuadrilla_int = Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')->find($interrupcion->getNumF328());
-        
-        $evento = new SAF_EVENTO();
-
-        $evento->setCEventoD($interrupcion->getNumF328());
-        $evento->setFHoraIni($interrupcion->getFechaHoraIni());
-        $evento->setRegion($interrupcion->getDistrito());
-        $evento->setCircuito($interrupcion->getCodSistema());
-        $evento->setCodNivel($interrupcion->getNivelSistema());
-        $evento->setKvaInt($interrupcion->getKvaInterrump());
-        $evento->setMvaMin($interrupcion->getMvamin());
-        $evento->setNumAveria($interrupcion->getNumAveria());
-        $evento->setTipoFalla($interrupcion->getCodCausa());
-        $evento->setClimatologia($interrupcion->getClimatologia());
-        $evento->setTrabajoRealizado($interrupcion->getTrabajoRealizado());
-        $evento->setNumRoe($interrupcion->getNumRoe());
-        
-        if ($mi_cronologia)
-        {
-          $evento->setFHoraRep($mi_cronologia->getFechaReparacion());
-          $evento->setOperador($mi_cronologia->getRespMesaRep());
-        }
-        else
-        {
-          $evento->setFHoraRep();
-          $evento->setOperador();
-        }
-        
-        $evento->setDescAveria($mi_averia->getDescripcion());        
-        //$evento->setCuadrilla($mi_cronologia_cuadrilla_int->getCodCuadCont()); 
-        //$evento->setProgramador() = ;
-        //$evento->setOperadorResp() = ;
+      {              
+        $evento = new Evento();
+        $evento = $evento->crearEvento($interrupcion);
         array_push($array_eventos,$evento);
       }
     }
@@ -74,7 +45,9 @@ class agenda_convocatoriaActions extends sfActions
   
   public function executeShow(sfWebRequest $request)
   {
-    $this->saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id')));
+    $this->saf_agenda_convocatoria = 
+            Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+            ->find(array($request->getParameter('id')));
     $this->forward404Unless($this->saf_agenda_convocatoria);
   }
   

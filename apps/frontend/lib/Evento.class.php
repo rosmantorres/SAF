@@ -42,7 +42,7 @@ class Evento
     $evento->setNumAveria($interrupcion->getNumAveria());
     $evento->setDescAveria($mi_averia->getDescripcion());
     $evento->setTipoFalla($this->getTipoFalla($interrupcion->getCodCausa()));
-    $evento->setClimatologia($interrupcion->getClimatologia());
+    $evento->setClimatologia($this->getClimatologia($interrupcion->getClimatologia()));
     $evento->setTrabajoRealizado($interrupcion->getTrabajoRealizado());
     $evento->setNumRoe($interrupcion->getNumRoe());
 
@@ -119,16 +119,16 @@ class Evento
   }
   
   /**
-   * Método que retorna la climatologia segun el cod_causa de la interrupcion
+   * Método que retorna la climatologia segun el cod_clima de la interrupcion
    * 
    * @param integer $cod_clima
    * @return string
    */
-  public function getClimatologia($cod_causa)
+  public function getClimatologia($cod_clima)
   {
     $climatologia = '';
     
-    switch ($cod_causa) {
+    switch ($cod_clima) {
       case 1:
         $climatologia = 'Seco';
         break;

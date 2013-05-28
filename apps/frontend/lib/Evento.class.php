@@ -18,47 +18,92 @@ class Evento
    */
   public function crearEvento($interrupcion)
   {
-    $mi_averia = Doctrine_Core::getTable('AVERIA')
-            ->find($interrupcion->getNumAveria());
-
-    $mi_cronologia = Doctrine_Core::getTable('CRONOLOGIA')
-            ->find($interrupcion->getNumF328());
-
-    $mi_cronologia_cuadrilla_int = Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')
-            ->getCuadrilla($interrupcion->getNumF328());
-
-    $mi_circuito = Doctrine_Core::getTable('CIRCUITOS')
-            ->find($interrupcion->getCodSistema());
-
     $evento = new SAF_EVENTO();
-
     $evento->setCEventoD($interrupcion->getNumF328());
     $evento->setFHoraIni($interrupcion->getFechaHoraIni());
     $evento->setRegion($this->getRegion($interrupcion->getDistrito()));
-    $evento->setCircuito($mi_circuito->getDescCto());
     $evento->setCodNivel($interrupcion->getNivelSistema());
     $evento->setKvaInt($interrupcion->getKvaInterrump());
     $evento->setMvaMin($interrupcion->getMvamin());
     $evento->setNumAveria($interrupcion->getNumAveria());
-    $evento->setDescAveria($mi_averia->getDescripcion());
     $evento->setTipoFalla($this->getTipoFalla($interrupcion->getCodCausa()));
     $evento->setClimatologia($this->getClimatologia($interrupcion->getClimatologia()));
     $evento->setTrabajoRealizado($interrupcion->getTrabajoRealizado());
     $evento->setNumRoe($interrupcion->getNumRoe());
 
-    if ($mi_cronologia) {
-      $evento->setFHoraRep($mi_cronologia->getFechaReparacion());
-      $evento->setOperador($mi_cronologia->getRespMesaRep());
+    if ($averia = $this->getAveria($interrupcion->getNumAveria())) {
+      $evento->setDescAveria($averia->getDescripcion());
     }
 
-    if ($mi_cronologia_cuadrilla_int) {
-      $evento->setCuadrilla($mi_cronologia_cuadrilla_int->getCodCuadCont());
+    if ($cronologia = $this->getCronologia($interrupcion->getNumF328())) {
+      $evento->setFHoraRep($cronologia->getFechaReparacion());
+      $evento->setOperador($cronologia->getRespMesaRep());
     }
 
-    //$evento->setProgramador() = ;
-    //$evento->setOperadorResp() = ;
+    if ($cronologia_cuadrilla = $this->getCronologiaCuadrilla($interrupcion->getNumF328())) {
+      $evento->setCuadrilla($cronologia_cuadrilla->getCodCuadCont());
+    }
+
+    if ($circuito = $this->getCircuito($interrupcion->getCodSistema())) {
+      $evento->setCircuito($circuito->getDescCto());
+    }
+
+    if ($this->getTipoFalla($interrupcion->getCodCausa()) == 'PROGRAMADA' and
+            $interrupcion->getNumProposicion() > 0) {
+      //$evento->setProgramador();
+      //$evento->setOperadorResp();
+    }
 
     return $evento;
+  }
+
+  public function getOperadores($num_proposicion)
+  {
+    //Doctrine_Core::getTable('HIS_PROPOSICIONES')->find($cod_sistema);
+  }
+
+  /**
+   * Método que retorna un objeto del modelo CIRCUITOS, segun cod_sistema
+   * 
+   * @param integer $cod_sistema
+   * @return CIRCUITOS
+   */
+  public function getCircuito($cod_sistema)
+  {
+    return Doctrine_Core::getTable('CIRCUITOS')->find($cod_sistema);
+  }
+
+  /**
+   * Método que retorna un objeto del modelo CRONOLOGIA_CUADRILLA_INT, segun num_f328
+   * 
+   * @param integer $num_f328
+   * @return CRONOLOGIA_CUADRILLA_INT
+   */
+  public function getCronologiaCuadrilla($num_f328)
+  {
+    return Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')->getCuadrilla($num_f328);
+  }
+
+  /**
+   * Método que retorna un objeto del modelo CRONOLOGIA, segun num_f328
+   * 
+   * @param integer $num_f328
+   * @return CRONOLOGIA
+   */
+  public function getCronologia($num_f328)
+  {
+    return Doctrine_Core::getTable('CRONOLOGIA')->find($num_f328);
+  }
+
+  /**
+   * Método que retorna un objeto del modelo AVERIA, segun num_averia
+   *
+   * @param integer $num_averia
+   * @return AVERIA
+   */
+  public function getAveria($num_averia)
+  {
+    return Doctrine_Core::getTable('AVERIA')->find($num_averia);
   }
 
   /**
@@ -106,18 +151,18 @@ class Evento
   public function getTipoFalla($cod_cuasa)
   {
     $tipo_falla = 'IMPREVISTA';
-    
+
     switch ($cod_cuasa) {
-      case ($cod_cuasa >=900 and $cod_cuasa <= 903):
+      case ($cod_cuasa >= 900 and $cod_cuasa <= 903):
         $tipo_falla = 'PROGRAMADA';
         break;
-      default:        
+      default:
         break;
     }
-    
+
     return $tipo_falla;
   }
-  
+
   /**
    * Método que retorna la climatologia segun el cod_clima de la interrupcion
    * 
@@ -127,7 +172,7 @@ class Evento
   public function getClimatologia($cod_clima)
   {
     $climatologia = '';
-    
+
     switch ($cod_clima) {
       case 1:
         $climatologia = 'Seco';
@@ -144,7 +189,7 @@ class Evento
       default:
         break;
     }
-    
+
     return $climatologia;
   }
 

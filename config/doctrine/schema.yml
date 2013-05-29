@@ -326,7 +326,7 @@ HIST_PROPOSICIONES:
   connection: schema_simip
   tableName: HIST_PROPOSICIONES
   columns:
-    cod_proposicion: { notnull: true, type: integer(6) }
+    cod_proposicion: { notnull: true, type: integer(6), primary: true }
     oper_cod_operador_resp: { notnull: true, type: integer(8) }
     oper_cod_operador_asig: { notnull: true, type: integer(8) }
 

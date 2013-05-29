@@ -7,13 +7,28 @@
  */
 class HIST_PROPOSICIONESTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object HIST_PROPOSICIONESTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('HIST_PROPOSICIONES');
-    }
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object HIST_PROPOSICIONESTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('HIST_PROPOSICIONES');
+  }
+
+  /**
+   * Método que retorna un objeto del modelo HIST_PROPOSICIONES, segun cod_proposicion   
+   * 
+   * @param integer $num_proposicion
+   * @return HIST_PROPOSICIONES
+   */
+  public function getHistProposicion($num_proposicion)
+  {
+    return $this->createQuery()
+            ->where('cod_proposicion = ?', $num_proposicion)
+            ->fetchOne();            
+  }
+
 }

@@ -23,11 +23,11 @@ class agenda_convocatoriaActions extends sfActions
 
   public function executeFiltrar(sfWebRequest $request)
   {
-    $fechas_filtro = $request->getParameter('saf_agenda_convocatoria');
-    $f_ini_filtro = $fechas_filtro['f_ini'];
-    $f_fin_filtro = $fechas_filtro['f_fin'];
+    $fechas = $request->getParameter('saf_agenda_convocatoria');
+    
     $interrupciones = Doctrine::getTable('INTERRUPCIONES')
-            ->getInterrupciones($f_ini_filtro,$f_fin_filtro);
+            ->getInterrupcionesFiltro1($fechas['f_ini'],$fechas['f_fin']);
+    
     $array_eventos = array();
     
     if($interrupciones)

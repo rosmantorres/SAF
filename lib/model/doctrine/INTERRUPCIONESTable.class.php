@@ -19,22 +19,76 @@ class INTERRUPCIONESTable extends Doctrine_Table
   }
 
   /**
-   * Método que retorna una coleccion de objetos del modelo INTERRUPCIONES del
-   * schema SIOD, segun varios criterios de seleccion en un rango de fecha.
+   * Método que retorna una coleccion de objetos del modelo INTERRUPCIONES,
+   * segun los siguientes criterios de seleccion:
+   *  - Rango de fechas
+   *  - MvaMin > 999
+   *  - Climatología Seca
+   *  - Nivel de sistema 6,7,8
+   *  - Interrupción imprevistas
    * 
    * @param String $fecha_inicial Formato del String YYYY-MM-DD
    * @param String $fecha_final Formato del String YYYY-MM-DD
    * @return Doctrine_Collection INTERRUPCIONES
    */
-  public function getInterrupciones($fecha_inicial, $fecha_final)
+  public function getInterrupcionesFiltro1($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()
-            ->where('fecha_hora_ini >= ?',  $fecha_inicial)
+            ->where('fecha_hora_ini >= ?', $fecha_inicial)
             ->andWhere('fecha_hora_ini <= ?', $fecha_final)
             ->andWhere('mvamin > ?',999)
             ->andWhere('climatologia = ?',1)
             ->andWhereIn('nivel_sistema',array(6,7,8))
             ->andWhereNotIn('cod_causa', array (901,902,903,904))
+            ->orderBy('num_f328');
+
+    return $query->execute();
+  }
+  
+  /**
+   * Método que retorna una coleccion de objetos del modelo INTERRUPCIONES,
+   * segun los siguientes criterios de seleccion:
+   *  - Rango de fechas
+   *  - MvaMin > 999
+   *  - Climatología Seca
+   *  - Nivel de sistema 6,7,8
+   *  - Interrupción Programadas sin incluir 904 (Programada Por Falla)
+   * 
+   * @param String $fecha_inicial Formato del String YYYY-MM-DD
+   * @param String $fecha_final Formato del String YYYY-MM-DD
+   * @return Doctrine_Collection INTERRUPCIONES
+   */
+  public function getInterrupcionesProgramadas($fecha_inicial, $fecha_final)
+  {
+    $query = $this->createQuery()
+            ->where('fecha_hora_ini >= ?', $fecha_inicial)
+            ->andWhere('fecha_hora_ini <= ?', $fecha_final)
+            ->andWhere('mvamin > ?',999)
+            ->andWhere('climatologia = ?',1)
+            ->andWhereIn('nivel_sistema',array(6,7,8))
+            ->andWhereIn('cod_causa', array (901,902,903))
+            ->orderBy('num_f328');
+
+    return $query->execute();
+  }
+  
+  /**
+   * Método que retorna una coleccion de objetos del modelo INTERRUPCIONES,
+   * segun los siguientes criterios de seleccion:
+   *  - Rango de fechas
+   *  - Interrupción con cuasas 500 (Error de operaciones)
+   * 
+   * @param String $fecha_inicial Formato del String YYYY-MM-DD
+   * @param String $fecha_final Formato del String YYYY-MM-DD
+   * @return Doctrine_Collection INTERRUPCIONES
+   */
+  public function getInterrupcionesFiltro3($fecha_inicial, $fecha_final)
+  {
+    $query = $this->createQuery()
+            ->where('fecha_hora_ini >= ?', $fecha_inicial)
+            ->andWhere('fecha_hora_ini <= ?', $fecha_final)
+            ->andWhere('cod_causa > ?', 499)
+            ->andWhere('cod_causa < ?', 600)
             ->orderBy('num_f328');
 
     return $query->execute();

@@ -8,103 +8,129 @@
 class Evento
 {
 
+  private $_interrupcion;
+  private $_evento;
+
   /**
-   * Método que crea un SAF_EVENTO con los valores encontrados en los modelos
-   * INTERRUPCIONES, AVERIA, CRONOLOGIA y CRONOLOGIA_CUADRILLA_INT, correspondiente
-   * al schema SIOD.
+   * Método que retorna un objeto del modelo SAF_EVENTO con sus valores ya seteados
    * 
    * @param INTERRUPCIONES $interrupcion Misma documentacion BaseINTERRUPCIONES.class.php
    * @return SAF_EVENTO
    */
   public function crearEvento($interrupcion)
   {
-    $evento = new SAF_EVENTO();
-    $evento->setCEventoD($interrupcion->getNumF328());
-    $evento->setFHoraIni($interrupcion->getFechaHoraIni());
-    $evento->setRegion($this->getRegion($interrupcion->getDistrito()));
-    $evento->setCodNivel($interrupcion->getNivelSistema());
-    $evento->setKvaInt($interrupcion->getKvaInterrump());
-    $evento->setMvaMin($interrupcion->getMvamin());
-    $evento->setNumAveria($interrupcion->getNumAveria());
-    $evento->setTipoFalla($this->getTipoFalla($interrupcion->getCodCausa()));
-    $evento->setClimatologia($this->getClimatologia($interrupcion->getClimatologia()));
-    $evento->setTrabajoRealizado($interrupcion->getTrabajoRealizado());
-    $evento->setNumRoe($interrupcion->getNumRoe());
+    $this->inicializar($interrupcion);
 
-    if ($averia = $this->getAveria($interrupcion->getNumAveria())) {
-      $evento->setDescAveria($averia->getDescripcion());
-    }
+    $this->setEventoFtInterrupcion();
+    $this->setEventoFtAveria();
+    $this->setEventoFtCronologias();
+    $this->setEventoFtCircuito();
+    $this->setEventoFtOperadores();
 
-    if ($cronologia = $this->getCronologia($interrupcion->getNumF328())) {
-      $evento->setFHoraRep($cronologia->getFechaReparacion());
-      $evento->setOperador($cronologia->getRespMesaRep());
-    }
-
-    if ($cronologia_cuadrilla = $this->getCronologiaCuadrilla($interrupcion->getNumF328())) {
-      $evento->setCuadrilla($cronologia_cuadrilla->getCodCuadCont());
-    }
-
-    if ($circuito = $this->getCircuito($interrupcion->getCodSistema())) {
-      $evento->setCircuito($circuito->getDescCto());
-    }
-
-    if ($this->getTipoFalla($interrupcion->getCodCausa()) == 'PROGRAMADA' and
-            $interrupcion->getNumProposicion() > 0) {
-      $operadores = $this->getOperadores($interrupcion->getNumProposicion());
-      $evento->setProgramador($operadores[0]);
-      $evento->setOperadorResp($operadores[1]);
-    }
-
-    return $evento;
-  }
-
-  public function getOperadores($num_proposicion)
-  {
-    return Doctrine_Core::getTable('OPERADORES')->getOperadores($num_proposicion);
+    return $this->_evento;
   }
 
   /**
-   * Método que retorna un objeto del modelo CIRCUITOS, segun cod_sistema
+   * Método que inicializa las variables privada de la clase Evento
    * 
-   * @param integer $cod_sistema
-   * @return CIRCUITOS
+   * @param INTERRUPCIONES $interrupcion
    */
-  public function getCircuito($cod_sistema)
+  private function inicializar($interrupcion)
   {
-    return Doctrine_Core::getTable('CIRCUITOS')->find($cod_sistema);
+    $this->_evento = new SAF_EVENTO();
+    $this->_interrupcion = $interrupcion;
   }
 
   /**
-   * Método que retorna un objeto del modelo CRONOLOGIA_CUADRILLA_INT, segun num_f328
-   * 
-   * @param integer $num_f328
-   * @return CRONOLOGIA_CUADRILLA_INT
+   * Método que setea al objeto SAF_EVENTO con los valores de la interrupcion.
    */
-  public function getCronologiaCuadrilla($num_f328)
+  private function setEventoFtInterrupcion()
   {
-    return Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')->getCuadrilla($num_f328);
+    $this->_evento->setCEventoD($this->_interrupcion->getNumF328());
+    $this->_evento->setFHoraIni($this->_interrupcion->getFechaHoraIni());
+    $this->_evento->setRegion($this->getRegion($this->_interrupcion->getDistrito()));
+    $this->_evento->setCodNivel($this->_interrupcion->getNivelSistema());
+    $this->_evento->setKvaInt($this->_interrupcion->getKvaInterrump());
+    $this->_evento->setMvaMin($this->_interrupcion->getMvamin());
+    $this->_evento->setNumAveria($this->_interrupcion->getNumAveria());
+    $this->_evento->setTipoFalla($this->getTipoFalla($this->_interrupcion->getCodCausa()));
+    $this->_evento->setClimatologia($this->getClimatologia($this->_interrupcion->getClimatologia()));
+    $this->_evento->setTrabajoRealizado($this->_interrupcion->getTrabajoRealizado());
+    $this->_evento->setNumRoe($this->_interrupcion->getNumRoe());
   }
 
   /**
-   * Método que retorna un objeto del modelo CRONOLOGIA, segun num_f328
-   * 
-   * @param integer $num_f328
-   * @return CRONOLOGIA
+   * Método que setea al objeto SAF_EVENTO con los valores de la averia, sí esta existe.
    */
-  public function getCronologia($num_f328)
+  private function setEventoFtAveria()
   {
-    return Doctrine_Core::getTable('CRONOLOGIA')->find($num_f328);
+    $averia = Doctrine_Core::getTable('AVERIA')
+            ->find($this->_interrupcion->getNumAveria());
+
+    if ($averia)
+    {
+      $this->_evento->setDescAveria($averia->getDescripcion());
+    }
   }
 
   /**
-   * Método que retorna un objeto del modelo AVERIA, segun num_averia
-   *
-   * @param integer $num_averia
-   * @return AVERIA
+   * Método que setea al objeto SAF_EVENTO con los valores de la cronologia 
+   * y cronologia_cuadrilla_int, sí los mismos existen
    */
-  public function getAveria($num_averia)
+  private function setEventoFtCronologias()
   {
-    return Doctrine_Core::getTable('AVERIA')->find($num_averia);
+    $cronologia = Doctrine_Core::getTable('CRONOLOGIA')
+            ->find($this->_interrupcion->getNumF328());
+
+    $cronologia_cuadrilla = Doctrine_Core::getTable('CRONOLOGIA_CUADRILLA_INT')
+            ->getCuadrilla($this->_interrupcion->getNumF328());
+
+    if ($cronologia)
+    {
+      $this->_evento->setFHoraRep($cronologia->getFechaReparacion());
+      $this->_evento->setOperador($cronologia->getRespMesaRep());
+    }
+
+    if ($cronologia_cuadrilla)
+    {
+      $this->_evento->setCuadrilla($cronologia_cuadrilla->getCodCuadCont());
+    }
+  }
+
+  /**
+   * Método que setea al objeto SAF_EVENTO con los valores del circuito sí existe.
+   */
+  private function setEventoFtCircuito()
+  {
+    $circuito = Doctrine_Core::getTable('CIRCUITOS')
+            ->find($this->_interrupcion->getCodSistema());
+
+    if ($circuito)
+    {
+      $this->_evento->setCircuito($circuito->getDescCto());
+    }
+  }
+
+  /**
+   * Método que setea al objeto SAF_EVENTO con los valores de los operadores, sí 
+   * el tipo de interrupcion es programada y si tiene número de proposición.
+   */
+  private function setEventoFtOperadores()
+  {
+    if ($this->getTipoFalla($this->_interrupcion->getCodCausa()) == 'PROGRAMADA')
+    {
+      if ($this->_interrupcion->getNumProposicion() > 0)
+      {
+        $operadores = Doctrine_Core::getTable('OPERADORES')
+                ->getOperadores($this->_interrupcion->getNumProposicion());
+
+        if ($operadores)
+        {
+          $this->_evento->setProgramador($operadores[0]);
+          $this->_evento->setOperadorResp($operadores[1]);
+        }
+      }
+    }
   }
 
   /**
@@ -113,7 +139,7 @@ class Evento
    * @param integer $num_distrito Disrito que aparece en la Interrupcion
    * @return string
    */
-  public function getRegion($num_distrito)
+  private function getRegion($num_distrito)
   {
     $region = '';
 
@@ -149,7 +175,7 @@ class Evento
    * @param integer $cod_cuasa El cod_cuasa de la interrupcion
    * @return string
    */
-  public function getTipoFalla($cod_cuasa)
+  private function getTipoFalla($cod_cuasa)
   {
     $tipo_falla = 'IMPREVISTA';
 
@@ -170,7 +196,7 @@ class Evento
    * @param integer $cod_clima
    * @return string
    */
-  public function getClimatologia($cod_clima)
+  private function getClimatologia($cod_clima)
   {
     $climatologia = '';
 

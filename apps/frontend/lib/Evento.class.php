@@ -50,8 +50,9 @@ class Evento
 
     if ($this->getTipoFalla($interrupcion->getCodCausa()) == 'PROGRAMADA' and
             $interrupcion->getNumProposicion() > 0) {
-      //$evento->setProgramador();
-      //$evento->setOperadorResp();
+      $operadores = $this->getOperadores($interrupcion->getNumProposicion());
+      $evento->setProgramador($operadores[0]);
+      $evento->setOperadorResp($operadores[1]);
     }
 
     return $evento;
@@ -59,7 +60,7 @@ class Evento
 
   public function getOperadores($num_proposicion)
   {
-    //Doctrine_Core::getTable('HIS_PROPOSICIONES')->find($cod_sistema);
+    return Doctrine_Core::getTable('OPERADORES')->getOperadores($num_proposicion);
   }
 
   /**

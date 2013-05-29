@@ -15,15 +15,13 @@ abstract class BaseHIST_PROPOSICIONESForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'                     => new sfWidgetFormInputHidden(),
-      'cod_proposicion'        => new sfWidgetFormInputText(),
+      'cod_proposicion'        => new sfWidgetFormInputHidden(),
       'oper_cod_operador_resp' => new sfWidgetFormInputText(),
       'oper_cod_operador_asig' => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
-      'id'                     => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'cod_proposicion'        => new sfValidatorInteger(),
+      'cod_proposicion'        => new sfValidatorChoice(array('choices' => array($this->getObject()->get('cod_proposicion')), 'empty_value' => $this->getObject()->get('cod_proposicion'), 'required' => false)),
       'oper_cod_operador_resp' => new sfValidatorInteger(),
       'oper_cod_operador_asig' => new sfValidatorInteger(),
     ));

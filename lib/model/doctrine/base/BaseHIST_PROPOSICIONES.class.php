@@ -29,8 +29,8 @@ abstract class BaseHIST_PROPOSICIONES extends sfDoctrineRecord
     {
         $this->setTableName('HIST_PROPOSICIONES');
         $this->hasColumn('cod_proposicion', 'integer', 6, array(
-             'notnull' => true,
              'type' => 'integer',
+             'primary' => true,
              'length' => 6,
              ));
         $this->hasColumn('oper_cod_operador_resp', 'integer', 8, array(

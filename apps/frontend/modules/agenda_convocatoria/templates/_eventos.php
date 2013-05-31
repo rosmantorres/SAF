@@ -2,7 +2,8 @@
  Elemento parcial que se encarga de mostrar los eventos en una tabla con los
  datos necesarios por el cliente
 -->
-<table class="table table-hover">
+
+<table border ="1" class="table table-hover">
   <thead>
     <tr>
       <th>NUM_F328</th>
@@ -26,9 +27,9 @@
     </tr>
   </thead>
   <tbody>
-    <?php foreach($eventos as $evento): ?>
+    <?php foreach ($eventos as $evento): ?>
     <tr class="success">
-      <td><?php echo $evento->getNumF328() ?></td>
+      <td><?php echo $evento->getCEventoD() ?></td>
       <td><?php echo $evento->getFHoraIni() ?></td>
       <td><?php echo $evento->getFHoraRep() ?></td>
       <td><?php echo $evento->getRegion() ?></td>
@@ -55,5 +56,3 @@
     </tr>
   </tbody>
 </table>
-
-

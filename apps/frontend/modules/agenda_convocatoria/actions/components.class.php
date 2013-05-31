@@ -11,10 +11,5 @@
 class agenda_convocatoriaComponents extends sfComponents
 {
 
-  public function executeEventos()
-  {
-    $this->eventos = Doctrine::getTable('INTERRUPCIONES')->getInterrupciones();        
-  }
-
 }
 

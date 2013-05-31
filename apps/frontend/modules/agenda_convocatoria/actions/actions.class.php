@@ -46,17 +46,27 @@ class agenda_convocatoriaActions extends sfActions
   {
     $fechas = $request->getParameter('saf_agenda_convocatoria');
     
-    $interrupciones = Doctrine::getTable('INTERRUPCIONES')
-            ->getInterrupcionesFiltro1($fechas['f_ini'],$fechas['f_fin']);
-    
-    $eventos_imp = array();
-    
-    if($interrupciones)
+    if($interrupciones_imp = Doctrine::getTable('INTERRUPCIONES')
+            ->getInterrupcionesImp($fechas['f_ini'],$fechas['f_fin']))
     {    
-      $eventos_imp = $this->conversionModelo($interrupciones);
+      $eventos_imp = $this->conversionModelo($interrupciones_imp);
+    }
+    
+    if($interrupciones_pro = Doctrine::getTable('INTERRUPCIONES')
+            ->getInterrupcionesPro($fechas['f_ini'],$fechas['f_fin']))
+    {    
+      $eventos_pro = $this->conversionModelo($interrupciones_pro);
+    }
+    
+    if($interrupciones_500 = Doctrine::getTable('INTERRUPCIONES')
+            ->getInterrupciones500($fechas['f_ini'],$fechas['f_fin']))
+    {    
+      $eventos_500 = $this->conversionModelo($interrupciones_500);
     }
     
     $this->eventos_imp = $eventos_imp;
+    $this->eventos_pro = $eventos_pro;
+    $this->eventos_500 = $eventos_500;
   }
   
   public function executeShow(sfWebRequest $request)

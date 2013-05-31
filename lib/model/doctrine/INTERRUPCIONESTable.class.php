@@ -31,7 +31,7 @@ class INTERRUPCIONESTable extends Doctrine_Table
    * @param String $fecha_final Formato del String YYYY-MM-DD
    * @return Doctrine_Collection INTERRUPCIONES
    */
-  public function getInterrupcionesFiltro1($fecha_inicial, $fecha_final)
+  public function getInterrupcionesImp($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()
             ->where('fecha_hora_ini >= ?', $fecha_inicial)
@@ -58,7 +58,7 @@ class INTERRUPCIONESTable extends Doctrine_Table
    * @param String $fecha_final Formato del String YYYY-MM-DD
    * @return Doctrine_Collection INTERRUPCIONES
    */
-  public function getInterrupcionesProgramadas($fecha_inicial, $fecha_final)
+  public function getInterrupcionesPro($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()
             ->where('fecha_hora_ini >= ?', $fecha_inicial)
@@ -82,7 +82,7 @@ class INTERRUPCIONESTable extends Doctrine_Table
    * @param String $fecha_final Formato del String YYYY-MM-DD
    * @return Doctrine_Collection INTERRUPCIONES
    */
-  public function getInterrupcionesFiltro3($fecha_inicial, $fecha_final)
+  public function getInterrupciones500($fecha_inicial, $fecha_final)
   {
     $query = $this->createQuery()
             ->where('fecha_hora_ini >= ?', $fecha_inicial)

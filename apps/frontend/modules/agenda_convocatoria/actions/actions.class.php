@@ -21,6 +21,27 @@ class agenda_convocatoriaActions extends sfActions
     $this->form = new SAF_AGENDA_CONVOCATORIAForm();
   }
 
+  /**
+   * Método convierte del modelo INTERRUPCIONES a SAF_EVENTO, retornando una 
+   * coleccion de objetos del módelo SAF_EVENTO
+   * 
+   * @param INTERRUPCIONES $interrupciones
+   * @return Doctrine_Collection SAF_EVENTO
+   */
+  private function conversionModelo($interrupciones)
+  {
+    $eventos = array();
+
+    foreach ($interrupciones as $interrupcion)
+    {
+      $evento = new Evento();
+      $evento = $evento->crearEvento($interrupcion);
+      array_push($eventos, $evento);
+    }
+
+    return $eventos;
+  }
+  
   public function executeFiltrar(sfWebRequest $request)
   {
     $fechas = $request->getParameter('saf_agenda_convocatoria');
@@ -28,19 +49,14 @@ class agenda_convocatoriaActions extends sfActions
     $interrupciones = Doctrine::getTable('INTERRUPCIONES')
             ->getInterrupcionesFiltro1($fechas['f_ini'],$fechas['f_fin']);
     
-    $array_eventos = array();
+    $eventos_imp = array();
     
     if($interrupciones)
     {    
-      foreach ($interrupciones as $interrupcion)
-      {              
-        $evento = new Evento();
-        $evento = $evento->crearEvento($interrupcion);
-        array_push($array_eventos,$evento);
-      }
+      $eventos_imp = $this->conversionModelo($interrupciones);
     }
     
-    $this->array_eventos = $array_eventos;
+    $this->eventos_imp = $eventos_imp;
   }
   
   public function executeShow(sfWebRequest $request)

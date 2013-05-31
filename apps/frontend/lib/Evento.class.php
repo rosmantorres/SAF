@@ -175,15 +175,19 @@ class Evento
    * @param integer $cod_cuasa El cod_cuasa de la interrupcion
    * @return string
    */
-  private function getTipoFalla($cod_cuasa)
+  private function getTipoFalla($cod_causa)
   {
-    $tipo_falla = 'IMPREVISTA';
+    $tipo_falla = '';
 
-    switch ($cod_cuasa) {
-      case ($cod_cuasa >= 900 and $cod_cuasa <= 903):
+    switch ($cod_causa) {
+      case ($cod_causa >= 900):
         $tipo_falla = 'PROGRAMADA';
         break;
+      case ($cod_causa >= 500 && $cod_causa <= 599):
+        $tipo_falla = 'CAUSA-500';
+        break;
       default:
+        $tipo_falla = 'IMPREVISTA';
         break;
     }
 

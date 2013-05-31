@@ -28,31 +28,34 @@
   </thead>
   <tbody>
     <?php foreach ($eventos as $evento): ?>
-    <tr class="success">
-      <td><?php echo $evento->getCEventoD() ?></td>
-      <td><?php echo $evento->getFHoraIni() ?></td>
-      <td><?php echo $evento->getFHoraRep() ?></td>
-      <td><?php echo $evento->getRegion() ?></td>
-      <td><?php echo $evento->getCircuito() ?></td>
-      <td><?php echo $evento->getCodNivel() ?></td>
-      <td><?php echo $evento->getKvaInt() ?></td>
-      <td><?php echo $evento->getMvaMin() ?></td>
-      <td><?php echo $evento->getNumAveria() ?></td>
-      <td><?php echo $evento->getDescAveria() ?></td>
-      <td><?php echo $evento->getTipoFalla() ?></td>
-      <td><?php echo $evento->getOperador() ?></td>
-      <td><?php echo $evento->getCuadrilla() ?></td>
-      <td><?php echo $evento->getClimatologia() ?></td>
-      <td><?php echo $evento->getTrabajoRealizado() ?></td>
-      <td><?php echo $evento->getNumRoe() ?></td>
-      <td><?php echo $evento->getProgramador() ?></td>
-      <td><?php echo $evento->getOperadorResp() ?></td>
-    </tr>
+      <?php if ($evento->getTipoFalla() == 'IMPREVISTA'): ?>
+        <tr class="error">
+      <?php endif; ?>
+      <?php if ($evento->getTipoFalla() == 'PROGRAMADA'): ?>
+        <tr class="success">
+      <?php endif; ?>
+      <?php if ($evento->getTipoFalla() == 'CAUSA-500'): ?>
+        <tr class="info">
+      <?php endif; ?>
+          <td><?php echo $evento->getCEventoD() ?></td>
+          <td><?php echo $evento->getFHoraIni() ?></td>
+          <td><?php echo $evento->getFHoraRep() ?></td>
+          <td><?php echo $evento->getRegion() ?></td>
+          <td><?php echo $evento->getCircuito() ?></td>
+          <td><?php echo $evento->getCodNivel() ?></td>
+          <td><?php echo $evento->getKvaInt() ?></td>
+          <td><?php echo $evento->getMvaMin() ?></td>
+          <td><?php echo $evento->getNumAveria() ?></td>
+          <td><?php echo $evento->getDescAveria() ?></td>
+          <td><?php echo $evento->getTipoFalla() ?></td>
+          <td><?php echo $evento->getOperador() ?></td>
+          <td><?php echo $evento->getCuadrilla() ?></td>
+          <td><?php echo $evento->getClimatologia() ?></td>
+          <td><?php echo $evento->getTrabajoRealizado() ?></td>
+          <td><?php echo $evento->getNumRoe() ?></td>
+          <td><?php echo $evento->getProgramador() ?></td>
+          <td><?php echo $evento->getOperadorResp() ?></td>
+        </tr>
     <?php endforeach ?>
-    <tr class="error">
-      <td>IMPREVISTA</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
   </tbody>
 </table>

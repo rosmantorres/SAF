@@ -126,8 +126,8 @@ class Evento
 
         if ($operadores)
         {
-          $this->_evento->setProgramador($operadores[0]);
-          $this->_evento->setOperadorResp($operadores[1]);
+          $this->_evento->setProgramador($operadores[0]->getDescOperador());
+          $this->_evento->setOperadorResp($operadores[1]->getDescOperador());
         }
       }
     }

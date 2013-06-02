@@ -12,9 +12,16 @@ class SAF_AGENDA_CONVOCATORIAForm extends BaseSAF_AGENDA_CONVOCATORIAForm
 {
   public function configure()
   {
+    $this->widgetSchema['f_inicio_consulta'] =  new sfWidgetFormInputText();
+    $this->widgetSchema['f_fin_consulta'] =  new sfWidgetFormInputText();
+    
     unset(
-      $this['created_at'], $this['updated_at'],
-      $this['f_inicio_consulta'], $this['f_fin_consulta']
+      $this['created_at'], 
+      $this['updated_at'], 
+      $this['departamento'],
+      $this['f_fin_consulta'],
+      $this['f_inicio_consulta']
     );
+    
   }
 }

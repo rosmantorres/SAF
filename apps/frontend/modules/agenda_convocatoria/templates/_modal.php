@@ -1,5 +1,7 @@
-<!-- Accion para disparar el modal -->
-<!-- <a href="#id_modal" data-toggle="modal"> -->
+<!-- 
+ Elemento parcial que se encarga de mostrar un evento con los datos secundarios. 
+ Este se dispara con un <a href="#id_modal" data-toggle="modal">
+-->
 
 <!-- Modal -->
 <div id="<?php echo $evento->getCEventoD() ?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -23,13 +25,19 @@
           <b><u>Cuadrilla:</u></b> &nbsp;<?php echo $evento->getCuadrilla() ?><br>          
         </td>
       </tr>
-    </table>
-    <hr>
-    <b><u>Programador Parada:</u></b> &nbsp;&nbsp;&nbsp;<?php echo $evento->getProgramador() ?><br>
-    <b><u>Operador resp Parada:</u></b> <?php echo $evento->getOperadorResp() ?>
-    <hr>
-    <b><u>Averia:</u></b> <?php echo $evento->getNumAveria() ?>
-    <p><?php echo $evento->getDescAveria() ?></p>            
+      <tr>
+        <td colspan="2">
+          <b><u>Programador Parada:</u></b> &nbsp;&nbsp;&nbsp;<?php echo $evento->getProgramador() ?><br>
+          <b><u>Operador resp Parada:</u></b> <?php echo $evento->getOperadorResp() ?>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <b><u>Averia:</u></b> <?php echo $evento->getNumAveria() ?>
+          <p><?php echo $evento->getDescAveria() ?></p>
+        </td>
+      </tr>
+    </table>                
   </div>  
 
   <div class="modal-footer">

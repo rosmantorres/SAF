@@ -1,25 +1,21 @@
+<?php use_javascript('agenda_convocatoria.js') ?>
 <?php if ((count($eventos_imp) == 0) && (count($eventos_pro) == 0) && (count($eventos_500) == 0)): ?>
   <label>Ningun resultado encontrado en la busqueda!</label>
 <?php else: ?>
-  
+
   <label>Resultados encontrados:</label>
 
-  <?php if (count($eventos_imp) > 0) : ?>
-    <div class="accordion" id="accordion">
-      <?php include_partial('acordeon', array('id_acordeon' => '1', 'cabecera' => 'INTERRUPCIONES IMPREVISTAS', 'contenido' => $eventos_imp)) ?>  
-    </div>
-  <?php endif; ?>
-  
-  <?php if (count($eventos_pro) > 0) : ?>
-    <div class="accordion" id="accordion">
+  <div class="accordion" id="accordion">
+    <?php if (count($eventos_imp) > 0) : ?>
+      <?php include_partial('acordeon', array('id_acordeon' => '1', 'cabecera' => 'INTERRUPCIONES IMPREVISTAS', 'contenido' => $eventos_imp)) ?>
+    <?php endif; ?>
+    <?php if (count($eventos_pro) > 0) : ?>
       <?php include_partial('acordeon', array('id_acordeon' => '2', 'cabecera' => 'INTERRUPCIONES PROGRAMADAS', 'contenido' => $eventos_pro)) ?>
-    </div>
-  <?php endif; ?>
-  
-  <?php if (count($eventos_500) > 0) : ?>
-    <div class="accordion" id="accordion">
-      <?php include_partial('acordeon', array('id_acordeon' => '3', 'cabecera' => 'INTERRUPCIONES CAUSAS 500', 'contenido' => $eventos_500)) ?>  
-    </div>
-  <?php endif; ?>
-  
+    <?php endif; ?>
+    <?php if (count($eventos_500) > 0) : ?>
+      <?php include_partial('acordeon', array('id_acordeon' => '3', 'cabecera' => 'INTERRUPCIONES CAUSAS 500', 'contenido' => $eventos_500)) ?>
+    <?php endif; ?>
+  </div>
+  <button class="btn btn-small btn-primary" type="submit">agregar</button>
+
 <?php endif; ?>

@@ -2,10 +2,10 @@
 
 <h5>Home >> Nueva agenda convocatoria</h5>
 
-<form id="form_filtrar" action="filtrar" method="POST">
-  <table border="0" width="100%">        
-    <tr>      
-      <!-- Primera columna = Filtro-->
+<table border="0" width="100%">        
+  <tr>      
+    <!-- Primera columna = Filtro-->
+    <form id="form_filtrar" action="filtrar" method="POST">
       <td valign="top">
         <?php echo $form['observacion']->renderLabel() ?>
         <?php echo $form['observacion']->render() ?><br>
@@ -14,14 +14,16 @@
         <button class="btn btn-small btn-primary" type="submit">Filtrar</button>
         <img id="loader" src="/images/loader.gif" style="display: none" />
       </td>
-      
-      <!-- Segunda columna = Separacion -->
-      <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
-      
-      <!-- Tercera columna = Resultados -->
-      <td valign="top">
+    </form>
+  
+    <!-- Segunda columna = Separacion -->
+    <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+    
+    <!-- Tercera columna = Resultados -->
+    <td valign="top">
+      <form id="form_agregar" action="agregar" method="POST">
         <div id="info_aqui">Aquí se mostrarán los resultados de la busqueda!</div>
-      </td>      
-    </tr>
-  </table>
-</form>
+      </form>
+    </td>
+  </tr>
+</table>

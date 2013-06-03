@@ -24,5 +24,10 @@ jQuery('document').ready(function()
             });
 
     return false;
+  });
+  
+  // Este no borrar porque se va a hacer el procedimiento de actualizar el DOM HTML del div id = info_aqui
+  jQuery('#form_agregar').submit(function() 
+  {
   })
 });

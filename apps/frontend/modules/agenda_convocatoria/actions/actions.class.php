@@ -18,6 +18,7 @@ class agenda_convocatoriaActions extends sfActions
 
   public function executeNew(sfWebRequest $request)
   {
+    $this->getUser()->setFlash('notice', sprintf('Aqui iran los mensajes del usuario'));
     $this->form = new SAF_AGENDA_CONVOCATORIAForm();
   }
 
@@ -40,6 +41,15 @@ class agenda_convocatoriaActions extends sfActions
     }
 
     return $eventos;
+  }
+  
+  public function executeAgregar(sfWebRequest $request)
+  {
+    $peticion = $request->getParameter('701463');
+    if($peticion == true)
+      echo 'seleccionado';
+    else
+      echo 'no seleccionado';
   }
   
   public function executeFiltrar(sfWebRequest $request)

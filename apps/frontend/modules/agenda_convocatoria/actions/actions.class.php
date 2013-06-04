@@ -10,16 +10,14 @@
  */
 class agenda_convocatoriaActions extends sfActions
 {
+
   // BORRAR :: AHORITA ES SOLO PARA VER CUALES EVENTOS TENGO EN MI SESSION
   public function executePrueba(sfWebRequest $request)
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_checked', array());
-    foreach ($eventos as $evento)
-    {
-      echo $evento->getCEventoD()."\n";
-    }
+    $this->eventos = $eventos;
   }
-  
+
   public function executeIndex(sfWebRequest $request)
   {
     $this->saf_agenda_convocatori_as =
@@ -62,6 +60,7 @@ class agenda_convocatoriaActions extends sfActions
   {
     $hist_eventos_filtrados = $this->getUser()->getAttribute('hist_eventos_filtrados', array());
     $checkbox_seleccionados = 0; // Cantidad de checkbox seleccionados
+    $decir = "";
 
     // Verifica cuales checkbox fueron seleccionados
     foreach ($hist_eventos_filtrados as $evento)
@@ -72,18 +71,25 @@ class agenda_convocatoriaActions extends sfActions
       if ($checkbox_name == true)
       {
         $checkbox_seleccionados = $checkbox_seleccionados + 1;
-        $this->guardarEventoCheckedEnHist($evento);
+        if ($this->guardarEventoCheckedEnHist($evento))
+        {
+          $decir = $decir . "<i class='icon-ok'></i> " . $evento->getCEventoD() . "<br>";
+        } else
+        {
+          $decir = $decir . "<i class='icon-remove'></i> " . $evento->getCEventoD() . "<br>";
+        }
       }
     }
 
     if ($checkbox_seleccionados > 0)
     {
       return $this->renderText("<div class='alert alert-info'>
-        <strong>".$checkbox_seleccionados." EVENTOS FUERON AGREGADOS A MI SESIÓN!</strong></div>");
+        <strong><u>Eventos agregados a mi sesión:</u></strong>
+        <br><br>" . $decir . "</div>");
     } else
     {
-      return $this->renderText("<div class='alert alert-error'>
-        <strong>NINGÚN EVENTO FUE AGREGADO A MI SESIÓN!</strong></div>");
+      return $this->renderText("<i class='icon-ban-circle'></i> 
+        No se seleccionaron eventos para guardar en la sesión");
     }
   }
 
@@ -91,6 +97,7 @@ class agenda_convocatoriaActions extends sfActions
    * Método que guarda eventos en hist_eventos_checked (historial) de la sesion del usuario.
    * 
    * @param array SAF_EVENTOS $eventos_filtrados
+   * @return boolean
    */
   public function guardarEventoCheckedEnHist($evento_checked)
   {
@@ -98,10 +105,18 @@ class agenda_convocatoriaActions extends sfActions
     // si el identificador no esta definido aun, entonces devuelve un array()
     $eventos = $this->getUser()->getAttribute('hist_eventos_checked', array());
 
-    array_push($eventos, $evento_checked);
+    foreach ($eventos as $evento)
+    {
+      if ($evento->getCEventoD() == $evento_checked->getCEventoD())
+      {
+        return false;
+      }
+    }
 
-    // Almacena el nuevo historial a la sesion del usuario
+    array_push($eventos, $evento_checked);
     $this->getUser()->setAttribute('hist_eventos_checked', $eventos);
+
+    return true;
   }
 
   /**
@@ -141,8 +156,7 @@ class agenda_convocatoriaActions extends sfActions
 
     if ($parametros_form['f_ini'] == '' || $parametros_form['f_fin'] == '')
     {
-      return $this->renderText("<div class='alert alert-error'>
-        <strong>NINGUNA FECHA FUE SELECCIONADA</strong></div>");
+      return $this->renderText("<i class='icon-ban-circle'></i> Ninguna fecha fue seleccionada");
     } else
     {
       if ($interrupciones_imp = Doctrine::getTable('INTERRUPCIONES')

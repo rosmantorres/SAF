@@ -1,5 +1,7 @@
 <?php if ((count($eventos_imp) == 0) && (count($eventos_pro) == 0) && (count($eventos_500) == 0)): ?>
-  <label>Ningun resultado encontrado en la busqueda!</label>
+  <label>
+    <i class="icon-info-sign"></i> Ningun resultado encontrado en la busqueda!
+  </label>
 <?php else: ?>
   <label>Resultados encontrados:</label>
   <form id="form_agregar" action="guardarHistEventosChecked" method="POST">
@@ -14,6 +16,8 @@
         <?php include_partial('acordeon', array('id_acordeon' => '3', 'cabecera' => 'INTERRUPCIONES CAUSAS 500', 'contenido' => $eventos_500)) ?>
       <?php endif; ?>
     </div>
-    <button class="btn btn-small btn-primary" type="submit">Agregar eventos a mi sesión</button>
+    <button class="btn btn-small btn-primary" type="submit">
+      <i class="icon-plus"></i> Agregar eventos a mi sesión
+    </button>
   </form>
 <?php endif; ?>

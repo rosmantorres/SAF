@@ -34,11 +34,15 @@
 
       <div>
         <?php if ($sf_user->hasFlash('notice')): ?>
-          <div class="flash_notice"><?php echo $sf_user->getFlash('notice') ?></div>
+          <div class="alert alert-success">
+            <strong><?php echo $sf_user->getFlash('notice') ?></strong>
+          </div>
         <?php endif ?>
 
         <?php if ($sf_user->hasFlash('error')): ?>
-          <div class="flash_error"><?php echo $sf_user->getFlash('error') ?></div>
+          <div class="alert alert-error">
+            <strong><?php echo $sf_user->getFlash('error') ?></strong>
+          </div>
         <?php endif ?>
       </div>
 

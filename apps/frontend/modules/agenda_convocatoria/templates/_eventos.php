@@ -12,7 +12,7 @@
       <th>CIRCUITO</th>
       <th>MVA</th>
       <th>TRABAJO REALIZADO</th>
-      <th><input type="checkbox" value=""></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -37,7 +37,10 @@
         <td><?php echo $evento->getCircuito() ?></td>          
         <td><?php echo $evento->getMvaMin() ?></td>          
         <td><?php echo $evento->getTrabajoRealizado() ?></td>
-        <td><input type="checkbox" name="<?php echo $evento->getCEventoD() ?>" /></td>        
+        <td>
+          <!-- El nombre del checkbox sera el nombre del cod del evento -->
+          <input type="checkbox" name="<?php echo $evento->getCEventoD() ?>" checked="true" />
+        </td>        
       </tr>
     <?php endforeach ?>
   </tbody>

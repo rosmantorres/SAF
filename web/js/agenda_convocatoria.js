@@ -13,21 +13,28 @@ jQuery('document').ready(function()
     jQuery('button[type="submit"]').hide();
     jQuery('#loader').show();
     jQuery.post(jQuery('#form_filtrar').attr('action'), jQuery('#form_filtrar').serialize(),
-            function(datos_devueltos) {
-              if (datos_devueltos) {
-                jQuery('#info_aqui').html(datos_devueltos);
-                jQuery('button[type="submit"]').show();
-                jQuery('#loader').hide();
-              }
-              else
-                alert('INDIQUE LOS DATOS');
-            });
+        function(datos_devueltos) {
+          if (datos_devueltos) {
+            jQuery('#info_aqui').html(datos_devueltos);
+            jQuery('button[type="submit"]').show();
+            jQuery('#loader').hide();
+          }
+        });
 
     return false;
   });
   
-  // Este no borrar porque se va a hacer el procedimiento de actualizar el DOM HTML del div id = info_aqui
   jQuery('#form_agregar').submit(function() 
   {
+    if (confirm("¿Realmente quieres agregar estos eventos a tu sesión?")){
+      jQuery.post(jQuery('#form_agregar').attr('action'), jQuery('#form_agregar').serialize(),
+        function(datos_devueltos) {
+          if (datos_devueltos) {
+            jQuery('#info_aqui').html(datos_devueltos);
+          }
+        });      
+    }
+    return false;
   })
+  
 });

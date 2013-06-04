@@ -15,7 +15,8 @@ class agenda_convocatoriaActions extends sfActions
   public function executePrueba(sfWebRequest $request)
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_checked', array());
-    $this->eventos = $eventos;
+    $this->form = new SAF_AGENDA_CONVOCATORIAForm();
+    $this->eventos = $eventos;    
   }
 
   public function executeIndex(sfWebRequest $request)
@@ -25,8 +26,7 @@ class agenda_convocatoriaActions extends sfActions
   }
 
   public function executeNew(sfWebRequest $request)
-  {
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm();
+  {    
   }
 
   /**

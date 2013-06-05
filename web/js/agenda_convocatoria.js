@@ -24,13 +24,28 @@ jQuery('document').ready(function()
     return false;
   });
   
-  jQuery('#form_agregar').submit(function() 
+  jQuery('#form_agregar_eventos_sesion').submit(function() 
   {
     if (confirm("¿Realmente quieres agregar estos eventos a tu sesión?")){
-      jQuery.post(jQuery('#form_agregar').attr('action'), jQuery('#form_agregar').serialize(),
+      jQuery.post(jQuery('#form_agregar_eventos_sesion').attr('action'), 
+      jQuery('#form_agregar_eventos_sesion').serialize(),
         function(datos_devueltos) {
           if (datos_devueltos) {
             jQuery('#info_aqui').html(datos_devueltos);
+          }
+        });      
+    }
+    return false;
+  })
+  
+  jQuery('#form_agenda_guardar').submit(function() 
+  {
+    if (confirm("¿Desea continuar con el proceso de guardado?")){
+      jQuery.post(jQuery('#form_agenda_guardar').attr('action'), 
+      jQuery('#form_agenda_guardar').serialize(),
+        function(datos_devueltos) {
+          if (datos_devueltos) {
+            jQuery('.sf_content').html(datos_devueltos);
           }
         });      
     }

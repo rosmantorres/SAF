@@ -1,30 +1,32 @@
-<h1>Lista de agendas para convocatoria</h1>
+<h5 class="muted"><i class="icon-folder-open"></i> LISTA DE AGENDAS </h5>
 
-<table class="table table-hover">
-  <thead>
+<table class="table table-bordered table-hover">
+  <thead style="background-color: #d8d9d7">
     <tr>
-      <th>Id</th>
-      <th>Departamento</th>
-      <th>F inicio consulta</th>
-      <th>F fin consulta</th>
-      <th>Observacion</th>
-      <th>Created at</th>
-      <th>Updated at</th>
+      <th>#</th>
+      <th>ID</th>
+      <th>OBSERACIÓN</th>
+      <th>FECHA DE CREACIÓN</th>
+      <th>FECHA DE MODIFICACIÓN</th>
     </tr>
   </thead>
   <tbody>
-    <?php foreach ($saf_agenda_convocatori_as as $saf_agenda_convocatoria): ?>
-    <tr>
-      <td><a href="<?php echo url_for('agenda_convocatoria/show?id='.$saf_agenda_convocatoria->getId()) ?>"><?php echo $saf_agenda_convocatoria->getId() ?></a></td>
-      <td><?php echo $saf_agenda_convocatoria->getDepartamento() ?></td>
-      <td><?php echo $saf_agenda_convocatoria->getFInicioConsulta() ?></td>
-      <td><?php echo $saf_agenda_convocatoria->getFFinConsulta() ?></td>
-      <td><?php echo $saf_agenda_convocatoria->getObservacion() ?></td>
-      <td><?php echo $saf_agenda_convocatoria->getCreatedAt() ?></td>
-      <td><?php echo $saf_agenda_convocatoria->getUpdatedAt() ?></td>
-    </tr>
+    <?php $item = 0 ?>
+    <?php foreach ($agendas as $agenda): ?>
+      <?php $item = $item + 1 ?>
+      <tr>
+        <td><?php echo $item ?></td>
+        <td>
+          <a href="<?php echo url_for('agenda_convocatoria/show?id=' . $agenda->getId()) ?>">
+            <?php echo $agenda->getId() ?>
+          </a>
+        </td>
+        <td><?php echo $agenda->getObservacion() ?></td>
+        <td><?php echo $agenda->getCreatedAt() ?></td>
+        <td><?php echo $agenda->getUpdatedAt() ?></td>
+      </tr>
     <?php endforeach; ?>
   </tbody>
 </table>
 
-  <a href="<?php echo url_for('agenda_convocatoria/new') ?>">New</a>
+<a href="<?php echo url_for('agenda_convocatoria/new') ?>">New</a>

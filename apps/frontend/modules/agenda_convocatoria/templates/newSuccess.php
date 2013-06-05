@@ -22,7 +22,7 @@
           <i class="icon-search"></i> Filtrar
         </button> 
         <h6>
-          <a href="prueba" style="right: ">
+          <a href="verSesion" style="right: ">
             <i class="icon-eye-open"></i>
             ver eventos en mi sesión
           </a>
@@ -33,7 +33,7 @@
     
     <!-- Tercera columna = Resultados -->
     <td valign="top">      
-      <form id="form_agregar" action="guardarHistEventosChecked" method="POST">
+      <form id="form_agregar_eventos_sesion" action="agregarEventosAMiSesion" method="POST">
         <div id="info_aqui">Aquí se mostrarán los resultados de la busqueda!</div>
       </form>
     </td>

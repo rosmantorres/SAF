@@ -13,8 +13,7 @@ abstract class BaseSAF_EVENTOFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'descripcion'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'clasificado_en'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'descripcion'       => new sfWidgetFormFilterInput(),
       'id_agenda'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => true)),
       'id_convocatoria'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'add_empty' => true)),
       'status'            => new sfWidgetFormFilterInput(),
@@ -41,7 +40,6 @@ abstract class BaseSAF_EVENTOFormFilter extends BaseFormFilterDoctrine
 
     $this->setValidators(array(
       'descripcion'       => new sfValidatorPass(array('required' => false)),
-      'clasificado_en'    => new sfValidatorPass(array('required' => false)),
       'id_agenda'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'column' => 'id')),
       'id_convocatoria'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'column' => 'id')),
       'status'            => new sfValidatorPass(array('required' => false)),
@@ -85,7 +83,6 @@ abstract class BaseSAF_EVENTOFormFilter extends BaseFormFilterDoctrine
     return array(
       'id'                => 'Number',
       'descripcion'       => 'Text',
-      'clasificado_en'    => 'Text',
       'id_agenda'         => 'ForeignKey',
       'id_convocatoria'   => 'ForeignKey',
       'status'            => 'Text',

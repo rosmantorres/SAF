@@ -9,23 +9,17 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_AGENDA_CONVOCATORIA', 'schem
  * 
  * @property integer $id
  * @property string $departamento
- * @property timestamp $f_inicio_consulta
- * @property timestamp $f_fin_consulta
  * @property string $observacion
  * @property Doctrine_Collection $SAF_CONVOCATORIA_CAF
  * @property Doctrine_Collection $SAF_EVENTO
  * 
  * @method integer                 getId()                   Returns the current record's "id" value
  * @method string                  getDepartamento()         Returns the current record's "departamento" value
- * @method timestamp               getFInicioConsulta()      Returns the current record's "f_inicio_consulta" value
- * @method timestamp               getFFinConsulta()         Returns the current record's "f_fin_consulta" value
  * @method string                  getObservacion()          Returns the current record's "observacion" value
  * @method Doctrine_Collection     getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" collection
  * @method Doctrine_Collection     getSAFEVENTO()            Returns the current record's "SAF_EVENTO" collection
  * @method SAF_AGENDA_CONVOCATORIA setId()                   Sets the current record's "id" value
  * @method SAF_AGENDA_CONVOCATORIA setDepartamento()         Sets the current record's "departamento" value
- * @method SAF_AGENDA_CONVOCATORIA setFInicioConsulta()      Sets the current record's "f_inicio_consulta" value
- * @method SAF_AGENDA_CONVOCATORIA setFFinConsulta()         Sets the current record's "f_fin_consulta" value
  * @method SAF_AGENDA_CONVOCATORIA setObservacion()          Sets the current record's "observacion" value
  * @method SAF_AGENDA_CONVOCATORIA setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" collection
  * @method SAF_AGENDA_CONVOCATORIA setSAFEVENTO()            Sets the current record's "SAF_EVENTO" collection
@@ -49,16 +43,6 @@ abstract class BaseSAF_AGENDA_CONVOCATORIA extends sfDoctrineRecord
              'notnull' => true,
              'type' => 'string',
              'length' => 50,
-             ));
-        $this->hasColumn('f_inicio_consulta', 'timestamp', 7, array(
-             'notnull' => true,
-             'type' => 'timestamp',
-             'length' => 7,
-             ));
-        $this->hasColumn('f_fin_consulta', 'timestamp', 7, array(
-             'notnull' => true,
-             'type' => 'timestamp',
-             'length' => 7,
              ));
         $this->hasColumn('observacion', 'string', 1000, array(
              'notnull' => false,

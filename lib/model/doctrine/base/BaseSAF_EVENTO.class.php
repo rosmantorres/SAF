@@ -9,7 +9,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * 
  * @property integer $id
  * @property string $descripcion
- * @property string $clasificado_en
  * @property integer $id_agenda
  * @property integer $id_convocatoria
  * @property string $status
@@ -40,7 +39,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * 
  * @method integer                 getId()                      Returns the current record's "id" value
  * @method string                  getDescripcion()             Returns the current record's "descripcion" value
- * @method string                  getClasificadoEn()           Returns the current record's "clasificado_en" value
  * @method integer                 getIdAgenda()                Returns the current record's "id_agenda" value
  * @method integer                 getIdConvocatoria()          Returns the current record's "id_convocatoria" value
  * @method string                  getStatus()                  Returns the current record's "status" value
@@ -70,7 +68,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method Doctrine_Collection     getSAFR1000MVAMIN()          Returns the current record's "SAF_R1000_MVAMIN" collection
  * @method SAF_EVENTO              setId()                      Sets the current record's "id" value
  * @method SAF_EVENTO              setDescripcion()             Sets the current record's "descripcion" value
- * @method SAF_EVENTO              setClasificadoEn()           Sets the current record's "clasificado_en" value
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
  * @method SAF_EVENTO              setIdConvocatoria()          Sets the current record's "id_convocatoria" value
  * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
@@ -115,14 +112,8 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'sequence' => 'SAF_EVENTO',
              ));
         $this->hasColumn('descripcion', 'string', 500, array(
-             'notnull' => true,
              'type' => 'string',
              'length' => 500,
-             ));
-        $this->hasColumn('clasificado_en', 'string', 50, array(
-             'notnull' => true,
-             'type' => 'string',
-             'length' => 50,
              ));
         $this->hasColumn('id_agenda', 'integer', null, array(
              'notnull' => false,

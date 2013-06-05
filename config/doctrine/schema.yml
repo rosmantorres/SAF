@@ -4,9 +4,7 @@ SAF_AGENDA_CONVOCATORIA:
   actAs: { Timestampable: ~ }
   columns:
     id: { type: integer, primary: true, sequence: true }
-    departamento: { notnull: true, type: string(50) }
-    f_inicio_consulta: { notnull: true, type: timestamp(7) }
-    f_fin_consulta: { notnull: true, type: timestamp(7) }    
+    departamento: { notnull: true, type: string(50) }     
     observacion: { notnull: false, type: string(1000) }
   relations:
     SAF_CONVOCATORIA_CAF:
@@ -95,8 +93,7 @@ SAF_EVENTO:
   tableName: SAF_EVENTO
   columns:
     id: { type: integer, primary: true, sequence: true }
-    descripcion: { notnull: true, type: string(500) }
-    clasificado_en: { notnull: true, type: string(50) }
+    descripcion: { type: string(500) }
     id_agenda: { notnull: false, type: integer }
     id_convocatoria: { notnull: false, type: integer }    
     status: { notnull: false, type: string(50) }
@@ -326,7 +323,7 @@ HIST_PROPOSICIONES:
   connection: schema_simip
   tableName: HIST_PROPOSICIONES
   columns:
-    cod_proposicion: { notnull: true, type: integer(6), primary: true }
+    cod_proposicion: { notnull: true, type: integer(6), primary:true }
     oper_cod_operador_resp: { notnull: true, type: integer(8) }
     oper_cod_operador_asig: { notnull: true, type: integer(8) }
 

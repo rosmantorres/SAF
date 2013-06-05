@@ -17,7 +17,6 @@ abstract class BaseSAF_EVENTOForm extends BaseFormDoctrine
     $this->setWidgets(array(
       'id'                => new sfWidgetFormInputHidden(),
       'descripcion'       => new sfWidgetFormTextarea(),
-      'clasificado_en'    => new sfWidgetFormInputText(),
       'id_agenda'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => true)),
       'id_convocatoria'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'add_empty' => true)),
       'status'            => new sfWidgetFormInputText(),
@@ -44,8 +43,7 @@ abstract class BaseSAF_EVENTOForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'                => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'descripcion'       => new sfValidatorString(array('max_length' => 500)),
-      'clasificado_en'    => new sfValidatorString(array('max_length' => 50)),
+      'descripcion'       => new sfValidatorString(array('max_length' => 500, 'required' => false)),
       'id_agenda'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'required' => false)),
       'id_convocatoria'   => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'required' => false)),
       'status'            => new sfValidatorString(array('max_length' => 50, 'required' => false)),

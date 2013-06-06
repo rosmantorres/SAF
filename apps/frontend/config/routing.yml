@@ -1,6 +1,42 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+# Las rutas son llamadas con el helper url_for de la siguiente manera:
+# echo url_for('@mostrar_agenda?id=1') 
+# echo url_for('agenda_convocatoria/show?id=1')
+# Ambas llamadas dan lo mismo, solo que la primera busca la ruta directamente
+# y la segunda busca ruta a ruta hasta encontrar una que coincida con la accion
+# y los parametros enviados.
+
+# Rutas para el modulo de agenda_convocatoria
+index_agenda:
+  url: /agenda_convocatoria
+  param: { module: agenda_convocatoria, action: index }
+  
+mostrar_agenda:
+  url: /agenda_convocatoria/mostrar/:id
+  param: { module: agenda_convocatoria, action: show }
+
+nueva_agenda:
+  url: /agenda_convocatoria/nueva
+  param: { module: agenda_convocatoria, action: new }
+  
+mi_sesion_agenda:
+  url: /agenda_convocatoria/mi_sesion
+  param: { module: agenda_convocatoria, action: verSesion }
+  
+filtrar_agenda:
+  url: /agenda_convocatoria/nueva/eventos_encontrados
+  param: { module: agenda_convocatoria, action: filtrar }
+  
+eventos_sesion_agenda:
+  url: /agenda_convocatoria/nueva/eventos_encontrados/agregar_eventos_a_mi_sesion
+  param: { module: agenda_convocatoria, action: agregarEventosAMiSesion }
+  
+guardar_agenda:
+  url: /agenda_convocatoria/nueva/guardar
+  param: { module: agenda_convocatoria, action: guardarAgenda }
+  
 # default rules
 homepage:
   url:   /
@@ -8,9 +44,10 @@ homepage:
 
 # generic rules
 # please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
 
-default:
-  url:   /:module/:action/*
+#default_index:
+#  url:   /:module
+#  param: { action: index }
+#
+#default:
+#  url:   /:module/:action/*

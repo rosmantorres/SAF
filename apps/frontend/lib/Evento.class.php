@@ -12,6 +12,31 @@ class Evento
   private $_evento;
 
   /**
+   * Método que retorna el tipo de falla segun su cod de cuasa de la interrupción
+   * 
+   * @param integer $cod_cuasa El cod_cuasa de la interrupcion
+   * @return string
+   */
+  public static function getTipoFalla($cod_causa)
+  {
+    $tipo_falla = '';
+
+    switch ($cod_causa) {
+      case ($cod_causa >= 900):
+        $tipo_falla = 'PROGRAMADA';
+        break;
+      case ($cod_causa >= 500 && $cod_causa <= 599):
+        $tipo_falla = 'CAUSA-500';
+        break;
+      default:
+        $tipo_falla = 'IMPREVISTA';
+        break;
+    }
+
+    return $tipo_falla;
+  }
+  
+  /**
    * Método que retorna un objeto del modelo SAF_EVENTO con sus valores ya seteados
    * 
    * @param INTERRUPCIONES $interrupcion Misma documentacion BaseINTERRUPCIONES.class.php
@@ -167,31 +192,6 @@ class Evento
     }
 
     return $region;
-  }
-
-  /**
-   * Método que retorna el tipo de falla segun su cod de cuasa de la interrupción
-   * 
-   * @param integer $cod_cuasa El cod_cuasa de la interrupcion
-   * @return string
-   */
-  private function getTipoFalla($cod_causa)
-  {
-    $tipo_falla = '';
-
-    switch ($cod_causa) {
-      case ($cod_causa >= 900):
-        $tipo_falla = 'PROGRAMADA';
-        break;
-      case ($cod_causa >= 500 && $cod_causa <= 599):
-        $tipo_falla = 'CAUSA-500';
-        break;
-      default:
-        $tipo_falla = 'IMPREVISTA';
-        break;
-    }
-
-    return $tipo_falla;
   }
 
   /**

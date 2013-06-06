@@ -21,6 +21,91 @@ class agenda_convocatoriaActions extends sfActions
     
   }
 
+  public function executeShow(sfWebRequest $request)
+  {
+    $this->agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+            ->find($request->getParameter('id'));
+
+    $this->forward404Unless($this->agenda);
+
+    $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
+            ->getEventosAgenda($request->getParameter('id'));
+
+    $this->forward404Unless($this->eventos);
+  }
+
+  public function executeCreate(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod(sfRequest::POST));
+
+    $this->form = new SAF_AGENDA_CONVOCATORIAForm();
+
+    $this->processForm($request, $this->form);
+
+    $this->setTemplate('new');
+  }
+
+  public function executeEdit(sfWebRequest $request)
+  {
+    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
+    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
+  }
+
+  public function executeUpdate(sfWebRequest $request)
+  {
+    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
+    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('La agenda con id (%s) no existe.', $request->getParameter('id')));
+    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
+
+    $this->processForm($request, $this->form);
+
+    $this->setTemplate('edit');
+  }
+
+  public function executeDelete(sfWebRequest $request)
+  {
+    $request->checkCSRFProtection();
+
+    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
+    $saf_agenda_convocatoria->delete();
+
+    $this->redirect('agenda_convocatoria/index');
+  }
+  
+  private function filtrarPorFechas()
+  {
+    
+  }
+
+  private function filtrarPorCodEvento()
+  {
+    $interrupciones = array();
+    $this->eventos_imp = array();
+    $this->eventos_pro = array();
+    $this->eventos_500 = array();
+
+    $interrupcion = Doctrine_Core::getTable('INTERRUPCIONES')->find(701774);
+
+    if ($interrupcion)
+    {
+      array_push($interrupciones, $interrupcion);
+      $evento = $this->conversionModelo($interrupciones);
+
+      if (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'IMPREVISTA')
+      {
+        $this->eventos_imp = $evento;
+      }
+      elseif (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'PROGRAMADA')
+      {
+        $this->eventos_pro = $evento;
+      }
+      elseif (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'CAUSA-500')
+      {
+        $this->eventos_500 = $evento;
+      }
+    }
+  }
+
   /**
    * Acción que busca todas las INTERRUPCIONES segun un rango de  
    * fechas, convirtiendolas de modelo a SAF_EVENTOS y almacenandolos   
@@ -35,12 +120,14 @@ class agenda_convocatoriaActions extends sfActions
 
     $parametros_form = $request->getParameter('saf_agenda_convocatoria');
 
-    if ($parametros_form['f_ini'] == '' || $parametros_form['f_fin'] == '')
+    if (($parametros_form['f_ini'] == '' || $parametros_form['f_fin'] == '') && $parametros_form['c_evento'] == '')
     {
+      return $this->renderText("<i class='icon-ban-circle'></i> No se indicó ningún filtro para hacer la busqueda");      
       return $this->renderText("<i class='icon-ban-circle'></i> Ninguna fecha fue seleccionada");
     }
     else
     {
+      
       if ($interrupciones_imp = Doctrine::getTable('INTERRUPCIONES')
               ->getInterrupcionesImp($parametros_form['f_ini'], $parametros_form['f_fin']))
       {
@@ -96,19 +183,19 @@ class agenda_convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_sesion', array());
         return $this->renderText("<div class='alert alert-success'><i class='icon-thumbs-up'>
-          </i> <strong>LA AGENDA FUE GUARDADA CON EXITO!</strong></div>");
+          </i> <strong>LA AGENDA FUE GUARDADA CON EXITO! </strong><a href=''>regresar</a></div>");
       }
       else
       {
         return $this->renderText("<div class='alert alert-error'>
-          <i class='icon-thumbs-down'></i> <strong>LA AGENDA NO FUE GUARDADA CON 
-          EXITO! (Comuniquese con el analista de sistema si el problema persiste)</strong></div>");
+          <i class='icon-thumbs-down'></i> <strong>LA AGENDA NO FUE GUARDADA CON EXITO! (Comuniquese 
+          con el analista de sistema si el problema persiste) </strong><a href=''>regresar</a></div>");
       }
     }
     else
     {
-      return $this->renderText("<i class='icon-ban-circle'></i> No se 
-        seleccionaron eventos para la agenda, vuelva a intentar");
+      return $this->renderText("<i class='icon-ban-circle'></i> No se seleccionaron
+        eventos para la agenda, <a href=''>vuelva a intentar</a>");
     }
   }
 
@@ -169,67 +256,10 @@ class agenda_convocatoriaActions extends sfActions
     $this->eventos = $eventos;
   }
 
-  public function executeShow(sfWebRequest $request)
-  {
-    $this->saf_agenda_convocatoria =
-            Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
-            ->find(array($request->getParameter('id')));
-    $this->forward404Unless($this->saf_agenda_convocatoria);
-  }
-
-  public function executeCreate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
-
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm();
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('new');
-  }
-
-  public function executeEdit(sfWebRequest $request)
-  {
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
-  }
-
-  public function executeUpdate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('La agenda con id (%s) no existe.', $request->getParameter('id')));
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('edit');
-  }
-
-  public function executeDelete(sfWebRequest $request)
-  {
-    $request->checkCSRFProtection();
-
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
-    $saf_agenda_convocatoria->delete();
-
-    $this->redirect('agenda_convocatoria/index');
-  }
-
-  protected function processForm(sfWebRequest $request, sfForm $form)
-  {
-    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-    if ($form->isValid())
-    {
-      $saf_agenda_convocatoria = $form->save();
-
-      $this->redirect('agenda_convocatoria/edit?id=' . $saf_agenda_convocatoria->getId());
-    }
-  }
-
   /**
    * Método que convierte del modelo INTERRUPCIONES a SAF_EVENTO
    * 
-   * @param INTERRUPCIONES $interrupciones
+   * @param Doctrine_Collection INTERRUPCIONES $interrupciones
    * @return Doctrine_Collection SAF_EVENTO
    */
   private function conversionModelo($interrupciones)
@@ -325,4 +355,16 @@ class agenda_convocatoriaActions extends sfActions
 
     return true;
   }
+
+  protected function processForm(sfWebRequest $request, sfForm $form)
+  {
+    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
+    if ($form->isValid())
+    {
+      $saf_agenda_convocatoria = $form->save();
+
+      $this->redirect('agenda_convocatoria/edit?id=' . $saf_agenda_convocatoria->getId());
+    }
+  }
+
 }

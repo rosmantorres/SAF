@@ -7,13 +7,30 @@
  */
 class SAF_EVENTOTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_EVENTOTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('SAF_EVENTO');
-    }
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_EVENTOTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_EVENTO');
+  }
+
+  /**
+   * Método que retorna todos los eventos pertenecientes a una SAF_AGENDA_CONVOCATORIA
+   * 
+   * @param integer $id_agenda
+   * @return Doctrine_Collection SAF_EVENTO
+   */
+  public function getEventosAgenda($id_agenda)
+  {
+    return $this->createQuery('e')
+            ->innerJoin('e.SAF_AGENDA_CONVOCATORIA a')
+            ->where('a.ID = ?',$id_agenda)
+            ->orderBy('e.TIPO_FALLA')
+            ->execute();
+  }
+
 }

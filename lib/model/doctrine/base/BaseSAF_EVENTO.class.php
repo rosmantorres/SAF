@@ -12,7 +12,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property integer $id_agenda
  * @property integer $id_convocatoria
  * @property string $status
- * @property integer $c_eveno_t
+ * @property integer $c_evento_t
  * @property integer $c_evento_d
  * @property timestamp $f_hora_ini
  * @property timestamp $f_hora_rep
@@ -42,7 +42,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method integer                 getIdAgenda()                Returns the current record's "id_agenda" value
  * @method integer                 getIdConvocatoria()          Returns the current record's "id_convocatoria" value
  * @method string                  getStatus()                  Returns the current record's "status" value
- * @method integer                 getCEvenoT()                 Returns the current record's "c_eveno_t" value
+ * @method integer                 getCEventoT()                Returns the current record's "c_evento_t" value
  * @method integer                 getCEventoD()                Returns the current record's "c_evento_d" value
  * @method timestamp               getFHoraIni()                Returns the current record's "f_hora_ini" value
  * @method timestamp               getFHoraRep()                Returns the current record's "f_hora_rep" value
@@ -71,7 +71,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
  * @method SAF_EVENTO              setIdConvocatoria()          Sets the current record's "id_convocatoria" value
  * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
- * @method SAF_EVENTO              setCEvenoT()                 Sets the current record's "c_eveno_t" value
+ * @method SAF_EVENTO              setCEventoT()                Sets the current record's "c_evento_t" value
  * @method SAF_EVENTO              setCEventoD()                Sets the current record's "c_evento_d" value
  * @method SAF_EVENTO              setFHoraIni()                Sets the current record's "f_hora_ini" value
  * @method SAF_EVENTO              setFHoraRep()                Sets the current record's "f_hora_rep" value
@@ -128,7 +128,7 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'type' => 'string',
              'length' => 50,
              ));
-        $this->hasColumn('c_eveno_t', 'integer', null, array(
+        $this->hasColumn('c_evento_t', 'integer', null, array(
              'notnull' => false,
              'type' => 'integer',
              ));

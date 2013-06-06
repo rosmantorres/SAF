@@ -97,7 +97,7 @@ SAF_EVENTO:
     id_agenda: { notnull: false, type: integer }
     id_convocatoria: { notnull: false, type: integer }    
     status: { notnull: false, type: string(50) }
-    c_eveno_t: { notnull: false, type: integer }
+    c_evento_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }
     f_hora_ini: { type: timestamp(7) }
     f_hora_rep: { type: timestamp(7) }

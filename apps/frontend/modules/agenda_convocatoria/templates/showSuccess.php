@@ -1,21 +1,26 @@
-<table>
-  <tbody>
-    <tr align="left" >
-      <th>Observacion:</th>
-      <td><?php echo $saf_agenda_convocatoria->getObservacion() ?></td>
-    </tr>
-    <tr align="left">
-      <th>Fecha de creación:</th>
-      <td><?php echo $saf_agenda_convocatoria->getCreatedAt() ?></td>
-    </tr>
-    <tr align="left">
-      <th>Fecha de modificación:</th>
-      <td><?php echo $saf_agenda_convocatoria->getUpdatedAt() ?></td>
-    </tr>
-  </tbody>
+<h5 class="muted"><i class="icon-eye-open"></i> VISTA AGENDA </h5>
+
+<br>
+<table width="100%">
+  <tr valign="top" align="left">
+    <td>
+      <u><b>Observacion:</u></b><br>
+      <?php echo $agenda->getObservacion() ?>
+    </td>
+    <td width="28%">
+      <small>
+        <u><b>Fechas de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <?php echo $agenda->getCreatedAt() ?>
+        
+        <u><b>Fecha de modificación:</u></b> &nbsp;
+        <?php echo $agenda->getUpdatedAt() ?>
+      </small>
+    </td>
+  </tr>
 </table>
 
 <br>
-<a href="<?php echo url_for('agenda_convocatoria/edit?id='.$saf_agenda_convocatoria->getId()) ?>">Edit</a>
-&nbsp;
-<a href="<?php echo url_for('agenda_convocatoria/index') ?>">List</a>
+<?php include_partial('eventos', array('eventos' => $eventos, 'no_column_check' => true)) ?>
+
+<br>
+<i class="icon-arrow-left"></i> <a href="<?php echo url_for('@index_agenda') ?>">Regresar</a>

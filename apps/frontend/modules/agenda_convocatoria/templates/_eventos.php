@@ -12,7 +12,9 @@
       <th>CIRCUITO</th>
       <th>MVA</th>
       <th>TRABAJO REALIZADO</th>
-      <th></th>
+      <?php if (!isset($no_column_check)): ?>
+        <th></th>
+      <?php endif; ?>
     </tr>
   </thead>
   <tbody>
@@ -37,10 +39,12 @@
         <td><?php echo $evento->getCircuito() ?></td>          
         <td><?php echo $evento->getMvaMin() ?></td>          
         <td><?php echo $evento->getTrabajoRealizado() ?></td>
-        <td>
-          <!-- El nombre del checkbox sera el nombre del cod del evento -->
-          <input type="checkbox" name="<?php echo $evento->getCEventoD() ?>" checked="true" />
-        </td>        
+        <?php if (!isset($no_column_check)): ?>
+          <td>
+            <!-- El nombre del checkbox sera el nombre del cod del evento -->
+            <input type="checkbox" name="<?php echo $evento->getCEventoD() ?>" checked="true" />
+          </td>   
+        <?php endif; ?>
       </tr>
     <?php endforeach ?>
   </tbody>

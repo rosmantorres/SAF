@@ -1,10 +1,8 @@
 <?php if ((count($eventos_imp) == 0) && (count($eventos_pro) == 0) && (count($eventos_500) == 0)): ?>
-  <label>
-    <i class="icon-info-sign"></i> Ningun resultado encontrado en la busqueda!
-  </label>
+  <i class="icon-info-sign"></i> Ningun resultado encontrado en la busqueda!
 <?php else: ?>
-  <label>Resultados encontrados:</label>
-  <form id="form_agregar_eventos_sesion" action="guardarHistEventosChecked" method="POST">
+  Resultados encontrados:
+  <form id="form_agregar_eventos_sesion" action="<?php echo url_for('@eventos_sesion_agenda') ?>" method="POST">
     <div class="accordion" id="accordion">
       <?php if (count($eventos_imp) > 0) : ?>
         <?php include_partial('acordeon', array('id_acordeon' => '1', 'cabecera' => 'INTERRUPCIONES IMPREVISTAS', 'contenido' => $eventos_imp)) ?>

@@ -49,3 +49,9 @@
     <?php endforeach ?>
   </tbody>
 </table>
+
+<?php if (isset($yes_button)): ?>
+  <button class="btn btn-small btn-primary" type="submit">
+    <i class="icon-plus"></i> Agregar eventos a la agenda
+  </button>
+<?php endif; ?>

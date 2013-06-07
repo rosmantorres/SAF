@@ -1,3 +1,5 @@
+<?php slot('title', 'SAF .::Nueva agenda::.') ?>
+
 <?php if ((count($eventos_imp) == 0) && (count($eventos_pro) == 0) && (count($eventos_500) == 0)): ?>
   <i class="icon-info-sign"></i> Ningun resultado encontrado en la busqueda!
 <?php else: ?>
@@ -15,7 +17,7 @@
       <?php endif; ?>
     </div>
     <button class="btn btn-small btn-primary" type="submit">
-      <i class="icon-plus"></i> Agregar eventos a mi sesión
+      <i class="icon-plus"></i> Agregar eventos a la agenda
     </button>
   </form>
 <?php endif; ?>

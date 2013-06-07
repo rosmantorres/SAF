@@ -1,3 +1,5 @@
+<?php slot('title', 'SAF .::Lista de agendas::.') ?>
+
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE AGENDAS </h5>
 
 <h6>
@@ -14,7 +16,7 @@
       <tr>
         <th>#</th>
         <th>ID</th>
-        <th>OBSERACIÓN</th>
+        <th>OBSERVACIONES</th>
         <th>FECHA DE CREACIÓN</th>
         <th>FECHA DE MODIFICACIÓN</th>
       </tr>

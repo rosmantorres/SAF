@@ -4,7 +4,7 @@
 <table width="100%">
   <tr valign="top" align="left">
     <td>
-      <u><b>Observacion:</u></b><br>
+      <u><b>Observaciones:</u></b><br>
       <?php echo $agenda->getObservacion() ?>
     </td>
     <td width="28%">

@@ -22,7 +22,7 @@ nueva_agenda:
   param: { module: agenda_convocatoria, action: new }
   
 mi_sesion_agenda:
-  url: /agenda_convocatoria/mi_sesion
+  url: /agenda_convocatoria/eventos_agregados
   param: { module: agenda_convocatoria, action: verSesion }
   
 filtrar_agenda:
@@ -30,7 +30,7 @@ filtrar_agenda:
   param: { module: agenda_convocatoria, action: filtrar }
   
 eventos_sesion_agenda:
-  url: /agenda_convocatoria/nueva/eventos_encontrados/agregar_eventos_a_mi_sesion
+  url: /agenda_convocatoria/nueva/eventos_encontrados/agregar_eventos_agenda
   param: { module: agenda_convocatoria, action: agregarEventosAMiSesion }
   
 guardar_agenda:

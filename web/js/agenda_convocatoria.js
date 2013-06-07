@@ -9,15 +9,18 @@
 jQuery('document').ready(function()
 {
   jQuery('#form_filtrar').submit(function() 
-  {
+  {    
     jQuery('button[type="submit"]').hide();
     jQuery('#loader').show();
     jQuery.post(jQuery('#form_filtrar').attr('action'), jQuery('#form_filtrar').serialize(),
         function(datos_devueltos) {
-          if (datos_devueltos) {
+          if (datos_devueltos) {            
             jQuery('#info_aqui').html(datos_devueltos);
             jQuery('button[type="submit"]').show();
             jQuery('#loader').hide();
+            jQuery('#f_ini').val('');
+            jQuery('#f_fin').val('');
+            jQuery('#c_evento').val('');
           }
         });
 
@@ -41,13 +44,7 @@ jQuery('document').ready(function()
   jQuery('#form_agenda_guardar').submit(function() 
   {
     if (confirm("¿Desea continuar con el proceso de guardado?")){
-      jQuery.post(jQuery('#form_agenda_guardar').attr('action'), 
-      jQuery('#form_agenda_guardar').serialize(),
-        function(datos_devueltos) {
-          if (datos_devueltos) {
-            jQuery('.sf_content').html(datos_devueltos);
-          }
-        });      
+      return true;    
     }
     return false;
   })

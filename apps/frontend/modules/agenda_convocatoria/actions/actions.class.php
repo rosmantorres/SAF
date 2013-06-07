@@ -71,87 +71,113 @@ class agenda_convocatoriaActions extends sfActions
 
     $this->redirect('agenda_convocatoria/index');
   }
-  
-  private function filtrarPorFechas()
+
+  /**
+   * Método que consulta y retorna todas las INTERRUPCIONES según un rango
+   * fecha y el tipo de interrupción, convirtiendolas de modelo a SAF_EVENTOS 
+   * y almacenandolos en hist_eventos_filtrados de la sesion del usuario.
+   * 
+   * @param string $fecha_inicial
+   * @param string $fecha_final
+   * @param string $consultar
+   * @return array SAF_EVENTO
+   */
+  private function filtrarPorFechas($fecha_inicial, $fecha_final, $consultar)
   {
-    
+    if ($consultar == 'IMPREVISTAS')
+    {
+      $interrupciones = Doctrine::getTable('INTERRUPCIONES')
+              ->getInterrupcionesImp($fecha_inicial, $fecha_final);
+    }
+    elseif ($consultar == 'PROGRAMADAS')
+    {
+      $interrupciones = Doctrine::getTable('INTERRUPCIONES')
+              ->getInterrupcionesPro($fecha_inicial, $fecha_final);
+    }
+    elseif ($consultar == 'CAUSAS-500')
+    {
+      $interrupciones = Doctrine::getTable('INTERRUPCIONES')
+              ->getInterrupciones500($fecha_inicial, $fecha_final);
+    }
+
+    if ($interrupciones)
+    {
+      $eventos = $this->conversionModelo($interrupciones);
+      $this->guardarHistEventosFiltrados($eventos);
+      return $eventos;
+    }
+
+    return array();
   }
 
-  private function filtrarPorCodEvento()
+  /**
+   * Método que consulta y retorna una INTERRUPCIONES segun c_evento 
+   * o num_f328, convirtiendola de modelo a SAF_EVENTOS y almacenandolo
+   * en hist_eventos_filtrados de la sesion del usuario.
+   * 
+   * @param integer $c_evento
+   * @return array SAF_EVENTO
+   */
+  private function filtrarPorCodEvento($c_evento)
   {
+    $evento = array();
     $interrupciones = array();
-    $this->eventos_imp = array();
-    $this->eventos_pro = array();
-    $this->eventos_500 = array();
 
-    $interrupcion = Doctrine_Core::getTable('INTERRUPCIONES')->find(701774);
+    $interrupcion = Doctrine_Core::getTable('INTERRUPCIONES')->find($c_evento);
 
     if ($interrupcion)
     {
       array_push($interrupciones, $interrupcion);
       $evento = $this->conversionModelo($interrupciones);
-
-      if (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'IMPREVISTA')
-      {
-        $this->eventos_imp = $evento;
-      }
-      elseif (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'PROGRAMADA')
-      {
-        $this->eventos_pro = $evento;
-      }
-      elseif (Evento::getTipoFalla($interrupcion->getCodCausa()) == 'CAUSA-500')
-      {
-        $this->eventos_500 = $evento;
-      }
+      $this->guardarHistEventosFiltrados($evento);
     }
+
+    return $evento;
   }
 
   /**
-   * Acción que busca todas las INTERRUPCIONES segun un rango de  
-   * fechas, convirtiendolas de modelo a SAF_EVENTOS y almacenandolos   
-   * en hist_eventos_filtrados de la sesion del usuario.
-   * 
+   * Acción que realizar busqueda de eventos según el filtro que se indique
+   *
    * @param sfWebRequest $request
+   * @return type
    */
   public function executeFiltrar(sfWebRequest $request)
   {
     // Cada vez que se hace un filtro se inicializa la variable de sesión
     $this->getUser()->setAttribute('hist_eventos_filtrados', array());
 
-    $parametros_form = $request->getParameter('saf_agenda_convocatoria');
+    $form = $request->getParameter('saf_agenda_convocatoria');
 
-    if (($parametros_form['f_ini'] == '' || $parametros_form['f_fin'] == '') && $parametros_form['c_evento'] == '')
+    if (($form['f_ini'] == '' || $form['f_fin'] == '') && $form['c_evento'] == '')
     {
-      return $this->renderText("<i class='icon-ban-circle'></i> No se indicó ningún filtro para hacer la busqueda");      
-      return $this->renderText("<i class='icon-ban-circle'></i> Ninguna fecha fue seleccionada");
+      return $this->renderText("<i class='icon-ban-circle'></i> 
+        No se indicó ningún filtro para hacer la busqueda de los eventos.");
     }
-    else
+    elseif ($form['f_ini'] != '' && $form['f_fin'] != '') 
     {
-      
-      if ($interrupciones_imp = Doctrine::getTable('INTERRUPCIONES')
-              ->getInterrupcionesImp($parametros_form['f_ini'], $parametros_form['f_fin']))
+      $this->eventos_imp = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'IMPREVISTAS');
+      $this->eventos_pro = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'PROGRAMADAS');
+      $this->eventos_500 = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'CAUSAS-500');
+    }
+    elseif ($form['c_evento'] != '')
+    {
+      if (ctype_digit($form['c_evento']))
       {
-        $eventos_imp = $this->conversionModelo($interrupciones_imp);
-        $this->guardarHistEventosFiltrados($eventos_imp);
+        $evento = $this->filtrarPorCodEvento($form['c_evento']);
+        if (count($evento) > 0)
+        {
+          return $this->renderPartial('eventos', array('eventos' => $evento, 'yes_button' => true));
+        }
+        else
+        {
+          return $this->renderText("<i class='icon-info-sign'></i> Ningun resultado encontrado en la busqueda!");
+        }
       }
-
-      if ($interrupciones_pro = Doctrine::getTable('INTERRUPCIONES')
-              ->getInterrupcionesPro($parametros_form['f_ini'], $parametros_form['f_fin']))
+      else
       {
-        $eventos_pro = $this->conversionModelo($interrupciones_pro);
-        $this->guardarHistEventosFiltrados($eventos_pro);
+        return $this->renderText("<i class='icon-ban-circle'></i> 
+          El codigo del evento tiene que ser del tipo entero (digitos).");
       }
-
-      if ($interrupciones_500 = Doctrine::getTable('INTERRUPCIONES')
-              ->getInterrupciones500($parametros_form['f_ini'], $parametros_form['f_fin']))
-      {
-        $eventos_500 = $this->conversionModelo($interrupciones_500);
-        $this->guardarHistEventosFiltrados($eventos_500);
-      }
-
-      $this->eventos_imp = $eventos_imp;
-      $this->eventos_pro = $eventos_pro;
-      $this->eventos_500 = $eventos_500;
     }
   }
 
@@ -182,20 +208,20 @@ class agenda_convocatoriaActions extends sfActions
       if ($this->commitAgenda($request->getParameter('observacion'), $eventos_a_guardar))
       {
         $this->getUser()->setAttribute('hist_eventos_sesion', array());
-        return $this->renderText("<div class='alert alert-success'><i class='icon-thumbs-up'>
-          </i> <strong>LA AGENDA FUE GUARDADA CON EXITO! </strong><a href=''>regresar</a></div>");
+        $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
+        $this->redirect('agenda_convocatoria/index');
       }
       else
       {
-        return $this->renderText("<div class='alert alert-error'>
-          <i class='icon-thumbs-down'></i> <strong>LA AGENDA NO FUE GUARDADA CON EXITO! (Comuniquese 
-          con el analista de sistema si el problema persiste) </strong><a href=''>regresar</a></div>");
+        $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
+          (Comuniquese con el analista de sistema si el problema persiste)');
+        $this->redirect('agenda_convocatoria/verSesion');
       }
     }
     else
     {
-      return $this->renderText("<i class='icon-ban-circle'></i> No se seleccionaron
-        eventos para la agenda, <a href=''>vuelva a intentar</a>");
+      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
+      $this->redirect('agenda_convocatoria/verSesion');
     }
   }
 
@@ -235,12 +261,13 @@ class agenda_convocatoriaActions extends sfActions
     if ($checkbox_seleccionados > 0)
     {
       return $this->renderText("<div class='alert alert-info'><strong><u>Eventos 
-        agregados a mi sesión:</u></strong><br><br>" . $decir . "</div>");
+        agregados a la agenda:</u></strong><br>Leyenda: <i class='icon-remove'></i> Ya existía
+        <i class='icon-ok'></i> Agregado<br><br>" . $decir . "</div>");
     }
     else
     {
       return $this->renderText("<i class='icon-ban-circle'></i> 
-        No se seleccionaron eventos para guardar en la sesión");
+        No se seleccionaron eventos para guardar en la agenda");
     }
   }
 

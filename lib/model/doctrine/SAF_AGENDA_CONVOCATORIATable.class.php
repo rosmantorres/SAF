@@ -24,7 +24,7 @@ class SAF_AGENDA_CONVOCATORIATable extends Doctrine_Table
   public function getAgendas()
   {
     // $this = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
-    return $this->createQuery('a')->execute();
+    return $this->createQuery('a')->orderBy('created_at desc')->execute();
   }
 
 }

@@ -25,8 +25,16 @@
           <a class="brand" href="#">SAF</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <li class="active">
+                <a href="<?php echo url_for('@index_agenda') ?>">Agenda</a>
+              </li>
+              <li>
+                <a href="<?php echo url_for('@index_agenda') ?>">Convocatoria</a>
+              </li>
+              <li>
+                <a href="<?php echo url_for('@index_agenda') ?>">Minuta</a>
+              </li>
+<!--              <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
@@ -39,7 +47,7 @@
                   <li><a href="#">Separated link</a></li>
                   <li><a href="#">One more separated link</a></li>
                 </ul>
-              </li>
+              </li>-->
             </ul>
             <form class="navbar-form pull-right">
               <input class="span2" type="text" placeholder="Email">

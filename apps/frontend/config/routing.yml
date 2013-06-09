@@ -36,7 +36,12 @@ eventos_sesion_agenda:
 guardar_agenda:
   url: /agenda_convocatoria/nueva/guardar
   param: { module: agenda_convocatoria, action: guardarAgenda }
-  
+
+# Rutas para el modulo de convocatoria
+index_convocatoria:
+  url: /convocatoria
+  param: { module: convocatoria, action: index }
+
 # default rules
 homepage:
   url:   /

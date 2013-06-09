@@ -7,7 +7,7 @@
       <u><b>Observaciones:</u></b><br>
       <?php echo $agenda->getObservacion() ?>
     </td>
-    <td width="28%">
+    <td width="260px">
       <small>
         <u><b>Fechas de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <?php echo $agenda->getCreatedAt() ?>

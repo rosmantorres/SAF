@@ -8,7 +8,7 @@
 <table border="0" width="100%">        
   <tr>      
     <!-- Primera columna = Filtro -->  
-    <td valign="top" width='25%'>   
+    <td valign="top" width='240px'>   
       <form id="form_filtrar" action="<?php echo url_for('@filtrar_agenda') ?>" method="POST">
         Fecha inicial de la busqueda:
         <input id="f_ini" type="date" name="saf_agenda_convocatoria[f_ini]" />

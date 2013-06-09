@@ -16,4 +16,12 @@ class SAF_CONVOCATORIA_CAFTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF');
     }
+    
+  /**
+   * @return Doctrine_Colletion SAF_CONVOCATORIA_CAF
+   */
+  public function getConvocatorias()
+  {
+    return $this->createQuery('a')->orderBy('created_at desc')->execute();
+  }
 }

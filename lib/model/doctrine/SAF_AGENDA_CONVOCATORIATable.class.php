@@ -19,7 +19,7 @@ class SAF_AGENDA_CONVOCATORIATable extends Doctrine_Table
   }
 
   /**
-   * @return coleccion de objetos SAF_AGENDA_CONVOCATORIA
+   * @return Doctrine_Collection SAF_AGENDA_CONVOCATORIA
    */
   public function getAgendas()
   {

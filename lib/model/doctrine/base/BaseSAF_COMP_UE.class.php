@@ -40,6 +40,7 @@ abstract class BaseSAF_COMP_UE extends sfDoctrineRecord
         $this->hasColumn('id', 'integer', null, array(
              'type' => 'integer',
              'primary' => true,
+             'sequence' => 'SAF_COMP_UE',
              ));
         $this->hasColumn('id_compromiso', 'integer', null, array(
              'notnull' => true,

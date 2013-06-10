@@ -13,27 +13,33 @@ abstract class BaseSAF_CONVOCATORIA_CAFFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id_agenda'   => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => true)),
-      'asunto'      => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'hora_ini'    => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
-      'hora_fin'    => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
-      'lugar'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'observacion' => new sfWidgetFormFilterInput(),
-      'c_caf'       => new sfWidgetFormFilterInput(),
-      'created_at'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
-      'updated_at'  => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
+      'id_agenda'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => true)),
+      'asunto'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'fecha'             => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
+      'hora_ini'          => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
+      'hora_fin'          => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
+      'lugar'             => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'status'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'motivo_suspencion' => new sfWidgetFormFilterInput(),
+      'observacion'       => new sfWidgetFormFilterInput(),
+      'c_caf'             => new sfWidgetFormFilterInput(),
+      'created_at'        => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
+      'updated_at'        => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
     ));
 
     $this->setValidators(array(
-      'id_agenda'   => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'column' => 'id')),
-      'asunto'      => new sfValidatorPass(array('required' => false)),
-      'hora_ini'    => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
-      'hora_fin'    => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
-      'lugar'       => new sfValidatorPass(array('required' => false)),
-      'observacion' => new sfValidatorPass(array('required' => false)),
-      'c_caf'       => new sfValidatorPass(array('required' => false)),
-      'created_at'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
-      'updated_at'  => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
+      'id_agenda'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'column' => 'id')),
+      'asunto'            => new sfValidatorPass(array('required' => false)),
+      'fecha'             => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
+      'hora_ini'          => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
+      'hora_fin'          => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
+      'lugar'             => new sfValidatorPass(array('required' => false)),
+      'status'            => new sfValidatorPass(array('required' => false)),
+      'motivo_suspencion' => new sfValidatorPass(array('required' => false)),
+      'observacion'       => new sfValidatorPass(array('required' => false)),
+      'c_caf'             => new sfValidatorPass(array('required' => false)),
+      'created_at'        => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
+      'updated_at'        => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
     ));
 
     $this->widgetSchema->setNameFormat('saf_convocatoria_caf_filters[%s]');
@@ -53,16 +59,19 @@ abstract class BaseSAF_CONVOCATORIA_CAFFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'          => 'Number',
-      'id_agenda'   => 'ForeignKey',
-      'asunto'      => 'Text',
-      'hora_ini'    => 'Date',
-      'hora_fin'    => 'Date',
-      'lugar'       => 'Text',
-      'observacion' => 'Text',
-      'c_caf'       => 'Text',
-      'created_at'  => 'Date',
-      'updated_at'  => 'Date',
+      'id'                => 'Number',
+      'id_agenda'         => 'ForeignKey',
+      'asunto'            => 'Text',
+      'fecha'             => 'Date',
+      'hora_ini'          => 'Date',
+      'hora_fin'          => 'Date',
+      'lugar'             => 'Text',
+      'status'            => 'Text',
+      'motivo_suspencion' => 'Text',
+      'observacion'       => 'Text',
+      'c_caf'             => 'Text',
+      'created_at'        => 'Date',
+      'updated_at'        => 'Date',
     );
   }
 }

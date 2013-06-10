@@ -36,7 +36,7 @@ SAF_COMP_UE:
   connection: schema_saf
   tableName: SAF_COMP_UE
   columns:
-    id: { type: integer, primary: true }
+    id: { type: integer, primary: true, sequence: true }
     id_compromiso: { notnull: true, type: integer }
     id_ue: { notnull: true, type: integer }
   relations:
@@ -61,9 +61,12 @@ SAF_CONVOCATORIA_CAF:
     id: {type: integer, primary: true, sequence: true }
     id_agenda: { notnull: true, type: integer }
     asunto: { notnull: true, type: string(100) }
+    fecha: { notnull: true, type: timestamp(7) }
     hora_ini: { notnull: true, type: timestamp(7) }
     hora_fin: { notnull: true, type: timestamp(7) }
     lugar: { notnull: true, type: string(100) }
+    status: { notnull: true, type: string(50) }
+    motivo_suspencion: { notnull: false, type: string(1000) }
     observacion: { notnull: false, type: string(1000) }
     c_caf: { notnull: false, type: string(100) }
   relations:
@@ -71,10 +74,6 @@ SAF_CONVOCATORIA_CAF:
       local: id_agenda
       foreign: id
       type: one
-    SAF_F_CONVOCATORIA_CAF:
-      local: id
-      foreign: id_convocatoria
-      type: many
     SAF_EVENTO:
       local: id
       foreign: id_convocatoria
@@ -163,22 +162,7 @@ SAF_FOTO:
       local: id_vario
       foreign: id
       type: one
-      
-SAF_F_CONVOCATORIA_CAF:
-  connection: schema_saf
-  tableName: SAF_F_CONVOCATORIA_CAF
-  columns:
-    fecha: { type: timestamp(7), primary: true }
-    id_convocatoria: { notnull: true, type: integer }
-    status: { notnull: true, type: string(50) }
-    motivo_suspencion: { notnull: false, type: string(1000) }
-  relations:
-    SAF_CONVOCATORIA_CAF:
-      local: id_convocatoria
-      foreign: id
-      foreignAlias: MisFechasDeConvocatia
-      type: one
-      
+
 SAF_PERSONAL:
   connection: schema_saf
   tableName: SAF_PERSONAL

@@ -10,7 +10,7 @@
   <form id="form_agenda_guardar" action="<?php echo url_for('@guardar_agenda') ?>" method="POST">
     <label>Observaciones para la agenda:</label>
     <textarea name="observacion" class="input-block-level" rows="4"></textarea>
-    <?php include_partial('eventos', array('eventos' => $eventos)) ?>
+    <?php include_partial('global/eventos', array('eventos' => $eventos)) ?>
     <button class="btn btn-small btn-primary" type="submit">
       <i class="icon-briefcase"></i> GUARDAR AGENDA
     </button>

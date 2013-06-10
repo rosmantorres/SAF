@@ -7,10 +7,6 @@ SAF_AGENDA_CONVOCATORIA:
     departamento: { notnull: true, type: string(50) }     
     observacion: { notnull: false, type: string(1000) }
   relations:
-    SAF_CONVOCATORIA_CAF:
-      local: id
-      foreign: id_agenda
-      type: many
     SAF_EVENTO:
       local: id
       foreign: id_agenda
@@ -59,7 +55,6 @@ SAF_CONVOCATORIA_CAF:
   actAs: { Timestampable: ~ }
   columns:
     id: {type: integer, primary: true, sequence: true }
-    id_agenda: { notnull: true, type: integer }
     asunto: { notnull: true, type: string(100) }
     fecha: { notnull: true, type: timestamp(7) }
     hora_ini: { notnull: true, type: timestamp(7) }
@@ -70,10 +65,6 @@ SAF_CONVOCATORIA_CAF:
     observacion: { notnull: false, type: string(1000) }
     c_caf: { notnull: false, type: string(100) }
   relations:
-    SAF_AGENDA_CONVOCATORIA:
-      local: id_agenda
-      foreign: id
-      type: one
     SAF_EVENTO:
       local: id
       foreign: id_convocatoria

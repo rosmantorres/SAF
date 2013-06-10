@@ -153,7 +153,7 @@ class agenda_convocatoriaActions extends sfActions
       return $this->renderText("<i class='icon-ban-circle'></i> 
         No se indicó ningún filtro para hacer la busqueda de los eventos.");
     }
-    elseif ($form['f_ini'] != '' && $form['f_fin'] != '') 
+    elseif ($form['f_ini'] != '' && $form['f_fin'] != '')
     {
       $this->eventos_imp = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'IMPREVISTAS');
       $this->eventos_pro = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'PROGRAMADAS');
@@ -161,22 +161,14 @@ class agenda_convocatoriaActions extends sfActions
     }
     elseif ($form['c_evento'] != '')
     {
-      if (ctype_digit($form['c_evento']))
+      $evento = $this->filtrarPorCodEvento($form['c_evento']);
+      if (count($evento) > 0)
       {
-        $evento = $this->filtrarPorCodEvento($form['c_evento']);
-        if (count($evento) > 0)
-        {
-          return $this->renderPartial('eventos', array('eventos' => $evento, 'yes_button' => true));
-        }
-        else
-        {
-          return $this->renderText("<i class='icon-info-sign'></i> Ningun resultado encontrado en la busqueda!");
-        }
+        return $this->renderPartial('global/eventos', array('eventos' => $evento, 'yes_button' => true));
       }
       else
       {
-        return $this->renderText("<i class='icon-ban-circle'></i> 
-          El codigo del evento tiene que ser del tipo entero (digitos).");
+        return $this->renderText("<i class='icon-info-sign'></i> Ningun resultado encontrado en la busqueda!");
       }
     }
   }

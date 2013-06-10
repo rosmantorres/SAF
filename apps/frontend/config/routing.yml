@@ -41,6 +41,10 @@ guardar_agenda:
 index_convocatoria:
   url: /convocatoria
   param: { module: convocatoria, action: index }
+  
+nueva_convocatoria:
+  url: /convocatoria/nueva
+  param: { module: convocatoria, action: new }
 
 # default rules
 homepage:
@@ -50,9 +54,9 @@ homepage:
 # generic rules
 # please, remove them by adding more specific rules
 
-#default_index:
-#  url:   /:module
-#  param: { action: index }
-#
-#default:
-#  url:   /:module/:action/*
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*

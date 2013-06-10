@@ -10,19 +10,16 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_AGENDA_CONVOCATORIA', 'schem
  * @property integer $id
  * @property string $departamento
  * @property string $observacion
- * @property Doctrine_Collection $SAF_CONVOCATORIA_CAF
  * @property Doctrine_Collection $SAF_EVENTO
  * 
- * @method integer                 getId()                   Returns the current record's "id" value
- * @method string                  getDepartamento()         Returns the current record's "departamento" value
- * @method string                  getObservacion()          Returns the current record's "observacion" value
- * @method Doctrine_Collection     getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" collection
- * @method Doctrine_Collection     getSAFEVENTO()            Returns the current record's "SAF_EVENTO" collection
- * @method SAF_AGENDA_CONVOCATORIA setId()                   Sets the current record's "id" value
- * @method SAF_AGENDA_CONVOCATORIA setDepartamento()         Sets the current record's "departamento" value
- * @method SAF_AGENDA_CONVOCATORIA setObservacion()          Sets the current record's "observacion" value
- * @method SAF_AGENDA_CONVOCATORIA setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" collection
- * @method SAF_AGENDA_CONVOCATORIA setSAFEVENTO()            Sets the current record's "SAF_EVENTO" collection
+ * @method integer                 getId()           Returns the current record's "id" value
+ * @method string                  getDepartamento() Returns the current record's "departamento" value
+ * @method string                  getObservacion()  Returns the current record's "observacion" value
+ * @method Doctrine_Collection     getSAFEVENTO()    Returns the current record's "SAF_EVENTO" collection
+ * @method SAF_AGENDA_CONVOCATORIA setId()           Sets the current record's "id" value
+ * @method SAF_AGENDA_CONVOCATORIA setDepartamento() Sets the current record's "departamento" value
+ * @method SAF_AGENDA_CONVOCATORIA setObservacion()  Sets the current record's "observacion" value
+ * @method SAF_AGENDA_CONVOCATORIA setSAFEVENTO()    Sets the current record's "SAF_EVENTO" collection
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -54,10 +51,6 @@ abstract class BaseSAF_AGENDA_CONVOCATORIA extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('SAF_CONVOCATORIA_CAF', array(
-             'local' => 'id',
-             'foreign' => 'id_agenda'));
-
         $this->hasMany('SAF_EVENTO', array(
              'local' => 'id',
              'foreign' => 'id_agenda'));

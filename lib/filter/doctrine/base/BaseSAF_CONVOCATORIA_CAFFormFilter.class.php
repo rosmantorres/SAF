@@ -13,7 +13,6 @@ abstract class BaseSAF_CONVOCATORIA_CAFFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id_agenda'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => true)),
       'asunto'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'fecha'             => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
       'hora_ini'          => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
@@ -28,7 +27,6 @@ abstract class BaseSAF_CONVOCATORIA_CAFFormFilter extends BaseFormFilterDoctrine
     ));
 
     $this->setValidators(array(
-      'id_agenda'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'column' => 'id')),
       'asunto'            => new sfValidatorPass(array('required' => false)),
       'fecha'             => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'hora_ini'          => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
@@ -60,7 +58,6 @@ abstract class BaseSAF_CONVOCATORIA_CAFFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id'                => 'Number',
-      'id_agenda'         => 'ForeignKey',
       'asunto'            => 'Text',
       'fecha'             => 'Date',
       'hora_ini'          => 'Date',

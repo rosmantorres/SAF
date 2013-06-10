@@ -16,7 +16,6 @@ abstract class BaseSAF_CONVOCATORIA_CAFForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'                => new sfWidgetFormInputHidden(),
-      'id_agenda'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'), 'add_empty' => false)),
       'asunto'            => new sfWidgetFormInputText(),
       'fecha'             => new sfWidgetFormDateTime(),
       'hora_ini'          => new sfWidgetFormDateTime(),
@@ -32,7 +31,6 @@ abstract class BaseSAF_CONVOCATORIA_CAFForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'                => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'id_agenda'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_AGENDA_CONVOCATORIA'))),
       'asunto'            => new sfValidatorString(array('max_length' => 100)),
       'fecha'             => new sfValidatorDateTime(),
       'hora_ini'          => new sfValidatorDateTime(),

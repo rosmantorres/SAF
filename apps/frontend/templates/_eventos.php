@@ -32,7 +32,7 @@
           <a href="#<?php echo $evento->getCEventoD() ?>" data-toggle="modal">
             <?php echo $evento->getCEventoD() ?>              
           </a>
-          <?php include_partial('modal', array('evento' => $evento)) ?>
+          <?php include_partial('global/modal', array('evento' => $evento)) ?>
         </td>
         <td><?php echo $evento->getFHoraIni() ?></td>          
         <td><?php echo $evento->getRegion() ?></td>

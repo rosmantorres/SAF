@@ -20,7 +20,7 @@
 </table>
 
 <br>
-<?php include_partial('eventos', array('eventos' => $eventos, 'no_column_check' => true)) ?>
+<?php include_partial('global/eventos', array('eventos' => $eventos, 'no_column_check' => true)) ?>
 
 <br>
 <i class="icon-arrow-left"></i> <a href="<?php echo url_for('@index_agenda') ?>">Regresar</a>

@@ -3,7 +3,7 @@
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE CONVOCATORIAS </h5>
 
 <h6>
-  <a href="<?php echo url_for('') ?>">
+  <a href="<?php echo url_for('@nueva_convocatoria') ?>">
     <i class="icon-plus"></i>
     Crear una nueva convocatoria
   </a>

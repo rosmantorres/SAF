@@ -18,7 +18,7 @@
 
         <br><br>
         Codigo del evento:
-        <input id="c_evento" type="text" name="saf_agenda_convocatoria[c_evento]" />
+        <input id="c_evento" type="number" name="saf_agenda_convocatoria[c_evento]" />        
 
         <br><br>
         <img id="loader" src="/images/loader.gif" style="display: none" />
@@ -28,7 +28,7 @@
         </button> 
 
         <h6>
-          <a href="<?php echo url_for('@mi_sesion_agenda') ?>" style="right: ">
+          <a href="<?php echo url_for('@mi_sesion_agenda') ?>" >
             <i class="icon-eye-open"></i>
             ver eventos agregados en la agenda
           </a>

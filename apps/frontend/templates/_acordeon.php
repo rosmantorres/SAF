@@ -17,7 +17,7 @@
   <!-- CONTENIDO DEL ACORDEON -->
   <div id="<?php echo $id_acordeon ?>" class="accordion-body collapse">
     <div class="accordion-inner">
-      <?php include_partial('eventos',array('eventos' => $contenido)) ?>
+      <?php include_partial('global/eventos',array('eventos' => $contenido)) ?>
     </div>
   </div>
   

@@ -73,6 +73,119 @@ class agenda_convocatoriaActions extends sfActions
   }
 
   /**
+   * Acción que realizar busqueda de eventos según el filtro que se indique
+   *
+   * @param sfWebRequest $request
+   * @return type
+   */
+  public function executeFiltrar(sfWebRequest $request)
+  {
+    // Cada vez que se hace un filtro se inicializa la variable de sesión, para
+    // no acumular eventos por cada filtro.
+    $this->getUser()->setAttribute('hist_eventos_filtrados', array());
+
+    $form = $request->getParameter('saf_agenda_convocatoria');
+
+    if (($form['f_ini'] == '' || $form['f_fin'] == '') && $form['c_evento'] == '')
+    {
+      return $this->renderText("<i class='icon-ban-circle'></i> 
+        No se indicó ningún filtro para hacer la busqueda de los eventos.");
+    }
+    elseif ($form['f_ini'] != '' && $form['f_fin'] != '')
+    {
+      $this->eventos_imp = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'IMPREVISTAS');
+      $this->eventos_pro = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'PROGRAMADAS');
+      $this->eventos_500 = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'CAUSAS-500');
+    }
+    elseif ($form['c_evento'] != '')
+    {
+      $evento = $this->filtrarPorCodEvento($form['c_evento']);
+
+      if (count($evento) > 0)
+      {
+        return $this->renderPartial('global/eventos', array('eventos' => $evento, 'yes_button' => true));
+      }
+      else
+      {
+        return $this->renderText("<i class='icon-info-sign'></i> Ningun resultado encontrado en la busqueda!");
+      }
+    }
+  }
+
+  /**
+   * Acción que guarda la agenda con observaciones y los eventos confirmados 
+   * por el usuario, a través de los checkbox.
+   * 
+   * @param sfWebRequest $request
+   * @return $this->renderText() - No tiene vista asociada
+   */
+  public function executeGuardarAgenda(sfWebRequest $request)
+  {
+    $eventos_a_guardar = $this->getUser()
+            ->retornarEventosAGuardarEnAgendaConvocatoria($request, 'hist_eventos_agenda');
+
+    if (count($eventos_a_guardar) > 0)
+    {
+      if ($this->commitAgenda($request->getParameter('observacion'), $eventos_a_guardar))
+      {
+        $this->getUser()->setAttribute('hist_eventos_agenda', array());
+        $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
+        $this->redirect('agenda_convocatoria/index');
+      }
+      else
+      {
+        $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
+          (Comuniquese con el analista de sistema si el problema persiste)');
+        $this->redirect('agenda_convocatoria/verSesion');
+      }
+    }
+    else
+    {
+      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
+      $this->redirect('agenda_convocatoria/verSesion');
+    }
+  }
+
+  /**
+   * Acción que verifica cuales eventos fueron seleccionados despues del filtro 
+   * (busqueda) para agregarlos a la variable de sesion hist_eventos_sesion
+   * 
+   * @param sfWebRequest $request
+   * @return $this->renderText() No tiene vista asociada
+   */
+  // CAMBIAR ESTE NOMBREEEEEEEEEEE
+  public function executeAgregarEventosAMiSesion(sfWebRequest $request)
+  {
+    $resultado = $this->getUser()->agregarEventosCheckedAlHist($request, 'hist_eventos_agenda');
+
+    if ($resultado != '')
+    {
+      return $this->renderText("<div class='alert alert-info'> 
+        <strong><u>Eventos agregados a la agenda:</u></strong>
+        <br>
+        Leyenda: <i class='icon-remove'></i> Ya existía <i class='icon-ok'></i> Agregado
+        <br><br>" . $resultado . "</div>");
+    }
+    else
+    {
+      return $this->renderText("<i class='icon-ban-circle'></i> 
+        No se seleccionaron eventos para guardar en la Agenda");
+    }
+  }
+
+  /**
+   * Acción que muestra los eventos que hasta el momento fueron seleccionados por
+   * el usuario, permitiendo guardar la agenda con esos eventos y observaciones.
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeVerSesion(sfWebRequest $request)
+  {
+    $eventos = $this->getUser()->getAttribute('hist_eventos_agenda', array());
+    $this->eventos = $eventos;
+  }
+
+  /**
    * Método que consulta y retorna todas las INTERRUPCIONES según un rango
    * fecha y el tipo de interrupción, convirtiendolas de modelo a SAF_EVENTOS 
    * y almacenandolos en hist_eventos_filtrados de la sesion del usuario.
@@ -103,7 +216,7 @@ class agenda_convocatoriaActions extends sfActions
     if ($interrupciones)
     {
       $eventos = $this->conversionModelo($interrupciones);
-      $this->getUser()->guardarHistEventosFiltrados($eventos);      
+      $this->getUser()->agregarEventosFiltradosAlHist($eventos);
       return $eventos;
     }
 
@@ -129,158 +242,12 @@ class agenda_convocatoriaActions extends sfActions
     {
       array_push($interrupciones, $interrupcion);
       $evento = $this->conversionModelo($interrupciones);
-      $this->getUser()->guardarHistEventosFiltrados($evento);  
+      $this->getUser()->agregarEventosFiltradosAlHist($evento);
     }
 
     return $evento;
   }
-
-  /**
-   * Acción que realizar busqueda de eventos según el filtro que se indique
-   *
-   * @param sfWebRequest $request
-   * @return type
-   */
-  public function executeFiltrar(sfWebRequest $request)
-  {
-    // Cada vez que se hace un filtro se inicializa la variable de sesión, para
-    // no acumular eventos por cada filtro.
-    $this->getUser()->setAttribute('hist_eventos_filtrados', array());
-    
-    $form = $request->getParameter('saf_agenda_convocatoria');
-
-    if (($form['f_ini'] == '' || $form['f_fin'] == '') && $form['c_evento'] == '')
-    {
-      return $this->renderText("<i class='icon-ban-circle'></i> 
-        No se indicó ningún filtro para hacer la busqueda de los eventos.");
-    }
-    elseif ($form['f_ini'] != '' && $form['f_fin'] != '')
-    {
-      $this->eventos_imp = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'IMPREVISTAS');
-      $this->eventos_pro = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'PROGRAMADAS');
-      $this->eventos_500 = $this->filtrarPorFechas($form['f_ini'], $form['f_fin'], 'CAUSAS-500');
-    }
-    elseif ($form['c_evento'] != '')
-    {
-      $evento = $this->filtrarPorCodEvento($form['c_evento']);
-      
-      if (count($evento) > 0)
-      {
-        return $this->renderPartial('global/eventos', array('eventos' => $evento, 'yes_button' => true));
-      }
-      else
-      {
-        return $this->renderText("<i class='icon-info-sign'></i> Ningun resultado encontrado en la busqueda!");
-      }
-    }
-  }
-
-  /**
-   * Acción que guarda la agenda con observaciones y los eventos confirmados 
-   * por el usuario, a través de los checkbox.
-   * 
-   * @param sfWebRequest $request
-   * @return $this->renderText() No tiene vista asociada
-   */
-  public function executeGuardarAgenda(sfWebRequest $request)
-  {
-//    $eventos_a_guardar = array();
-//    $eventos_sesion = $this->getUser()->getAttribute('hist_eventos_sesion', array());
-//    foreach ($eventos_sesion as $evento_sesion)
-//    {
-//      // Se procesan los checkbox de la petición del formulario
-//      $checkbox_name = $request->getParameter($evento_sesion->getCEventoD());
-//
-//      if ($checkbox_name == true)
-//      {
-//        array_push($eventos_a_guardar, $evento_sesion);
-//      }
-//    }
-
-    $eventos_a_guardar = $this->getUser()->confirmarEventosChecked($request, 'hist_eventos_agenda');
-    
-    if (count($eventos_a_guardar) > 0)
-    {
-      if ($this->commitAgenda($request->getParameter('observacion'), $eventos_a_guardar))
-      {
-        $this->getUser()->setAttribute('hist_eventos_sesion', array());
-        $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
-        $this->redirect('agenda_convocatoria/index');
-      }
-      else
-      {
-        $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
-          (Comuniquese con el analista de sistema si el problema persiste)');
-        $this->redirect('agenda_convocatoria/verSesion');
-      }
-    }
-    else
-    {
-      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
-      $this->redirect('agenda_convocatoria/verSesion');
-    }
-  }
-
-  /**
-   * Acción que verifica cuales eventos fueron seleccionados despues del filtro 
-   * (busqueda) para agregarlos a la variable de sesion hist_eventos_sesion
-   * 
-   * @param sfWebRequest $request
-   * @return $this->renderText() No tiene vista asociada
-   */
-  public function executeAgregarEventosAMiSesion(sfWebRequest $request)
-  {
-     return $this->renderText($this->getUser()->agregarEventosAMiSesion($request, 'hist_eventos_agenda'));
   
-//    $decir = "";
-//    $checkbox_seleccionados = 0;
-//    $hist_eventos_filtrados = $this->getUser()->getAttribute('hist_eventos_filtrados', array());
-//
-//    // Verifica cuales checkbox fueron seleccionados
-//    foreach ($hist_eventos_filtrados as $evento_filtrado)
-//    {
-//      // Se procesan los checkbox de la petición del formulario
-//      $checkbox = $request->getParameter($evento_filtrado->getCEventoD());
-//
-//      if ($checkbox == true)
-//      {
-//        $checkbox_seleccionados = $checkbox_seleccionados + 1;
-//        if ($this->guardarEventoCheckedEnHist($evento_filtrado))
-//        {
-//          $decir = $decir . "<i class='icon-ok'></i> " . $evento_filtrado->getCEventoD() . "<br>";
-//        }
-//        else
-//        {
-//          $decir = $decir . "<i class='icon-remove'></i> " . $evento_filtrado->getCEventoD() . "<br>";
-//        }
-//      }
-//    }
-//
-//    if ($checkbox_seleccionados > 0)
-//    {
-//      return $this->renderText("<div class='alert alert-info'><strong><u>Eventos 
-//        agregados a la agenda:</u></strong><br>Leyenda: <i class='icon-remove'></i> Ya existía
-//        <i class='icon-ok'></i> Agregado<br><br>" . $decir . "</div>");
-//    }
-//    else
-//    {
-//      return $this->renderText("<i class='icon-ban-circle'></i> 
-//        No se seleccionaron eventos para guardar en la agenda");
-//    }
-  }
-
-  /**
-   * Acción que muestra los eventos que hasta el momento fueron seleccionados por
-   * el usuario, permitiendo guardar la agenda con esos eventos y observaciones.
-   * 
-   * @param sfWebRequest $request
-   */
-  public function executeVerSesion(sfWebRequest $request)
-  {
-    $eventos = $this->getUser()->getAttribute('hist_eventos_agenda', array());
-    $this->eventos = $eventos;
-  }
-
   /**
    * Método que convierte del modelo INTERRUPCIONES a SAF_EVENTO
    * 
@@ -299,34 +266,6 @@ class agenda_convocatoriaActions extends sfActions
     }
 
     return $eventos;
-  }
-
-  /**
-   * Método que guarda un evento checked o seleccionado por el usuario
-   * en la variable de sesion hist_eventos_sesion.
-   * 
-   * @param array SAF_EVENTOS $eventos_filtrados
-   * @return boolean
-   */
-  private function guardarEventoCheckedEnHist($evento_checked)
-  {
-    // Busca los eventos ya almacenados en la variable de sesión correspondiente
-    // si el identificador no esta definido aun, entonces devuelve un array()
-    $eventos_sesion = $this->getUser()->getAttribute('hist_eventos_sesion', array());
-
-    // Se verifica si el evento_checked no esta en la variable de sesión.
-    foreach ($eventos_sesion as $evento_sesion)
-    {
-      if ($evento_sesion->getCEventoD() == $evento_checked->getCEventoD())
-      {
-        return false;
-      }
-    }
-
-    array_push($eventos_sesion, $evento_checked);
-    $this->getUser()->setAttribute('hist_eventos_sesion', $eventos_sesion);
-
-    return true;
   }
 
   /**

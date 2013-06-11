@@ -2,6 +2,28 @@
 
 class myUser extends sfBasicSecurityUser
 {
+ 
+  /**
+   * Método que guarda en hist_eventos_filtrados de la sesion del usuario, 
+   * aquellos eventos que fueron encontrados por la accion filtrar del modulo de
+   * agenda_convocatoria y por la accion xxxxx de convocatoria.
+   * 
+   * @param array SAF_EVENTOS $eventos_filtrados
+   */
+  public function guardarHistEventosFiltrados($eventos_filtrados)
+  {        
+    // Busca los eventos ya almacenados en la variable de sesion correspondiente.
+    // si el identificador no esta definido aun, entonces se setea con un array()
+    $eventos = $this->getAttribute('hist_eventos_filtrados', array());
+
+    foreach ($eventos_filtrados as $evento_filtrado)
+    {
+      array_push($eventos, $evento_filtrado);
+    }
+
+    // Almacena el nuevo historial a la sesion del usuario
+    $this->setAttribute('hist_eventos_filtrados', $eventos);
+  }
   
   /**
    * Acción que verifica cuales eventos fueron seleccionados despues del filtro 
@@ -10,44 +32,42 @@ class myUser extends sfBasicSecurityUser
    * @param sfWebRequest $request
    * @return $this->renderText() No tiene vista asociada
    */
-  public function agregarEventosAMiSesion($request, $sesion, $sesion_consulta)
+  public function agregarEventosAMiSesion($request, $sesion)
   {
-    $decir = "";
+    $decir = "";        
     $checkbox_seleccionados = 0;
-    // hist_eventos_filtrados
-    $eventos_sesion_consulta = $this->getUser()->getAttribute($sesion_consulta, array());
+    $hist_eventos_filtrados = $this->getAttribute('hist_eventos_filtrados', array());
 
     // Verifica cuales checkbox fueron seleccionados
-    foreach ($eventos_sesion_consulta as $evento)
+    foreach ($hist_eventos_filtrados as $evento_filtrado)
     {
       // Se procesan los checkbox de la petición del formulario
-      $checkbox = $request->getParameter($evento->getCEventoD());
+      $checkbox = $request->getParameter($evento_filtrado->getCEventoD());
 
       if ($checkbox == true)
       {
         $checkbox_seleccionados = $checkbox_seleccionados + 1;
         
-        if ($this->guardarEventoCheckedEnHist($evento, $sesion))
+        if ($this->guardarEventoCheckedEnHist($evento_filtrado, $sesion))
         {
-          $decir = $decir . "<i class='icon-ok'></i> " . $evento->getCEventoD() . "<br>";
+          $decir = $decir . "<i class='icon-ok'></i> " . $evento_filtrado->getCEventoD() . "<br>";
         }
         else
         {
-          $decir = $decir . "<i class='icon-remove'></i> " . $evento->getCEventoD() . "<br>";
+          $decir = $decir . "<i class='icon-remove'></i> " . $evento_filtrado->getCEventoD() . "<br>";
         }
       }
     }
 
     if ($checkbox_seleccionados > 0)
     {
-      return $this->renderText("<div class='alert alert-info'><strong><u>Eventos 
-        agregados a la agenda:</u></strong><br>Leyenda: <i class='icon-remove'></i> Ya existía
-        <i class='icon-ok'></i> Agregado<br><br>" . $decir . "</div>");
+      return "<div class='alert alert-info'><strong><u>Eventos agregados a la
+        agenda:</u></strong><br>Leyenda: <i class='icon-remove'></i> Ya existía
+        <i class='icon-ok'></i> Agregado<br><br>" . $decir . "</div>";
     }
     else
     {
-      return $this->renderText("<i class='icon-ban-circle'></i> 
-        No se seleccionaron eventos para guardar en la agenda");
+      return "<i class='icon-ban-circle'></i> No se seleccionaron eventos para guardar en la agenda";
     }
   }
   
@@ -58,13 +78,12 @@ class myUser extends sfBasicSecurityUser
    * @param array SAF_EVENTOS $eventos_filtrados
    * @return boolean
    */
-  private function guardarEventoCheckedEnHist($evento_checked, $sesion)
+  public function guardarEventoCheckedEnHist($evento_checked, $sesion)
   {
     // Busca los eventos ya almacenados en la variable de sesión correspondiente
     // si el identificador no esta definido aun, entonces devuelve un array()
     
-    // hist_eventos_sesion
-    $eventos_sesion = $this->getUser()->getAttribute($sesion, array());
+    $eventos_sesion = $this->getAttribute($sesion, array());
 
     // Se verifica si el evento_checked no esta en la variable de sesión.
     foreach ($eventos_sesion as $evento_sesion)
@@ -76,8 +95,29 @@ class myUser extends sfBasicSecurityUser
     }
 
     array_push($eventos_sesion, $evento_checked);
-    $this->getUser()->setAttribute('hist_eventos_sesion', $eventos_sesion);
+    $this->setAttribute($sesion, $eventos_sesion);
 
     return true;
   }
+  
+  public function confirmarEventosChecked($request, $sesion)
+  {
+    $eventos_a_guardar = array();
+    
+    $eventos_sesion = $this->getAttribute($sesion, array());
+    
+    foreach ($eventos_sesion as $evento_sesion)
+    {
+      // Se procesan los checkbox de la petición del formulario
+      $checkbox_name = $request->getParameter($evento_sesion->getCEventoD());
+
+      if ($checkbox_name == true)
+      {
+        array_push($eventos_a_guardar, $evento_sesion);
+      }
+    }
+    
+    return $eventos_a_guardar;
+  }
+  
 }

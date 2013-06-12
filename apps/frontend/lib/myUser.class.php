@@ -25,10 +25,10 @@ class myUser extends sfBasicSecurityUser
 
   /**
    * Método que verifica los eventos que fueron checked para ser agregados a la
-   * agenda (hist_eventos_agenda) o a la convocatoria (hist_eventos_convocatoria)
+   * agenda(hist_eventos_agenda) o a la convocatoria(hist_eventos_convocatoria)
    *
    * @param sfWebRequest $request  - petición del usuario sfWebRequest
-   * @param string $sesion  - variable de sesion donde se quiere guardar los eventos
+   * @param string $sesion  - sesion donde se quiere guardar los eventos
    * @return string  - Indica los eventos que fueron agregados
    */
   public function agregarEventosCheckedAlHist($request, $sesion)
@@ -61,8 +61,8 @@ class myUser extends sfBasicSecurityUser
 
   /**
    * Método que verifica los eventos que fueron elegidos para ser guardados
-   * directamente en la agenda o en la convocatoria, comparandolos con los que
-   * estan en su hist de la sesion (hist_eventos_agenda o hist_eventos_convocatoria).
+   * directamente en la agenda o en la convocatoria, comparandolos con los del
+   * histórico de la sesión (hist_eventos_agenda o hist_eventos_convocatoria).
    * 
    * @param sfWebRequest $request
    * @param string $sesion

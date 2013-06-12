@@ -17,14 +17,10 @@
         <th>#</th>
         <th>ID</th>
         <th>ASUNTO</th>
-        <th>FECHA</th>
-        <th>HORA</th>
+        <th width="75px">FECHA</th>
+        <th width="90px">HORA</th>
         <th>LUGAR</th>
-        <th>STATUS</th>        
-        <th>OBSERVACION</th>
-        <th>COD CAF</th>        
-        <th>FECHA DE CREACIÓN</th>
-        <th>FECHA DE MODIFICACIÓN</th>
+        <th>STATUS</th>
       </tr>
     </thead>
     <tbody>
@@ -34,19 +30,15 @@
         <tr>
           <td><?php echo $item ?></td>
           <td>
-            <a href="<?php echo url_for('@mostrar_agenda?id=' . $convocatoria->getId()) ?>">
+            <a href="<?php echo url_for('@mostrar_convocatoria?id=' . $convocatoria->getId()) ?>">
               <?php echo $convocatoria->getId() ?>
             </a>
           </td>
           <td><?php echo $convocatoria->getAsunto() ?></td>
-          <td><?php echo $convocatoria->getFecha() ?></td>
-          <td><?php echo $convocatoria->getHoraIni().' - '.$convocatoria->getHoraFin() ?></td>
+          <td><?php echo substr($convocatoria->getFecha(), 0, 10) ?></td>
+          <td><?php echo $convocatoria->getHoraIni().' a '.$convocatoria->getHoraFin() ?></td>
           <td><?php echo $convocatoria->getLugar() ?></td>
           <td><?php echo $convocatoria->getStatus() ?></td>
-          <td><?php echo $convocatoria->getObservacion() ?></td>
-          <td><?php echo $convocatoria->getCCaf() ?></td>
-          <td><?php echo $convocatoria->getCreatedAt() ?></td>
-          <td><?php echo $convocatoria->getUpdatedAt() ?></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

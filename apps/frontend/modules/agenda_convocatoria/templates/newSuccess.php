@@ -28,9 +28,9 @@
         </button> 
 
         <h6>
-          <a href="<?php echo url_for('@mi_sesion_agenda') ?>" >
-            <i class="icon-eye-open"></i>
-            ver eventos agregados en la agenda
+          <a href="<?php echo url_for('@vista_preliminar_agenda') ?>" >
+            <i class="icon-eye-open"></i> 
+            vista preliminar de la agenda
           </a>
         </h6>
         
@@ -44,7 +44,7 @@
 
     <!-- Segunda columna = Resultados -->
     <td valign="top">      
-      <form id="form_agregar_eventos_sesion" action="<?php echo url_for('@eventos_sesion_agenda') ?>" method="POST">
+      <form id="form_agregar_eventos_sesion" action="<?php echo url_for('@agregar_eventos_agenda') ?>" method="POST">
         <div id="info_aqui">Aquí se mostrarán los resultados de la busqueda!</div>
       </form>
     </td>

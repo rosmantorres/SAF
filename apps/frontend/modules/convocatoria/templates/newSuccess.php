@@ -1,4 +1,4 @@
-<?php //use_javascript('convocatoria.js') ?>
+<?php use_javascript('convocatoria.js') ?>
 
 <?php slot('title', 'SAF .::Nueva convocatoria::.') ?>
 
@@ -24,9 +24,9 @@
 
       <br>
       <h6>
-        <a href="prueba" >
+        <a href="<?php echo url_for('@vista_preliminar_convocatoria') ?>" >
           <i class="icon-eye-open"></i>
-          ver la agenda de la<br>convocatoria (hasta ahora).
+          vista preliminar de la convocatoria
         </a>
       </h6>
       
@@ -34,30 +34,10 @@
     
     <td valign="top"> 
       
-      <form id="form_agregar_eventos_sesion" action="<?php echo url_for('') ?>" method="POST">
+      <form id="form_agregar_eventos_sesion" action="agregarEventosALaConvocatoria" method="POST">
         <div id="info_aqui">Aquí se mostrará la agenda buscada!</div>
       </form>
       
     </td>    
   </tr>
 </table>
-
-<!--<br>
-Fecha de la convocatoria:<br>
-<input class="input-medium" type="date">
-<input class="input-medium" type="time" value="09:00">
-<input class="input-medium" type="time" value="11:59">
-
-<br>
-Asunto:<br>
-<input class="input-xxlarge" type="text" placeholder="Convocatoria Reunión de Análisis de Fallas en la Red de Distribución">
-
-<br>
-Lugar:<br>
-<input class="input-xxlarge" type="text" placeholder="Colegio de Ing. Santa Rosa. Piso 3. Ala Oeste">
-
-<br>
-Observacion:<br>
-<textarea class="input-block-level" rows="4" placeholder=""></textarea>
-
-<br>-->

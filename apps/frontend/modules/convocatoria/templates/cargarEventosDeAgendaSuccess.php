@@ -18,7 +18,7 @@
   </table>
 
   <br>
-  <form id="form_agregar_eventos_convocatoria" action="agregarEventosConvocatoria" method="POST">
+  <form id="form_agregar_eventos_convocatoria" action="agregarEventosALaConvocatoria" method="POST">
     <?php include_partial('global/eventos', array('eventos' => $eventos)) ?>
     <button class="btn btn-small btn-primary" type="submit">
       <i class="icon-plus"></i> Agregar eventos a la convocatoria

@@ -42,4 +42,3 @@
 <?php else : ?>
   <i class="icon-info-sign"></i> NO HAY AGENDAS EN ESTOS MOMENTOS!
 <?php endif; ?>
-

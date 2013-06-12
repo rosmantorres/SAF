@@ -9,7 +9,7 @@
     </td>
     <td width="260px">
       <small>
-        <u><b>Fechas de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <u><b>Fecha de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <?php echo $agenda->getCreatedAt() ?>
         
         <u><b>Fecha de modificación:</u></b> &nbsp;

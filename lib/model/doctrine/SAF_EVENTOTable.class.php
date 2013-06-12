@@ -32,5 +32,19 @@ class SAF_EVENTOTable extends Doctrine_Table
             ->orderBy('e.TIPO_FALLA')
             ->execute();
   }
-
+  
+  /**
+   * Método que retorna todos los eventos pertenecientes a una SAF_CONVOCATORIA_CAF
+   * 
+   * @param integer $id_convocatoria
+   * @return Doctrine_Collection SAF_EVENTO
+   */
+  public function getEventosConvocatoria($id_convocatoria)
+  {
+    return $this->createQuery('e')
+            ->innerJoin('e.SAF_CONVOCATORIA_CAF c')
+            ->where('c.ID = ?',$id_convocatoria)
+            ->orderBy('e.TIPO_FALLA')
+            ->execute();
+  }
 }

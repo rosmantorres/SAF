@@ -57,8 +57,8 @@ SAF_CONVOCATORIA_CAF:
     id: {type: integer, primary: true, sequence: true }
     asunto: { notnull: true, type: string(100) }
     fecha: { notnull: true, type: timestamp(7) }
-    hora_ini: { notnull: true, type: timestamp(7) }
-    hora_fin: { notnull: true, type: timestamp(7) }
+    hora_ini: { notnull: true, type: string(7) }
+    hora_fin: { notnull: true, type: string(7) }
     lugar: { notnull: true, type: string(100) }
     status: { notnull: true, type: string(50) }
     motivo_suspencion: { notnull: false, type: string(1000) }

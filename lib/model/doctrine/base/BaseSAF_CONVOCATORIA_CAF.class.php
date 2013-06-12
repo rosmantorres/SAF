@@ -10,8 +10,8 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @property integer $id
  * @property string $asunto
  * @property timestamp $fecha
- * @property timestamp $hora_ini
- * @property timestamp $hora_fin
+ * @property string $hora_ini
+ * @property string $hora_fin
  * @property string $lugar
  * @property string $status
  * @property string $motivo_suspencion
@@ -24,8 +24,8 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @method integer              getId()                Returns the current record's "id" value
  * @method string               getAsunto()            Returns the current record's "asunto" value
  * @method timestamp            getFecha()             Returns the current record's "fecha" value
- * @method timestamp            getHoraIni()           Returns the current record's "hora_ini" value
- * @method timestamp            getHoraFin()           Returns the current record's "hora_fin" value
+ * @method string               getHoraIni()           Returns the current record's "hora_ini" value
+ * @method string               getHoraFin()           Returns the current record's "hora_fin" value
  * @method string               getLugar()             Returns the current record's "lugar" value
  * @method string               getStatus()            Returns the current record's "status" value
  * @method string               getMotivoSuspencion()  Returns the current record's "motivo_suspencion" value
@@ -73,14 +73,14 @@ abstract class BaseSAF_CONVOCATORIA_CAF extends sfDoctrineRecord
              'type' => 'timestamp',
              'length' => 7,
              ));
-        $this->hasColumn('hora_ini', 'timestamp', 7, array(
+        $this->hasColumn('hora_ini', 'string', 7, array(
              'notnull' => true,
-             'type' => 'timestamp',
+             'type' => 'string',
              'length' => 7,
              ));
-        $this->hasColumn('hora_fin', 'timestamp', 7, array(
+        $this->hasColumn('hora_fin', 'string', 7, array(
              'notnull' => true,
-             'type' => 'timestamp',
+             'type' => 'string',
              'length' => 7,
              ));
         $this->hasColumn('lugar', 'string', 100, array(

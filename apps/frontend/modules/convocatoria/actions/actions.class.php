@@ -20,9 +20,22 @@ class convocatoriaActions extends sfActions
     
   }
   
+  public function executeShow(sfWebRequest $request)
+  {
+    $this->convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($request->getParameter('id'));
+
+    $this->forward404Unless($this->convocatoria);
+
+    $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
+            ->getEventosConvocatoria($request->getParameter('id'));
+
+    $this->forward404Unless($this->eventos);
+  }
+  
   public function executeCargarEventosDeAgenda(sfWebRequest $request)
   {
-    $this->getUser()->setAttribute('hist_eventos_agenda', array());
+    $this->getUser()->setAttribute('hist_eventos_filtrados', array());
     
     $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->find($request->getParameter('id_agenda'));
@@ -31,7 +44,7 @@ class convocatoriaActions extends sfActions
     {
       $eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosAgenda($request->getParameter('id_agenda'));
-      $this->guardarHistEventosAgenda($eventos);
+      $this->getUser()->agregarEventosFiltradosAlHist($eventos);
       $this->eventos = $eventos;
       $this->agenda = $agenda;
     }
@@ -41,74 +54,87 @@ class convocatoriaActions extends sfActions
         Ningun resultado encontrado en la busqueda!");
     }    
   }
-  
-  private function guardarHistEventosAgenda($eventos_agenda)
-  {
-    // Busca los eventos ya almacenados en la variable de sesion correspondiente
-    // si el identificador no esta definido aun, entonces se setea con un array()
-    $eventos = $this->getUser()->getAttribute('hist_eventos_agenda', array());
-
-    foreach ($eventos_agenda as $evento_agenda)
-    {
-      array_push($eventos, $evento_agenda);
-    }
-
-    // Almacena el nuevo historial a la sesion del usuario
-    $this->getUser()->setAttribute('hist_eventos_agenda', $eventos);
-  }
     
-  public function executePrueba()
+  public function executeVistaPreliminar(sfWebRequest $request)
   {
-    $hist_eventos_agenda = $this->getUser()->getAttribute('hist_eventos_agenda', array());
-    foreach ($hist_eventos_agenda as $value)
-    {
-      echo $value->getCEventoD()."\n";
-    }
+    $eventos = $this->getUser()->getAttribute('hist_eventos_convocatoria', array());
+    $this->eventos = $eventos;
   }
   
-  public function executeAgregarEventosConvocatoria(sfWebRequest $request)
+  public function executeGuardarConvocatoria(sfWebRequest $request)
   {
-    $decir = "";
-    $checkbox_seleccionados = 0;
-    $hist_eventos_agenda = $this->getUser()->getAttribute('hist_eventos_agenda', array());
+    $eventos_a_guardar = $this->getUser()
+            ->retornarEventosAGuardarEnAgendaConvocatoria($request, 'hist_eventos_convocatoria');
 
-    // Verifica cuales checkbox fueron seleccionados
-    foreach ($hist_eventos_agenda as $evento_agenda)
+    if (count($eventos_a_guardar) > 0)
     {
-      // Se procesan los checkbox de la petición del formulario
-      $checkbox = $request->getParameter($evento_agenda->getCEventoD());
-
-      if ($checkbox == true)
+      if ($this->commitConvocatoria($request, $eventos_a_guardar))
       {
-        $checkbox_seleccionados = $checkbox_seleccionados + 1;
-//        if ($this->guardarEventoCheckedEnHist($evento_agenda))
-//        {
-//          $decir = $decir . "<i class='icon-ok'></i> " . $evento_agenda->getCEventoD() . "<br>";
-//        }
-//        else
-//        {
-//          $decir = $decir . "<i class='icon-remove'></i> " . $evento_agenda->getCEventoD() . "<br>";
-//        }
+        $this->getUser()->setAttribute('hist_eventos_convocatoria', array());
+        $this->getUser()->setFlash('notice', 'LA CONVOCATORIA FUE GUARDADA CON EXITO!');
+        $this->redirect('@index_convocatoria');
+      }
+      else
+      {
+        $this->getUser()->setFlash('error', 'LA CONVOCATORIA NO FUE GUARDADA CON EXITO! 
+          (Comuniquese con el analista de sistema si el problema persiste)');
+        $this->redirect('@vista_preliminar_convocatoria');
       }
     }
-
-    if ($checkbox_seleccionados > 0)
+    else
     {
-      return $this->renderText("<i class='icon-ban-circle'></i> 
-        si se seleccionaron eventos para guardar en la agenda");
-      return $this->renderText("<div class='alert alert-info'><strong><u>Eventos 
-        agregados a la agenda:</u></strong><br>Leyenda: <i class='icon-remove'></i> Ya existía
-        <i class='icon-ok'></i> Agregado<br><br>" . $decir . "</div>");
+      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
+      $this->redirect('@vista_preliminar_convocatoria');
+    }
+  }
+  
+  private function commitConvocatoria($request, $eventos_a_guardar)
+  {
+    try
+    {
+      $convocatoria = new SAF_CONVOCATORIA_CAF();
+      $convocatoria->setAsunto($request->getParameter('asunto_convoca'));
+      $convocatoria->setFecha($request->getParameter('f_convoca'));
+      $convocatoria->setHoraIni($request->getParameter('h_ini_convoca'));
+      $convocatoria->setHoraFin($request->getParameter('h_fin_convoca'));
+      $convocatoria->setLugar($request->getParameter('lugar_convoca'));
+      $convocatoria->setStatus('ACTIVA');
+      $convocatoria->setObservacion($request->getParameter('observacion_convoca'));
+      $convocatoria->save();
+
+      foreach ($eventos_a_guardar as $evento)
+      {
+        $evento->setIdConvocatoria($convocatoria);
+        $evento->save();
+      }
+    }
+    catch (Exception $exc)
+    {
+      return false;
+    }
+
+    return true;
+  }
+  
+  public function executeAgregarEventosALaConvocatoria(sfWebRequest $request)
+  {
+    $resultado = $this->getUser()->agregarEventosCheckedAlHist($request, 'hist_eventos_convocatoria');
+
+    if ($resultado != '')
+    {
+      return $this->renderText("<div class='alert alert-info'> 
+        <strong><u>Eventos agregados a la convocatoria:</u></strong>
+        <br>
+        Leyenda: <i class='icon-remove'></i> Ya existía <i class='icon-ok'></i> Agregado
+        <br><br>" . $resultado . "</div>");
     }
     else
     {
       return $this->renderText("<i class='icon-ban-circle'></i> 
-        No se seleccionaron eventos para guardar en la agenda");
+        No se seleccionaron eventos para guardar en la Convocatoria");
     }
   }
-  
-  
-  
+   
   public function executeCreate(sfWebRequest $request)
   {
     $this->forward404Unless($request->isMethod(sfRequest::POST));

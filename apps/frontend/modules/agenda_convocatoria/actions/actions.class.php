@@ -130,31 +130,29 @@ class agenda_convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_agenda', array());
         $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
-        $this->redirect('agenda_convocatoria/index');
+        $this->redirect('@index_agenda');
       }
       else
       {
         $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
           (Comuniquese con el analista de sistema si el problema persiste)');
-        $this->redirect('agenda_convocatoria/verSesion');
+        $this->redirect('@vista_preliminar_agenda');
       }
     }
     else
     {
       $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
-      $this->redirect('agenda_convocatoria/verSesion');
+      $this->redirect('@vista_preliminar_agenda');
     }
   }
 
   /**
-   * Acción que verifica cuales eventos fueron seleccionados despues del filtro 
-   * (busqueda) para agregarlos a la variable de sesion hist_eventos_sesion
+   * Acción que agrega eventos a la agenda enviandolos a la sesion del usuario
    * 
    * @param sfWebRequest $request
    * @return $this->renderText() No tiene vista asociada
    */
-  // CAMBIAR ESTE NOMBREEEEEEEEEEE
-  public function executeAgregarEventosAMiSesion(sfWebRequest $request)
+  public function executeAgregarEventosALaAgenda(sfWebRequest $request)
   {
     $resultado = $this->getUser()->agregarEventosCheckedAlHist($request, 'hist_eventos_agenda');
 
@@ -179,7 +177,7 @@ class agenda_convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeVerSesion(sfWebRequest $request)
+  public function executeVistaPreliminar(sfWebRequest $request)
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_agenda', array());
     $this->eventos = $eventos;

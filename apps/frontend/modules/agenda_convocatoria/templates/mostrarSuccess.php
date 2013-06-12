@@ -1,3 +1,6 @@
+<?php slot('title', 'SAF .::Vista Agenda::.') ?>
+<?php slot('menu_activo_agenda','active') ?>
+
 <h5 class="muted"><i class="icon-eye-open"></i> VISTA AGENDA </h5>
 
 <br>

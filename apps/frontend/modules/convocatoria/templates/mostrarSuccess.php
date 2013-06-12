@@ -1,3 +1,6 @@
+<?php slot('title', 'SAF .::Vista Convocatoria::.') ?>
+<?php slot('menu_activo_convocatoria','active') ?>
+
 <h5 class="muted"><i class="icon-eye-open"></i> VISTA CONVOCATORIA </h5>
 
 <br>

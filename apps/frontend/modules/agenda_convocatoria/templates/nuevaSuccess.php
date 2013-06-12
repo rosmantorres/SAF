@@ -1,6 +1,7 @@
 <?php use_javascript('agenda_convocatoria.js') ?>
 
 <?php slot('title', 'SAF .::Nueva agenda::.') ?>
+<?php slot('menu_activo_agenda','active') ?>
 
 <h5 class="muted"><i class="icon-search"></i> BUSQUEDA DE EVENTOS </h5>
 

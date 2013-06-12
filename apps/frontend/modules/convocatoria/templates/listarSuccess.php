@@ -1,4 +1,5 @@
 <?php slot('title', 'SAF .::Lista de convocatorias::.') ?>
+<?php slot('menu_activo_convocatoria','active') ?>
 
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE CONVOCATORIAS </h5>
 

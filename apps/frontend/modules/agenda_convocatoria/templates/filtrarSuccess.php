@@ -1,4 +1,5 @@
 <?php slot('title', 'SAF .::Nueva agenda::.') ?>
+<?php slot('menu_activo_agenda','active') ?>
 
 <?php if ((count($eventos_imp) == 0) && (count($eventos_pro) == 0) && (count($eventos_500) == 0)): ?>
   <i class="icon-info-sign"></i> Ningun resultado encontrado en la busqueda!

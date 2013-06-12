@@ -1,5 +1,8 @@
 <?php slot('title', 'SAF .::Lista de agendas::.') ?>
 
+<?php slot('menu_activo_agenda','active') ?>
+
+
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE AGENDAS </h5>
 
 <h6>

@@ -1,6 +1,7 @@
 <?php // use_javascript('')  ?>
 
 <?php slot('title', 'SAF .::Nueva convocatoria::.') ?>
+<?php slot('menu_activo_convocatoria','active') ?>
 
 <h5 class="muted">
   <i class="icon-user"></i> EVENTOS AGREGADOS EN LA CONVOCATORIA
@@ -21,7 +22,7 @@
     <br>
     Lugar:<br>
     <input name="lugar_convoca" class="input-xxlarge" type="text" 
-           value="Colegio de Ing. Santa Rosa. Piso 3. Ala Oeste" required />
+           value="Centro de Operaciones Santa Rosa. Piso 3. Ala Oeste" required />
 
     <br>
     Observacion:<br>

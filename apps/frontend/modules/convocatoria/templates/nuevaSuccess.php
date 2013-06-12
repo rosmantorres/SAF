@@ -1,6 +1,7 @@
 <?php use_javascript('convocatoria.js') ?>
 
 <?php slot('title', 'SAF .::Nueva convocatoria::.') ?>
+<?php slot('menu_activo_convocatoria','active') ?>
 
 <h5 class="muted"><i class="icon-plus-sign"></i> NUEVA CONVOCATORIA </h5>
 

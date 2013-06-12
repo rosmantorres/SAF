@@ -14,10 +14,10 @@
     <title>
       <?php if (!include_slot('title')): ?>
         SAF 
-      <?php endif; ?>
+      <?php endif; ?>      
     </title>
   </head>
-  <body>
+  <body>    
     <!-- MENÚ -->
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
@@ -25,13 +25,13 @@
           <a class="brand" href="#">SAF</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="active">
+              <li class="<?php include_slot('menu_activo_agenda') ?>">
                 <a href="<?php echo url_for('@index_agenda') ?>">Agenda</a>
               </li>
-              <li>
-                <a href="<?php echo url_for('@index_agenda') ?>">Convocatoria</a>
+              <li class="<?php include_slot('menu_activo_convocatoria') ?>">
+                <a href="<?php echo url_for('@index_convocatoria') ?>">Convocatoria</a>
               </li>
-              <li>
+              <li class="<?php include_slot('menu_activo_minuta') ?>">
                 <a href="<?php echo url_for('@index_agenda') ?>">Minuta</a>
               </li>
 <!--              <li><a href="#about">About</a></li>

@@ -10,18 +10,32 @@
  */
 class agenda_convocatoriaActions extends sfActions
 {
-
-  public function executeIndex(sfWebRequest $request)
+  /**
+   * Acción que muestra la lista o todas las agendas creadas
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeListar(sfWebRequest $request)
   {
     $this->agendas = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();
   }
 
-  public function executeNew(sfWebRequest $request)
+  /**
+   * Acción que comienza con el proceso de una nueva agenda
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeNueva(sfWebRequest $request)
   {
     
   }
 
-  public function executeShow(sfWebRequest $request)
+  /**
+   * Acción que muestra una agenda
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeMostrar(sfWebRequest $request)
   {
     $this->agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->find($request->getParameter('id'));
@@ -32,44 +46,6 @@ class agenda_convocatoriaActions extends sfActions
             ->getEventosAgenda($request->getParameter('id'));
 
     $this->forward404Unless($this->eventos);
-  }
-
-  public function executeCreate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
-
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm();
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('new');
-  }
-
-  public function executeEdit(sfWebRequest $request)
-  {
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
-  }
-
-  public function executeUpdate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('La agenda con id (%s) no existe.', $request->getParameter('id')));
-    $this->form = new SAF_AGENDA_CONVOCATORIAForm($saf_agenda_convocatoria);
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('edit');
-  }
-
-  public function executeDelete(sfWebRequest $request)
-  {
-    $request->checkCSRFProtection();
-
-    $this->forward404Unless($saf_agenda_convocatoria = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->find(array($request->getParameter('id'))), sprintf('Object saf_agenda_convocatoria does not exist (%s).', $request->getParameter('id')));
-    $saf_agenda_convocatoria->delete();
-
-    $this->redirect('agenda_convocatoria/index');
   }
 
   /**
@@ -113,40 +89,6 @@ class agenda_convocatoriaActions extends sfActions
   }
 
   /**
-   * Acción que guarda la agenda con observaciones y los eventos confirmados 
-   * por el usuario, a través de los checkbox.
-   * 
-   * @param sfWebRequest $request
-   * @return $this->renderText() - No tiene vista asociada
-   */
-  public function executeGuardarAgenda(sfWebRequest $request)
-  {
-    $eventos_a_guardar = $this->getUser()
-            ->retornarEventosAGuardarEnAgendaConvocatoria($request, 'hist_eventos_agenda');
-
-    if (count($eventos_a_guardar) > 0)
-    {
-      if ($this->commitAgenda($request->getParameter('observacion'), $eventos_a_guardar))
-      {
-        $this->getUser()->setAttribute('hist_eventos_agenda', array());
-        $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
-        $this->redirect('@index_agenda');
-      }
-      else
-      {
-        $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
-          (Comuniquese con el analista de sistema si el problema persiste)');
-        $this->redirect('@vista_preliminar_agenda');
-      }
-    }
-    else
-    {
-      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
-      $this->redirect('@vista_preliminar_agenda');
-    }
-  }
-
-  /**
    * Acción que agrega eventos a la agenda enviandolos a la sesion del usuario
    * 
    * @param sfWebRequest $request
@@ -183,6 +125,40 @@ class agenda_convocatoriaActions extends sfActions
     $this->eventos = $eventos;
   }
 
+  /**
+   * Acción que guarda la agenda con observaciones y los eventos confirmados 
+   * por el usuario, a través de los checkbox.
+   * 
+   * @param sfWebRequest $request
+   * @return $this->renderText() - No tiene vista asociada
+   */
+  public function executeGuardarAgenda(sfWebRequest $request)
+  {
+    $eventos_a_guardar = $this->getUser()
+            ->retornarEventosAGuardarEnAgendaConvocatoria($request, 'hist_eventos_agenda');
+
+    if (count($eventos_a_guardar) > 0)
+    {
+      if ($this->commitAgenda($request->getParameter('observacion'), $eventos_a_guardar))
+      {
+        $this->getUser()->setAttribute('hist_eventos_agenda', array());
+        $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
+        $this->redirect('@index_agenda');
+      }
+      else
+      {
+        $this->getUser()->setFlash('error', 'LA AGENDA NO FUE GUARDADA CON EXITO! 
+          (Comuniquese con el analista de sistema si el problema persiste)');
+        $this->redirect('@vista_preliminar_agenda');
+      }
+    }
+    else
+    {
+      $this->getUser()->setFlash('error', 'DEBE INDICAR AL MENOS UN EVENTO');
+      $this->redirect('@vista_preliminar_agenda');
+    }
+  }
+  
   /**
    * Método que consulta y retorna todas las INTERRUPCIONES según un rango
    * fecha y el tipo de interrupción, convirtiendolas de modelo a SAF_EVENTOS 
@@ -267,8 +243,8 @@ class agenda_convocatoriaActions extends sfActions
   }
 
   /**
-   * Método que crea una agenda con las observaciones hechas y los eventos elegidos
-   * por el usuario en el tiempo de su sesion.
+   * Método que crea y guarda una agenda con las observaciones hechas 
+   * y los eventos elegidos por el usuario en el tiempo de su sesion.
    * 
    * @param string $obs_agenda
    * @param array $eventos_a_guardar
@@ -296,16 +272,4 @@ class agenda_convocatoriaActions extends sfActions
 
     return true;
   }
-
-  protected function processForm(sfWebRequest $request, sfForm $form)
-  {
-    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-    if ($form->isValid())
-    {
-      $saf_agenda_convocatoria = $form->save();
-
-      $this->redirect('agenda_convocatoria/edit?id=' . $saf_agenda_convocatoria->getId());
-    }
-  }
-
 }

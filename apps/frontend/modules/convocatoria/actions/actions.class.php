@@ -10,17 +10,33 @@
  */
 class convocatoriaActions extends sfActions
 {
-  public function executeIndex(sfWebRequest $request)
+
+  /**
+   * Acción que lista todas las convocatorias creadas
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeListar(sfWebRequest $request)
   {
     $this->convocatorias = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->getConvocatorias();
   }
 
-  public function executeNew(sfWebRequest $request)
+  /**
+   * Acción que comienza con el proceso de una nueva convocatoria
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeNueva(sfWebRequest $request)
   {
     
   }
-  
-  public function executeShow(sfWebRequest $request)
+
+  /**
+   * Acción que muestra una convocatoria
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeMostrar(sfWebRequest $request)
   {
     $this->convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
             ->find($request->getParameter('id'));
@@ -32,18 +48,25 @@ class convocatoriaActions extends sfActions
 
     $this->forward404Unless($this->eventos);
   }
-  
+
+  /**
+   * Acción que carga todos los eventos de una agenda para despues 
+   * tener la posibilidad de agregarlos a la convocatoria
+   * 
+   * @param sfWebRequest $request
+   * @return type
+   */
   public function executeCargarEventosDeAgenda(sfWebRequest $request)
   {
     $this->getUser()->setAttribute('hist_eventos_filtrados', array());
-    
+
     $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->find($request->getParameter('id_agenda'));
-    
+
     if ($agenda)
     {
       $eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosAgenda($request->getParameter('id_agenda'));
+              ->getEventosAgenda($request->getParameter('id_agenda'));
       $this->getUser()->agregarEventosFiltradosAlHist($eventos);
       $this->eventos = $eventos;
       $this->agenda = $agenda;
@@ -52,15 +75,52 @@ class convocatoriaActions extends sfActions
     {
       return $this->renderText("<i class='icon-info-sign'></i> 
         Ningun resultado encontrado en la busqueda!");
-    }    
+    }
   }
-    
+
+  /**
+   * Acción que agrega eventos a la convocatoria enviandolos a la sesion del usuario
+   * 
+   * @param sfWebRequest $request
+   * @return $this->renderText() No tiene vista asociada
+   */
+  public function executeAgregarEventosALaConvocatoria(sfWebRequest $request)
+  {
+    $resultado = $this->getUser()->agregarEventosCheckedAlHist($request, 'hist_eventos_convocatoria');
+
+    if ($resultado != '')
+    {
+      return $this->renderText("<div class='alert alert-info'> 
+        <strong><u>Eventos agregados a la convocatoria:</u></strong>
+        <br>
+        Leyenda: <i class='icon-remove'></i> Ya existía <i class='icon-ok'></i> Agregado
+        <br><br>" . $resultado . "</div>");
+    }
+    else
+    {
+      return $this->renderText("<i class='icon-ban-circle'></i> 
+        No se seleccionaron eventos para guardar en la Convocatoria");
+    }
+  }
+
+  /**
+   * Acción que muestra los eventos que estan agregados en la convocatoria,
+   * permitiendo guardarlos con toda la descripción de la misma.
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeVistaPreliminar(sfWebRequest $request)
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_convocatoria', array());
     $this->eventos = $eventos;
   }
-  
+
+  /**
+   * Acción que guarda una convocatoria con los eventos seleccionados por el
+   * usuario a traves de los checkbox.
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeGuardarConvocatoria(sfWebRequest $request)
   {
     $eventos_a_guardar = $this->getUser()
@@ -87,7 +147,15 @@ class convocatoriaActions extends sfActions
       $this->redirect('@vista_preliminar_convocatoria');
     }
   }
-  
+
+  /**
+   * Método que crea y guarda una convocatoria con toda sus descripciones hecha
+   * por el usuario y los eventos elegidos en el tiempo de su sesion.
+   * 
+   * @param sfWebRequest $request
+   * @param array $eventos_a_guardar
+   * @return boolean
+   */
   private function commitConvocatoria($request, $eventos_a_guardar)
   {
     try
@@ -115,72 +183,5 @@ class convocatoriaActions extends sfActions
 
     return true;
   }
-  
-  public function executeAgregarEventosALaConvocatoria(sfWebRequest $request)
-  {
-    $resultado = $this->getUser()->agregarEventosCheckedAlHist($request, 'hist_eventos_convocatoria');
 
-    if ($resultado != '')
-    {
-      return $this->renderText("<div class='alert alert-info'> 
-        <strong><u>Eventos agregados a la convocatoria:</u></strong>
-        <br>
-        Leyenda: <i class='icon-remove'></i> Ya existía <i class='icon-ok'></i> Agregado
-        <br><br>" . $resultado . "</div>");
-    }
-    else
-    {
-      return $this->renderText("<i class='icon-ban-circle'></i> 
-        No se seleccionaron eventos para guardar en la Convocatoria");
-    }
-  }
-   
-  public function executeCreate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST));
-
-    $this->form = new SAF_CONVOCATORIA_CAFForm();
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('new');
-  }
-
-  public function executeEdit(sfWebRequest $request)
-  {
-    $this->forward404Unless($saf_convocatoria_caf = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->find(array($request->getParameter('id'))), sprintf('Object saf_convocatoria_caf does not exist (%s).', $request->getParameter('id')));
-    $this->form = new SAF_CONVOCATORIA_CAFForm($saf_convocatoria_caf);
-  }
-
-  public function executeUpdate(sfWebRequest $request)
-  {
-    $this->forward404Unless($request->isMethod(sfRequest::POST) || $request->isMethod(sfRequest::PUT));
-    $this->forward404Unless($saf_convocatoria_caf = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->find(array($request->getParameter('id'))), sprintf('Object saf_convocatoria_caf does not exist (%s).', $request->getParameter('id')));
-    $this->form = new SAF_CONVOCATORIA_CAFForm($saf_convocatoria_caf);
-
-    $this->processForm($request, $this->form);
-
-    $this->setTemplate('edit');
-  }
-
-  public function executeDelete(sfWebRequest $request)
-  {
-    $request->checkCSRFProtection();
-
-    $this->forward404Unless($saf_convocatoria_caf = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->find(array($request->getParameter('id'))), sprintf('Object saf_convocatoria_caf does not exist (%s).', $request->getParameter('id')));
-    $saf_convocatoria_caf->delete();
-
-    $this->redirect('convocatoria/index');
-  }
-
-  protected function processForm(sfWebRequest $request, sfForm $form)
-  {
-    $form->bind($request->getParameter($form->getName()), $request->getFiles($form->getName()));
-    if ($form->isValid())
-    {
-      $saf_convocatoria_caf = $form->save();
-
-      $this->redirect('convocatoria/edit?id='.$saf_convocatoria_caf->getId());
-    }
-  }
 }

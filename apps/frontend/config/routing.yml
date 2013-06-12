@@ -21,17 +21,17 @@ nueva_agenda:
   url: /agenda_convocatoria/nueva
   param: { module: agenda_convocatoria, action: new }
   
-mi_sesion_agenda:
-  url: /agenda_convocatoria/eventos_agregados
-  param: { module: agenda_convocatoria, action: verSesion }
+vista_preliminar_agenda:
+  url: /agenda_convocatoria/vista_preliminar
+  param: { module: agenda_convocatoria, action: vistaPreliminar }
   
 filtrar_agenda:
   url: /agenda_convocatoria/nueva/eventos_encontrados
   param: { module: agenda_convocatoria, action: filtrar }
   
-eventos_sesion_agenda:
+agregar_eventos_agenda:
   url: /agenda_convocatoria/nueva/eventos_encontrados/agregar_eventos_agenda
-  param: { module: agenda_convocatoria, action: agregarEventosAMiSesion }
+  param: { module: agenda_convocatoria, action: agregarEventosALaAgenda }
   
 guardar_agenda:
   url: /agenda_convocatoria/nueva/guardar
@@ -45,6 +45,14 @@ index_convocatoria:
 nueva_convocatoria:
   url: /convocatoria/nueva
   param: { module: convocatoria, action: new }
+  
+mostrar_convocatoria:
+  url: /convocatoria/mostrar/:id
+  param: { module: convocatoria, action: show }
+
+vista_preliminar_convocatoria:
+  url: /convocatoria/vista_preliminar
+  param: { module: convocatoria, action: vistaPreliminar }
 
 # default rules
 homepage:

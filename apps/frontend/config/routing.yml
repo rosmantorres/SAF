@@ -11,15 +11,15 @@
 # Rutas para el modulo de agenda_convocatoria
 index_agenda:
   url: /agenda_convocatoria
-  param: { module: agenda_convocatoria, action: index }
+  param: { module: agenda_convocatoria, action: listar }
   
 mostrar_agenda:
   url: /agenda_convocatoria/mostrar/:id
-  param: { module: agenda_convocatoria, action: show }
+  param: { module: agenda_convocatoria, action: mostrar }
 
 nueva_agenda:
   url: /agenda_convocatoria/nueva
-  param: { module: agenda_convocatoria, action: new }
+  param: { module: agenda_convocatoria, action: nueva }
   
 vista_preliminar_agenda:
   url: /agenda_convocatoria/vista_preliminar
@@ -40,15 +40,15 @@ guardar_agenda:
 # Rutas para el modulo de convocatoria
 index_convocatoria:
   url: /convocatoria
-  param: { module: convocatoria, action: index }
+  param: { module: convocatoria, action: listar }
   
 nueva_convocatoria:
   url: /convocatoria/nueva
-  param: { module: convocatoria, action: new }
+  param: { module: convocatoria, action: nueva }
   
 mostrar_convocatoria:
   url: /convocatoria/mostrar/:id
-  param: { module: convocatoria, action: show }
+  param: { module: convocatoria, action: mostrar }
 
 vista_preliminar_convocatoria:
   url: /convocatoria/vista_preliminar
@@ -62,9 +62,9 @@ homepage:
 # generic rules
 # please, remove them by adding more specific rules
 
-default_index:
-  url:   /:module
-  param: { action: index }
-
-default:
-  url:   /:module/:action/*
+#default_index:
+#  url:   /:module
+#  param: { action: index }
+#
+#default:
+#  url:   /:module/:action/*

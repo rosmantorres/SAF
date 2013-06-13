@@ -1,4 +1,4 @@
-<?php // use_javascript('')  ?>
+<?php use_javascript('convocatoria.js') ?>
 
 <?php slot('title', 'SAF .::Nueva convocatoria::.') ?>
 <?php slot('menu_activo_convocatoria','active') ?>
@@ -7,8 +7,10 @@
   <i class="icon-user"></i> EVENTOS AGREGADOS EN LA CONVOCATORIA
 </h5>
 
+<br>
 <?php if (count($eventos) > 0) : ?>
-  <form id="form_convocatoria_guardar" action="guardarConvocatoria" method="POST">
+
+  <form id="form_guardar_convocatoria" action="<?php echo url_for('@guardar_convocatoria') ?>" method="POST">    
     Fecha de la convocatoria:<br>
     <input name="f_convoca" class="input-medium" type="date" required />
     <input name="h_ini_convoca" class="input-medium" type="time" value="09:00" required />
@@ -29,6 +31,7 @@
     <textarea name="observacion_convoca" class="input-block-level" rows="4" 
               placeholder="...indique aquí las observaciones de la convocatoria"></textarea>
     
+    <br>
     <?php include_partial('global/eventos', array('eventos' => $eventos)) ?>
     
     <button class="btn btn-small btn-primary" type="submit">
@@ -39,11 +42,12 @@
     <i class="icon-arrow-left"></i> 
     <a href="<?php echo url_for('@nueva_convocatoria') ?>">
       Regresar
-    </a>
-    
+    </a>    
   </form>
+
 <?php else : ?>
-  <i class="icon-info-sign"></i> 
-  Hasta ahora no has agregado ningún evento a la convocatoria!
+
+  <i class="icon-info-sign"></i> Hasta ahora no has agregado ningún evento a la convocatoria!
   <a href="<?php echo url_for('@nueva_convocatoria') ?>">regresar</a>
+  
 <?php endif; ?>

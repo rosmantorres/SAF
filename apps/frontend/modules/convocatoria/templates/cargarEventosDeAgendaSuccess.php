@@ -1,4 +1,5 @@
 <?php if (count($agenda) > 0) :?>
+
   <table width="100%">
     <tr valign="top" align="left">
       <td>
@@ -18,10 +19,14 @@
   </table>
 
   <br>
-  <form id="form_agregar_eventos_convocatoria" action="agregarEventosALaConvocatoria" method="POST">
+  <form id="form_agregar_eventos_convocatoria" action="<?php echo url_for('@agregar_eventos_convocatoria') ?>" method="POST">
+    
     <?php include_partial('global/eventos', array('eventos' => $eventos)) ?>
+    
     <button class="btn btn-small btn-primary" type="submit">
       <i class="icon-plus"></i> Agregar eventos a la convocatoria
     </button>
+    
   </form>  
+  
 <?php endif; ?>

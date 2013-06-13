@@ -8,37 +8,33 @@
 <br>
 <table>
   <tr>
-    <td valign="top" width='220px'>
-      
-      <form id="form_buscar_agenda" action="cargarEventosDeAgenda" method="POST">
-        <div id="busqueda">
-          <h6>
-            Cargar eventos de la agenda:<br>
-            <input id="id_agenda" class="input-medium" type="number" name="id_agenda" required/>
-          </h6>
-          <img id="loader" src="/images/loader.gif" style="display: none" />
-          <button class="btn btn-small btn-primary" type="submit">
-            <i class="icon-search"></i> Buscar
-          </button>
-        </div>
+    <td valign="top" width='220px'>      
+      <form id="form_buscar_agenda" action="<?php echo url_for('@cargar_agenda') ?>" method="POST">
+
+        <h6>Cargar eventos de la agenda:</h6>
+        <input id="id_agenda" class="input-medium" type="number" name="id_agenda" required/>
+
+        <br><br>
+        <img id="loader" src="/images/loader.gif" style="display: none" />
+        
+        <button class="btn btn-small btn-primary" type="submit">
+          <i class="icon-search"></i> Buscar
+        </button>
+
       </form>
 
-      <br>
       <h6>
         <a href="<?php echo url_for('@vista_preliminar_convocatoria') ?>" >
-          <i class="icon-eye-open"></i>
-          vista preliminar de la convocatoria
+          <i class="icon-eye-open"></i> vista preliminar de la convocatoria
         </a>
-      </h6>
-      
-    </td>
-    
-    <td valign="top"> 
-      
-      <form id="form_agregar_eventos_sesion" action="agregarEventosALaConvocatoria" method="POST">
+      </h6>      
+    </td>    
+    <td valign="top">       
+      <form id="form_agregar_eventos_convocatoria" action="<?php echo url_for('@agregar_eventos_convocatoria') ?>" method="POST">
+        
         <div id="info_aqui">Aquí se mostrará la agenda buscada!</div>
-      </form>
-      
+        
+      </form>      
     </td>    
   </tr>
 </table>

@@ -4,44 +4,46 @@
 <h5 class="muted"><i class="icon-eye-open"></i> VISTA CONVOCATORIA </h5>
 
 <br>
-<i class="icon-info-sign"></i>
-<small>
+<small><i class="icon-info-sign"></i> 
   <?php if ($convocatoria->getStatus() == 'ACTIVA'): ?>
-    <?php echo "ESTA CONVOCATORIA ESTA ACTIVA" ?>
+  La convocatoria esta <b style="color: green">ACTIVA</b> para realizar el comité en la fecha indicada.
   <?php elseif ($convocatoria->getStatus() == 'EJECUCION'): ?>
-    <?php echo "EN ESTOS MOMENTOS SE ESTA REALIZANDO EL COMITÉ DE ANÁLISIS DE FALLAS PARA DICHA CONVOCATORÍA" ?>
+  La convocatoria esta en <b style="color: #149bdf">EJECUCIÓN</b>. Se esta realizando el comité.
   <?php elseif ($convocatoria->getStatus() == 'TERMINADA'): ?>
-    <?php echo "YA EL COMITÉ PARA ESTA CONVOCATORIA SE REALIZÓ" ?>
+    La convocatoria esta <b>TERMINADA</b>. Comité realizado exitosamente.
   <?php elseif ($convocatoria->getStatus() == 'SUSPENDIDA'): ?>
-    <?php echo "CONVOCATORIA SUSPENDIDA. " . $convocatoria->getMotivoSuspencion() ?>
+    La convocatoria esta <b style="color: red">SUSPENDIDA</b>.
+    <?php echo $convocatoria->getMotivoSuspencion() ?>
   <?php endif; ?>
 </small>
 
 <br><br>
 <table width="100%">
-  <tr valign="top" align="left">
+  <tr valign="top">
     <td>
       <u><b>Asunto:</u></b>
       <?php echo $convocatoria->getAsunto() ?>
+      
       <br>
       <u><b>Lugar:</u></b>&nbsp;&nbsp;
       <?php echo $convocatoria->getLugar() ?>
+      
       <br>
       <u><b>Fecha:</u></b>&nbsp;
       <?php echo substr($convocatoria->getFecha(), 0, 10) . "  de " . 
               $convocatoria->getHoraIni(). " a " .$convocatoria->getHoraFin()?>
+      
       <br><br>
       <u><b>Observaciones:</u></b><br>
-      <?php echo $convocatoria->getObservacion() ?>
-      <br>
+      <?php echo $convocatoria->getObservacion() ?>      
     </td>
-    <td width="260px">
-      <small>        
+    <td width="260px">      
+      <small>    
         <u><b>Fecha de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <?php echo $convocatoria->getCreatedAt() ?>
         
         <u><b>Fecha de modificación:</u></b> &nbsp;
-        <?php echo $convocatoria->getUpdatedAt() ?>
+        <?php echo $convocatoria->getUpdatedAt() ?>        
       </small>
     </td>
   </tr>
@@ -51,4 +53,6 @@
 <?php include_partial('global/eventos', array('eventos' => $eventos, 'no_column_check' => true)) ?>
 
 <br>
-<i class="icon-arrow-left"></i> <a href="<?php echo url_for('@index_convocatoria') ?>">Regresar</a>
+<a href="<?php echo url_for('@index_convocatoria') ?>">
+  <i class="icon-arrow-left"></i> Regresar
+</a>

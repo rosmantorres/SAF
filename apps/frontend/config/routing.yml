@@ -54,6 +54,18 @@ vista_preliminar_convocatoria:
   url: /convocatoria/vista_preliminar
   param: { module: convocatoria, action: vistaPreliminar }
 
+cargar_agenda:
+  url: /convocatoria/nueva/eventos_encontrados_agenda
+  param: { module: convocatoria, action: cargarEventosDeAgenda }
+  
+agregar_eventos_convocatoria:
+  url: /convocatoria/nueva/eventos_encontrados_agenda/agregar_eventos_a_la_convocatoria
+  param: { module: convocatoria, action: agregarEventosALaConvocatoria }
+  
+guardar_convocatoria:
+  url: /convocatoria/nueva/guardar
+  param: { module: convocatoria, action: guardarConvocatoria }
+  
 # default rules
 homepage:
   url:   /

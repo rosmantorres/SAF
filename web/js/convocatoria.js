@@ -17,11 +17,11 @@ jQuery('document').ready(function()
     return false;
   });
   
-  jQuery('#form_agregar_eventos_sesion').submit(function() 
+  jQuery('#form_agregar_eventos_convocatoria').submit(function() 
   {
-    if (confirm("¿Realmente quieres agregar estos eventos a tu sesión?")){
-      jQuery.post(jQuery('#form_agregar_eventos_sesion').attr('action'), 
-      jQuery('#form_agregar_eventos_sesion').serialize(),
+    if (confirm("¿Realmente quieres agregar estos eventos a tu convocatoria?")){
+      jQuery.post(jQuery('#form_agregar_eventos_convocatoria').attr('action'), 
+      jQuery('#form_agregar_eventos_convocatoria').serialize(),
         function(datos_devueltos) {
           if (datos_devueltos) {
             jQuery('#info_aqui').html(datos_devueltos);
@@ -31,7 +31,7 @@ jQuery('document').ready(function()
     return false;
   })
   
-  jQuery('#form_agenda_guardar').submit(function() 
+  jQuery('#form_guardar_convocatoria').submit(function() 
   {
     if (confirm("¿Desea continuar con el proceso de guardado?")){
       return true;    

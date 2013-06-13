@@ -27,11 +27,11 @@ jQuery('document').ready(function()
     return false;
   });
   
-  jQuery('#form_agregar_eventos_sesion').submit(function() 
+  jQuery('#form_agregar_eventos_agenda').submit(function() 
   {
-    if (confirm("¿Realmente quieres agregar estos eventos a tu sesión?")){
-      jQuery.post(jQuery('#form_agregar_eventos_sesion').attr('action'), 
-      jQuery('#form_agregar_eventos_sesion').serialize(),
+    if (confirm("¿Realmente quieres agregar estos eventos a tu agenda?")){
+      jQuery.post(jQuery('#form_agregar_eventos_agenda').attr('action'), 
+      jQuery('#form_agregar_eventos_agenda').serialize(),
         function(datos_devueltos) {
           if (datos_devueltos) {
             jQuery('#info_aqui').html(datos_devueltos);

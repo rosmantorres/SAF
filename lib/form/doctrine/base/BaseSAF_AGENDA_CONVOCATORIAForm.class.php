@@ -18,6 +18,7 @@ abstract class BaseSAF_AGENDA_CONVOCATORIAForm extends BaseFormDoctrine
       'id'           => new sfWidgetFormInputHidden(),
       'departamento' => new sfWidgetFormInputText(),
       'observacion'  => new sfWidgetFormTextarea(),
+      'pendiente'    => new sfWidgetFormInputText(),
       'created_at'   => new sfWidgetFormDateTime(),
       'updated_at'   => new sfWidgetFormDateTime(),
     ));
@@ -26,6 +27,7 @@ abstract class BaseSAF_AGENDA_CONVOCATORIAForm extends BaseFormDoctrine
       'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'departamento' => new sfValidatorString(array('max_length' => 50)),
       'observacion'  => new sfValidatorString(array('max_length' => 1000, 'required' => false)),
+      'pendiente'    => new sfValidatorInteger(),
       'created_at'   => new sfValidatorDateTime(),
       'updated_at'   => new sfValidatorDateTime(),
     ));

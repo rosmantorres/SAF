@@ -50,9 +50,20 @@ class agenda_convocatoriaActions extends sfActions
 
   public function executeColocarPendiente(sfWebRequest $request)
   {
-     $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
-             ->find($request->getParameter('id'));
+     $this->forward404Unless(
+             $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+             ->find($request->getParameter('id')));
      
+     if ($agenda->getPendiente() == 1)
+     {
+       $agenda->setPendiente(0);
+     }
+     elseif ($agenda->getPendiente() == 0)
+     {
+       $agenda->setPendiente(1);
+     }
+     
+     $agenda->save();
      $this->getUser()->setFlash('notice', 'LA AGENDA FUE CAMBIADA DE ESTADO CON EXITO!');
      $this->redirect('@mostrar_agenda?id='.$request->getParameter('id'));
   }

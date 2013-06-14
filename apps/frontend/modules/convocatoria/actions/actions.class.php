@@ -28,7 +28,8 @@ class convocatoriaActions extends sfActions
    */
   public function executeNueva(sfWebRequest $request)
   {
-    
+    $this->agendas_pendientes = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+            ->getAgendasPendientes();
   }
 
   /**

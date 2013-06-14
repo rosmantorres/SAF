@@ -27,4 +27,14 @@ class SAF_AGENDA_CONVOCATORIATable extends Doctrine_Table
     return $this->createQuery('a')->orderBy('created_at desc')->execute();
   }
 
+  /**
+   * @return Doctrine_Collection SAF_AGENDA_CONVOCATORIA
+   */
+  public function getAgendasPendientes()
+  {
+    return $this->createQuery('a')
+            ->where('pendiente =?',1)
+            ->orderBy('created_at desc')
+            ->execute();
+  }
 }

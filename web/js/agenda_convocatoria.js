@@ -49,4 +49,10 @@ jQuery('document').ready(function()
     return false;
   })
   
+  jQuery('#agenda_pendiente').click(function (){
+    if (confirm("¿Deseas cambiar el status de la agenda?")){
+      document.location.href = $(this).val();
+    }
+    return false;
+  })
 });

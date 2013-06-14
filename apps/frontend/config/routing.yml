@@ -17,6 +17,10 @@ mostrar_agenda:
   url: /agenda_convocatoria/mostrar/:id
   param: { module: agenda_convocatoria, action: mostrar }
 
+colocar_pendiente_agenda:
+  url: /agenda_convocatoria/mostrar/:id/cambiar_status
+  param: { module: agenda_convocatoria, action: colocarPendiente }
+
 nueva_agenda:
   url: /agenda_convocatoria/nueva
   param: { module: agenda_convocatoria, action: nueva }

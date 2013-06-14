@@ -48,6 +48,15 @@ class agenda_convocatoriaActions extends sfActions
     $this->forward404Unless($this->eventos);
   }
 
+  public function executeColocarPendiente(sfWebRequest $request)
+  {
+     $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+             ->find($request->getParameter('id'));
+     
+     $this->getUser()->setFlash('notice', 'LA AGENDA FUE CAMBIADA DE ESTADO CON EXITO!');
+     $this->redirect('@mostrar_agenda?id='.$request->getParameter('id'));
+  }
+  
   /**
    * Acción que realizar busqueda de eventos según el filtro que se indique
    *
@@ -257,6 +266,7 @@ class agenda_convocatoriaActions extends sfActions
       $agenda = new SAF_AGENDA_CONVOCATORIA();
       $agenda->setDepartamento('IOD');
       $agenda->setObservacion($obs_agenda);
+      $agenda->setPendiente(1);
       $agenda->save();
 
       foreach ($eventos_a_guardar as $evento)

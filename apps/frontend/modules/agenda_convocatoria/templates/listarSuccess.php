@@ -33,7 +33,11 @@
           <td><?php echo $agenda->getObservacion() ?></td>
           <td><?php echo $agenda->getCreatedAt() ?></td>
           <td><?php echo $agenda->getUpdatedAt() ?></td>
-          <td><i class="icon-flag"></i></td>
+          <td>
+            <?php if ($agenda->getPendiente() == 1) : ?>
+              <i class="icon-flag"></i>
+            <?php endif; ?>
+          </td>
         </tr>
       <?php endforeach; ?>
     </tbody>

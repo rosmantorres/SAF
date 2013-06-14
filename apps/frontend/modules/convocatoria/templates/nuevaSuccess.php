@@ -9,13 +9,15 @@
   <tr>
     <td valign="top" width='220px'>  
       <h6>
-        <i class="icon-flag"></i> (agendas pendientes): <br>
-        11 - 12 - 13
+        <?php if (count($agendas_pendientes) > 0) :?>
+        <i class="icon-flag"></i> (agendas pendientes): <br> 
+          <?php foreach ($agendas_pendientes as $agenda_pendiente) : ?>
+            <?php echo "N° " . $agenda_pendiente ?><br>
+          <?php endforeach; ?>
+        <?php endif; ?>
       </h6>
       
-      <br>
       <form id="form_buscar_agenda" action="<?php echo url_for('@cargar_agenda') ?>" method="POST">
-
         <h6>Cargar eventos de la agenda:</h6>
         <input id="id_agenda" class="input-medium" type="number" name="id_agenda" required/>
 
@@ -25,7 +27,6 @@
         <button class="btn btn-small btn-primary" type="submit">
           <i class="icon-search"></i> Buscar
         </button>
-
       </form>
 
       <h6>
@@ -34,11 +35,10 @@
         </a>
       </h6>      
     </td>    
-    <td valign="top">       
-      <form id="form_agregar_eventos_convocatoria" action="<?php echo url_for('@agregar_eventos_convocatoria') ?>" method="POST">
-        
-        <div id="info_aqui">Aquí se mostrará la agenda buscada!</div>
-        
+    <td valign="top"  width='975px'>       
+      <form id="form_agregar_eventos_convocatoria" 
+            action="<?php echo url_for('@agregar_eventos_convocatoria') ?>" method="POST">        
+        <div id="info_aqui">Aquí se mostrará la agenda buscada!</div>        
       </form>      
     </td>    
   </tr>

@@ -12,7 +12,7 @@
   <form id="form_agenda_guardar" action="<?php echo url_for('@guardar_agenda') ?>" method="POST">
     
     Observaciones para la agenda:
-    <textarea name="observacion" class="input-block-level" rows="4"></textarea>
+    <textarea name="observacion" class="input-block-level" rows="4">AGENDA PARA LA CONVOCATORIA DE FECHA ???</textarea>
     
     <?php include_partial('global/eventos', array('eventos' => $eventos)) ?>
     

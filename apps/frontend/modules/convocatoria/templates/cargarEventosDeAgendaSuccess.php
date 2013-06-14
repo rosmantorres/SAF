@@ -1,5 +1,9 @@
 <?php if (count($agenda) > 0) :?>
 
+  <h5 align="center" class="muted">
+    <i class="icon-eye-open"></i> AGENDA N° <?php echo $agenda->getId() ?>
+  </h5>
+
   <table width="100%">
     <tr valign="top" align="left">
       <td>

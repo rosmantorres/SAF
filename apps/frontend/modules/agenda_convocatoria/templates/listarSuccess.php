@@ -9,16 +9,17 @@
   </a>
 </h6>
 
-<br>
 <?php if (count($agendas) > 0) : ?>
 
+  <h6 align="right"><i class="icon-flag"></i> (agendas pendientes)</h6>
   <table class="table table-bordered table-hover">
     <thead style="background-color: #d8d9d7">
       <tr>
         <th>N°</th>
-        <th>OBSERVACIONES</th>
+        <th width="720px">OBSERVACIONES</th>
         <th>FECHA DE CREACIÓN</th>
         <th>FECHA DE MODIFICACIÓN</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -32,6 +33,7 @@
           <td><?php echo $agenda->getObservacion() ?></td>
           <td><?php echo $agenda->getCreatedAt() ?></td>
           <td><?php echo $agenda->getUpdatedAt() ?></td>
+          <td><i class="icon-flag"></i></td>
         </tr>
       <?php endforeach; ?>
     </tbody>

@@ -1,7 +1,11 @@
+<?php use_javascript('agenda_convocatoria.js') ?>
+
 <?php slot('title', 'SAF .::Vista Agenda::.') ?>
 <?php slot('menu_activo_agenda','active') ?>
 
-<h5 class="muted"><i class="icon-eye-open"></i> VISTA AGENDA </h5>
+<h5 class="muted">
+  <i class="icon-eye-open"></i> VISTA AGENDA N° <?php echo $agenda->getId() ?>
+</h5>
 
 <br>
 <table width="100%">
@@ -12,6 +16,10 @@
     </td>
     <td width="260px">
       <small>
+        <i class="icon-flag"></i><b> Agenda Pendiente </b>
+        <input type="checkbox" id="agenda_pendiente" value="<?php echo url_for('@colocar_pendiente_agenda?id='.$agenda->getId()) ?>" />
+        
+        <br>
         <u><b>Fecha de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
         <?php echo $agenda->getCreatedAt() ?>
         

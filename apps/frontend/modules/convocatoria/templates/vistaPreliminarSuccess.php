@@ -19,7 +19,7 @@
     <br>
     Asunto:<br>
     <input name="asunto_convoca" class="input-xxlarge" type="text" 
-           value="Convocatoria Reunión de Análisis de Fallas en la Red de Distribución" required />
+           value="Convocatoria de Reunión de Análisis de Fallas en la Red de Distribución" required />
 
     <br>
     Lugar:<br>

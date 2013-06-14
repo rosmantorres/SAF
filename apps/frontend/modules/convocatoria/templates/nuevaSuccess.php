@@ -5,16 +5,21 @@
 
 <h5 class="muted"><i class="icon-plus-sign"></i> NUEVA CONVOCATORIA </h5>
 
-<br>
 <table>
   <tr>
-    <td valign="top" width='220px'>      
+    <td valign="top" width='220px'>  
+      <h6>
+        <i class="icon-flag"></i> (agendas pendientes): <br>
+        11 - 12 - 13
+      </h6>
+      
+      <br>
       <form id="form_buscar_agenda" action="<?php echo url_for('@cargar_agenda') ?>" method="POST">
 
         <h6>Cargar eventos de la agenda:</h6>
         <input id="id_agenda" class="input-medium" type="number" name="id_agenda" required/>
 
-        <br><br>
+        <br>
         <img id="loader" src="/images/loader.gif" style="display: none" />
         
         <button class="btn btn-small btn-primary" type="submit">

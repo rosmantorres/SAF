@@ -17,7 +17,11 @@
   <!-- CONTENIDO DEL ACORDEON -->
   <div id="<?php echo $id_acordeon ?>" class="accordion-body collapse">
     <div class="accordion-inner">
-      <?php include_partial('global/eventos',array('eventos' => $contenido)) ?>
+      <?php if (!isset($sin_incluir_partial)) : ?>
+        <?php include_partial('global/eventos',array('eventos' => $contenido)) ?>
+      <?php elseif (isset($sin_incluir_partial)) : ?>
+        <?php include_partial('llenarMinuta') ?>
+      <?php endif; ?>
     </div>
   </div>
   

@@ -46,7 +46,7 @@
       </h6>
     </td>
     <td>
-      <form action="minuta/xxx" method="POST" enctype="multipart/form-data">
+      <form action="minuta/procesarEvento" method="POST" enctype="multipart/form-data">        
         <pre><i class="icon-tag"></i> IMÁGENES: (Formatos válidos gif, jpeg, jpg, png)</pre>
         <div style="margin: 15px;" id="imagenes"></div>
         

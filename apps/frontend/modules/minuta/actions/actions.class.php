@@ -19,74 +19,170 @@ class minutaActions extends sfActions
   public function executeIndex(sfWebRequest $request)
   {
     $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find(4);
-
-    $this->form = new sfForm();
   }
 
-  public function executeXxx(sfWebRequest $request)
+  public function executeProcesarEvento(sfWebRequest $request)
   {
-    $cont = 1;
+    $this->verificarFotosYGuardar($request);
+    $this->verificarRazonesMVAminYGuardar($request);
+    $this->verificarBitacoraYGuardar($request);
+    $this->verificarAccionesYRecomendacionesYGuardar($request);
+    $this->verificarCompromisosYResponsablesYGuardar($request);
+  }
 
-    while ($request->getParameter('titulo_foto' . $cont)) {
-      echo "<br>". $titulo_foto = $request->getParameter('titulo_foto' . $cont);
-      echo "<br>". $sub_titulo_foto = $request->getParameter('sub_titulo_foto' . $cont);
-      echo "<br>". $nombre_foto = $_FILES["foto" . $cont]["name"];
-      echo "<br>". $tipo_foto = $_FILES["foto" . $cont]["type"];
-      echo "<br>". $tamano_foto = $_FILES["foto" . $cont]["size"] / 1024;
-      echo "<br>". $lugar_foto = $_FILES["foto" . $cont]["tmp_name"];
-      $cont++;
-    }
-    
-    $cont = 1;
+  public function executeRazonesMVAmin(sfWebRequest $request)
+  {
+    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
 
-    while ($request->getParameter('razon' . $cont)) {
-      echo "<br>". $razon = $request->getParameter('razon' . $cont);
-      echo "<br>". $mva_razon = $request->getParameter('mva_razon' . $cont);
-      $cont++;
-    }
-    
-    if ($request->getParameter('bitacora') != "")
+    $data_source = '';
+
+    foreach ($razones as $razon)
     {
-      echo "<br>". $resumen_bitacora = $request->getParameter('bitacora');
+      $data_source = $data_source . '"' . $razon->getRazon() . '",';
     }
-    
-    if ($request->getParameter('acciones'))
+
+    // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
+    return $this->renderText(substr($data_source, 0, -1));
+  }
+  
+  public function executeUnidadEquipo(sfWebRequest $request)
+  {
+    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
+
+    $data_source = '';
+
+    foreach ($unidades as $unidad)
     {
-      echo "<br>". $acciones_y_recomendaciones = $request->getParameter('acciones');
+      $data_source = $data_source . "<option value='" . $unidad->getId() . "'>" . $unidad->getNombre() . "</option>";      
     }
     
-    $cont = 1;
-    
-    while ($request->getParameter('compromiso' . $cont)) {
-      echo "<br>". $compromiso = $request->getParameter('compromiso' . $cont);
-      
-      $cont2 = 1;
-      while ($request->getParameter('responsable_compromiso' . $cont . $cont2)){
-        echo "<br>". $responsable_compromiso = $request->getParameter('responsable_compromiso' . $cont . $cont2);
-        $cont2++;
+    // Enviamos todas las unidades sin la ultima coma (,). Ejem: "u1","u2","u3"
+    return $this->renderText($data_source);
+  }
+
+  private function verificarFotosYGuardar($request)
+  {
+    $num_foto = 1;
+
+    while ($request->getParameter('titulo_foto' . $num_foto))
+    {
+      $tipo = $_FILES["foto" . $num_foto]["type"];
+      $tamano = $_FILES["foto" . $num_foto]["size"] / 1024;
+
+      if ((($tipo == "image/gif") || ($tipo == "image/jpeg") ||
+              ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 50))
+      {
+        $this->guardarFoto($request, $num_foto);
       }
       
+      $num_foto++;
+    }
+  }
+  
+  private function verificarRazonesMVAminYGuardar($request)
+  {
+    $cont = 1;
+    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
+
+    while ($request->getParameter('razon' . $cont))
+    {
+      foreach ($razones as $razon_de_razones)
+      {
+        if ($request->getParameter('razon' . $cont) == $razon_de_razones->getRazon())
+        {
+          $this->guardarEventoRazon($request, $cont, $razon_de_razones->getId());
+          break;          
+        }
+      }   
+      
       $cont++;
     }
   }
-
-  private function comprobarImagen($tipo_archivo, $tamano_archivo)
+  
+  private function verificarBitacoraYGuardar($request)
   {
-    $formatos = array("gif", "jpeg", "jpg", "png");
-    $extension = end(explode(".", $_FILES["file"]["name"]));
-    if ((($tipo_archivo == "image/gif") || ($tipo_archivo == "image/jpeg") || 
-         ($tipo_archivo == "image/jpg") || ($tipo_archivo == "image/pjpeg") || 
-         ($tipo_archivo == "image/x-png") || ($tipo_archivo == "image/png")) && 
-         ($tamano_archivo < 50) && in_array($extension, $formatos))
+    if ($request->getParameter('bitacora') != "")
     {
-      return true;
+      $bitacora = new SAF_VARIO();
+      $bitacora->setIdEvento(4);
+      $bitacora->setTipo('BITACORA');
+      $bitacora->setDescripcion($request->getParameter('bitacora'));
+      $bitacora->save();
     }
   }
 
-  public function executePrueba(sfWebRequest $request)
+  private function verificarAccionesYRecomendacionesYGuardar($request)
   {
-    $data_source = '"Alfredo","Rosman"';
-    return $this->renderText($data_source);
+    if ($request->getParameter('acciones'))
+    {
+      $acciones_y_recomendaciones = new SAF_VARIO();
+      $acciones_y_recomendaciones->setIdEvento(4);
+      $acciones_y_recomendaciones->setTipo('ACCIONES_Y_RECOMENDACIONES');
+      $acciones_y_recomendaciones->setDescripcion($request->getParameter('acciones'));
+      $acciones_y_recomendaciones->save();
+    }
+  }
+
+  private function verificarCompromisosYResponsablesYGuardar($request)
+  {
+    $cont = 1;
+
+    while ($request->getParameter('compromiso' . $cont))
+    {
+      $cont2 = 1;
+      
+      $compromiso = new SAF_VARIO();
+      $compromiso->setIdEvento(4);
+      $compromiso->setTipo('COMPROMISO');
+      $compromiso->setDescripcion($request->getParameter('compromiso' . $cont));
+      $compromiso->setFDuracionEstimada('2012-05-20');
+      $compromiso->setStatus('PENDIENTE');
+      $compromiso->save();
+
+      while ($request->getParameter('responsable_compromiso' . $cont . $cont2))
+      {
+        $responsable_compromiso = $request->getParameter('responsable_compromiso' . $cont . $cont2);
+        
+        $comp_ue = new SAF_COMP_UE();
+        $comp_ue->setIdCompromiso($compromiso);
+        $comp_ue->setIdUe($responsable_compromiso);
+        $comp_ue->save();
+        
+        $cont2++;
+      }
+
+      $cont++;
+    }
+  }
+  
+  private function guardarFoto($request, $num_foto)
+  {
+    $foto = new SAF_FOTO();
+    $foto->setTitulo($request->getParameter('titulo_foto' . $num_foto));
+    $foto->setSubTitulo($request->getParameter('sub_titulo_foto' . $num_foto));
+    $foto->setDir("subidas/" . $_FILES["foto" . $num_foto]["name"]);
+    $foto->setIdEvento(4);  // ACOMODAR
+
+    if (!file_exists($foto->getDir()))
+    {
+      move_uploaded_file($_FILES["foto" . $num_foto]["tmp_name"], $foto->getDir());
+    }
+
+    $foto->save();
+  }
+
+  private function guardarEventoRazon($request, $num_razon, $id_razon)
+  {
+    $evento_razon = new SAF_EVENTO_RAZON();
+    $evento_razon->setIdEvento(4);
+    $evento_razon->setIdRazon($id_razon);
+    $evento_razon->setMvaMin($request->getParameter('mva_razon' . $num_razon));
+    $evento_razon->save();
+  }
+  
+  private function guardarCompromiso()
+  {
+    
   }
 
 }

@@ -15,7 +15,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @property string $status
  * @property string $titulo
  * @property SAF_EVENTO $SAF_EVENTO
- * @property Doctrine_Collection $SAF_FOTO
  * @property Doctrine_Collection $SAF_COMP_UE
  * 
  * @method integer             getId()                  Returns the current record's "id" value
@@ -26,7 +25,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @method string              getStatus()              Returns the current record's "status" value
  * @method string              getTitulo()              Returns the current record's "titulo" value
  * @method SAF_EVENTO          getSAFEVENTO()           Returns the current record's "SAF_EVENTO" value
- * @method Doctrine_Collection getSAFFOTO()             Returns the current record's "SAF_FOTO" collection
  * @method Doctrine_Collection getSAFCOMPUE()           Returns the current record's "SAF_COMP_UE" collection
  * @method SAF_VARIO           setId()                  Sets the current record's "id" value
  * @method SAF_VARIO           setIdEvento()            Sets the current record's "id_evento" value
@@ -36,7 +34,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @method SAF_VARIO           setStatus()              Sets the current record's "status" value
  * @method SAF_VARIO           setTitulo()              Sets the current record's "titulo" value
  * @method SAF_VARIO           setSAFEVENTO()           Sets the current record's "SAF_EVENTO" value
- * @method SAF_VARIO           setSAFFOTO()             Sets the current record's "SAF_FOTO" collection
  * @method SAF_VARIO           setSAFCOMPUE()           Sets the current record's "SAF_COMP_UE" collection
  * 
  * @package    Proyecto_SAF
@@ -91,10 +88,6 @@ abstract class BaseSAF_VARIO extends sfDoctrineRecord
         $this->hasOne('SAF_EVENTO', array(
              'local' => 'id_evento',
              'foreign' => 'id'));
-
-        $this->hasMany('SAF_FOTO', array(
-             'local' => 'id',
-             'foreign' => 'id_vario'));
 
         $this->hasMany('SAF_COMP_UE', array(
              'local' => 'id',

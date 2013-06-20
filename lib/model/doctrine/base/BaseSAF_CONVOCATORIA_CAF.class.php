@@ -18,7 +18,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @property string $observacion
  * @property string $c_caf
  * @property Doctrine_Collection $SAF_EVENTO
- * @property Doctrine_Collection $SAF_FOTO
  * @property Doctrine_Collection $SAF_ASISTENCIA
  * 
  * @method integer              getId()                Returns the current record's "id" value
@@ -32,7 +31,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @method string               getObservacion()       Returns the current record's "observacion" value
  * @method string               getCCaf()              Returns the current record's "c_caf" value
  * @method Doctrine_Collection  getSAFEVENTO()         Returns the current record's "SAF_EVENTO" collection
- * @method Doctrine_Collection  getSAFFOTO()           Returns the current record's "SAF_FOTO" collection
  * @method Doctrine_Collection  getSAFASISTENCIA()     Returns the current record's "SAF_ASISTENCIA" collection
  * @method SAF_CONVOCATORIA_CAF setId()                Sets the current record's "id" value
  * @method SAF_CONVOCATORIA_CAF setAsunto()            Sets the current record's "asunto" value
@@ -45,7 +43,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @method SAF_CONVOCATORIA_CAF setObservacion()       Sets the current record's "observacion" value
  * @method SAF_CONVOCATORIA_CAF setCCaf()              Sets the current record's "c_caf" value
  * @method SAF_CONVOCATORIA_CAF setSAFEVENTO()         Sets the current record's "SAF_EVENTO" collection
- * @method SAF_CONVOCATORIA_CAF setSAFFOTO()           Sets the current record's "SAF_FOTO" collection
  * @method SAF_CONVOCATORIA_CAF setSAFASISTENCIA()     Sets the current record's "SAF_ASISTENCIA" collection
  * 
  * @package    Proyecto_SAF
@@ -114,10 +111,6 @@ abstract class BaseSAF_CONVOCATORIA_CAF extends sfDoctrineRecord
     {
         parent::setUp();
         $this->hasMany('SAF_EVENTO', array(
-             'local' => 'id',
-             'foreign' => 'id_convocatoria'));
-
-        $this->hasMany('SAF_FOTO', array(
              'local' => 'id',
              'foreign' => 'id_convocatoria'));
 

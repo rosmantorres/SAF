@@ -70,10 +70,6 @@ SAF_CONVOCATORIA_CAF:
       local: id
       foreign: id_convocatoria
       type: many
-    SAF_FOTO:
-      local: id
-      foreign: id_convocatoria
-      type: many
     SAF_ASISTENCIA:
       local: id
       foreign: id_convocatoria
@@ -124,7 +120,7 @@ SAF_EVENTO:
       local: id
       foreign: id_evento
       type: many
-    SAF_R1000_MVAMIN:
+    SAF_EVENTO_RAZON:
       local: id
       foreign: id_evento
       type: many
@@ -134,24 +130,13 @@ SAF_FOTO:
   tableName: SAF_FOTO
   columns:
     id: { type: integer, primary: true, sequence: true }
-    tipo: { notnull: true, type: string(50) }
     titulo: { notnull: true, type: string(100) }
     dir: { notnull: true, type: string(100) }
-    id_convocatoria: { notnull: false, type: integer }
     id_evento: { notnull: false, type: integer }
-    id_vario: { notnull: false, type: integer }
     sub_titulo: { notnull: false, type: string(100) }
   relations:
-    SAF_CONVOCATORIA_CAF:
-      local: id_convocatoria
-      foreign: id
-      type: one
     SAF_EVENTO:
       local: id_evento
-      foreign: id
-      type: one
-    SAF_VARIO:
-      local: id_vario
       foreign: id
       type: one
 
@@ -174,19 +159,33 @@ SAF_PERSONAL:
       foreign: id_personal
       type: many
       
-SAF_R1000_MVAMIN:
+SAF_RAZON_MVAMIN:
   connection: schema_saf
-  tableName: SAF_R1000_MVAMIN
+  tableName: SAF_RAZON_MVAMIN
   columns:
     id: { type: integer, primary: true, sequence: true }
-    id_evento: { notnull: true, type: integer }
-    razon: { notnull: true, type: string(50) }
-    valor: { notnull: true, type: integer }
+    razon: { notnull: true, type: string(50), unique: true }
+  relations:
+    SAF_EVENTO_RAZON:
+      local: id
+      foreign: id_razon
+      type: many
+      
+SAF_EVENTO_RAZON:
+  connection: schema_saf
+  tableName: SAF_EVENTO_RAZON
+  columns:
+    id_evento: { notnull: true, type: integer, primary: true }
+    id_razon: { notnull: true, type: integer, primary: true }
+    mva_min: { notnull: true, type: integer }
   relations:
     SAF_EVENTO:
       local: id_evento
       foreign: id
-      foreignAlias: Razones_1000MvaMin
+      type: one
+    SAF_RAZON_MVAMIN:
+      local: id_razon
+      foreign: id
       type: one
       
 SAF_TAREA_REALIZADA_COMP:
@@ -237,10 +236,6 @@ SAF_VARIO:
       local: id_evento
       foreign: id
       type: one
-    SAF_FOTO:
-      local: id
-      foreign: id_vario
-      type: many
     SAF_COMP_UE:
       local: id
       foreign: id_compromiso

@@ -35,7 +35,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
  * @property Doctrine_Collection $SAF_VARIO
  * @property Doctrine_Collection $SAF_FOTO
- * @property Doctrine_Collection $SAF_R1000_MVAMIN
+ * @property Doctrine_Collection $SAF_EVENTO_RAZON
  * 
  * @method integer                 getId()                      Returns the current record's "id" value
  * @method string                  getDescripcion()             Returns the current record's "descripcion" value
@@ -65,7 +65,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_CONVOCATORIA_CAF    getSAFCONVOCATORIACAF()      Returns the current record's "SAF_CONVOCATORIA_CAF" value
  * @method Doctrine_Collection     getSAFVARIO()                Returns the current record's "SAF_VARIO" collection
  * @method Doctrine_Collection     getSAFFOTO()                 Returns the current record's "SAF_FOTO" collection
- * @method Doctrine_Collection     getSAFR1000MVAMIN()          Returns the current record's "SAF_R1000_MVAMIN" collection
+ * @method Doctrine_Collection     getSAFEVENTORAZON()          Returns the current record's "SAF_EVENTO_RAZON" collection
  * @method SAF_EVENTO              setId()                      Sets the current record's "id" value
  * @method SAF_EVENTO              setDescripcion()             Sets the current record's "descripcion" value
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
@@ -94,7 +94,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setSAFCONVOCATORIACAF()      Sets the current record's "SAF_CONVOCATORIA_CAF" value
  * @method SAF_EVENTO              setSAFVARIO()                Sets the current record's "SAF_VARIO" collection
  * @method SAF_EVENTO              setSAFFOTO()                 Sets the current record's "SAF_FOTO" collection
- * @method SAF_EVENTO              setSAFR1000MVAMIN()          Sets the current record's "SAF_R1000_MVAMIN" collection
+ * @method SAF_EVENTO              setSAFEVENTORAZON()          Sets the current record's "SAF_EVENTO_RAZON" collection
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -220,7 +220,7 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'id_evento'));
 
-        $this->hasMany('SAF_R1000_MVAMIN', array(
+        $this->hasMany('SAF_EVENTO_RAZON', array(
              'local' => 'id',
              'foreign' => 'id_evento'));
     }

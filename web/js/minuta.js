@@ -23,14 +23,14 @@ function VerificarCant()
     jQuery('#remover_compromiso').show();
 }
 
-function Agregar(en, data)
+function Agregar(en, data, cant_respon)
 {
   if (en == 'imagen')
   {
     campo = '<div id="imagen_agregada">\n\
               <input type="text" class="span4" name="titulo_foto' + cant_fotos + '" placeholder="Indique el titulo" required /><br>\n\
               <input type="text" class="span6" name="sub_titulo_foto' + cant_fotos + '" placeholder="Indique el sub-titulo" /><br>\n\
-              <input type="file" name="foto' + cant_fotos + '" required>\n\
+              <input type="file" name="foto' + cant_fotos + '" accept="image/png, image/gif, image/jpeg, image/jpg" required>\n\
              </div>';
     jQuery('#imagenes').append(campo);
   }
@@ -38,8 +38,8 @@ function Agregar(en, data)
   if (en == 'razon')
   {
     campo = '<div id="razon_agregada">\n\
-               <input type="text" class="span3" name="razon' + cant_razones + '" data-provide="typeahead" data-items="3" data-matcher="" data-source=[' + data + '] placeholder="Indique razón" required />\n\
-               <input type="number" class="span1" name="mva_razon' + cant_razones + '" placeholder="Cant" required/> MvaMin\n\
+               <input type="text" class="span3" name="razon' + cant_razones + '" data-provide="typeahead" data-items="3" data-matcher="" data-source=[' + data + '] autocomplete="off" placeholder="Indique razón" required />\n\
+               <input type="number" class="span1" name="mva_razon' + cant_razones + '" placeholder="Cant" required/> MVAmin\n\
              </div>';
 
     jQuery('#razones').append(campo);
@@ -56,15 +56,15 @@ function Agregar(en, data)
 
   if (en == 'compromiso')
   {     
-    var input = ' ';
-    for (var i=1; i<= data; i++)
-    {
-      input = input + '<input type="text" class="span3" name="responsable_compromiso' + cant_compromisos + i +'" data-provide="typeahead" data-items="3" data-matcher="" data-source=[""] placeholder="Indique el responsable del compromiso" required /> ';
+    var select = ' ';
+    for (var i=1; i<= cant_respon; i++)
+    {          
+      select = select + '<select name="responsable_compromiso' + cant_compromisos + i +'" required><option></option>' + data + '</select>';
     }
       
     campo = '<div id="compromiso_agregado">\n\
                <textarea name="compromiso' + cant_compromisos + '" class="input-block-level" rows="3" placeholder="Indique el compromiso" required></textarea> '
-               + input +
+               + select +
             '</div>';
     
     jQuery('#compromisos').append(campo);
@@ -99,7 +99,7 @@ jQuery('document').ready(function()
   {
     $.ajax({
       type: "POST",
-      url: "minuta/prueba",
+      url: "minuta/razonesMVAmin",
       data: {},
       success: function(respuesta) {
         if (respuesta)
@@ -155,11 +155,21 @@ jQuery('document').ready(function()
     
     if (!isNaN(cant) && cant!=null && cant>0)
     {
-      cant_compromisos++;
+      $.ajax({
+      type: "POST",
+      url: "minuta/unidadEquipo",
+      data: {},
+      success: function(respuesta) {
+        if (respuesta)
+        {
+          cant_compromisos++;
 
-      Agregar('compromiso',cant);
+          Agregar('compromiso', respuesta, cant);
 
-      VerificarCant();
+          VerificarCant();
+        }
+       }
+      });
     }
     else if (isNaN(cant))
       alert ('Error:: No introdujo un valor númerico');

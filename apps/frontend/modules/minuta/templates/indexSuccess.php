@@ -17,7 +17,7 @@
           <i class="icon-plus-sign"></i> Agregar Imagén
         </a> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" id="remover_imagen" style="display: none">
-          <i class="icon-minus-sign"></i> Remover Última Imagén
+          <i class="icon-minus-sign"></i> Remover Última Imagén <br>
         </a>
         
         <br>
@@ -25,7 +25,7 @@
           <i class="icon-plus-sign"></i> Agregar Razón
         </a> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" id="remover_razon" style="display: none">
-          <i class="icon-minus-sign"></i> Remover Última Razón
+          <i class="icon-minus-sign"></i> Remover Última Razón <br>
         </a>
         
         <br>
@@ -55,7 +55,7 @@
         
         <pre><i class="icon-tag"></i> RESUMEN DE LA BITÁCORA DEL EVENTO: </pre> 
         <div style="margin: 15px;">
-          <textarea name="bitacora" class="input-block-level" rows="8"><?php echo $evento->getDescAveria() ?></textarea>
+          <textarea name="bitacora" class="input-block-level" rows="3"><?php echo $evento->getDescAveria() ?></textarea>
         </div>
         
         <pre><i class="icon-tag"></i> ACCIONES Y RECOMENDACIONES: </pre>

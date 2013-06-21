@@ -48,7 +48,7 @@ function Agregar(en, data, cant_respon)
   if (en == 'acciones')
   {
     campo = '<div id="accion_agregada">\n\
-               <textarea name="acciones" class="input-block-level" rows="5" placeholder="Indique las acciones y recomendaciones" required></textarea>\n\
+               <textarea name="acciones" class="input-block-level" rows="3" placeholder="Indique las acciones y recomendaciones" required></textarea>\n\
              </div>';
 
     jQuery('#acciones').append(campo);
@@ -59,11 +59,13 @@ function Agregar(en, data, cant_respon)
     var select = ' ';
     for (var i=1; i<= cant_respon; i++)
     {          
-      select = select + '<select name="responsable_compromiso' + cant_compromisos + i +'" required><option></option>' + data + '</select>';
+      select = select + '<select class="span1" name="responsable_compromiso' + cant_compromisos + i +'" required><option></option>' + data + '</select> ';
     }
       
     campo = '<div id="compromiso_agregado">\n\
-               <textarea name="compromiso' + cant_compromisos + '" class="input-block-level" rows="3" placeholder="Indique el compromiso" required></textarea> '
+               <small><b>Duración estimada del compromiso:</b></small>\n\
+               <br><input name="f_duracion_estimada_comp' + cant_compromisos + '" type="datetime-local" required />\n\
+               <textarea name="compromiso' + cant_compromisos + '" class="input-block-level" rows="3" placeholder="Indique el compromiso y luego los responsables" required></textarea> '
                + select +
             '</div>';
     

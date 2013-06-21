@@ -10,17 +10,16 @@
  */
 class minutaActions extends sfActions
 {
-
-  /**
-   * Executes index action
-   *
-   * @param sfRequest $request A request object
-   */
   public function executeIndex(sfWebRequest $request)
   {
     $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find(4);
   }
 
+  /**
+   * Acción que manda a procesar todo el desarrollo que se le hizo a un evento
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeProcesarEvento(sfWebRequest $request)
   {
     $this->verificarFotosYGuardar($request);
@@ -30,6 +29,12 @@ class minutaActions extends sfActions
     $this->verificarCompromisosYResponsablesYGuardar($request);
   }
 
+  /**
+   * Acción que retorna todas las razones disponibles por la que un evento supera los 999MVAmin
+   * 
+   * @param sfWebRequest $request
+   * @return string
+   */
   public function executeRazonesMVAmin(sfWebRequest $request)
   {
     $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
@@ -44,7 +49,13 @@ class minutaActions extends sfActions
     // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
     return $this->renderText(substr($data_source, 0, -1));
   }
-  
+
+  /**
+   * Acción que retorna todas las unidades que siempre asisten al CAF
+   * 
+   * @param sfWebRequest $request
+   * @return string
+   */
   public function executeUnidadEquipo(sfWebRequest $request)
   {
     $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
@@ -53,13 +64,19 @@ class minutaActions extends sfActions
 
     foreach ($unidades as $unidad)
     {
-      $data_source = $data_source . "<option value='" . $unidad->getId() . "'>" . $unidad->getNombre() . "</option>";      
+      $data_source = $data_source . "<option value='" . $unidad->getId() . "'>" . $unidad->getNombre() . "</option>";
     }
-    
+
     // Enviamos todas las unidades sin la ultima coma (,). Ejem: "u1","u2","u3"
     return $this->renderText($data_source);
   }
 
+  /**
+   * Método que verifica si existen fotos agregadas y que las mismas cumplan con 
+   * el tipo de formato y con el tamaño, para despues mandarlas a guardar en bd.
+   * 
+   * @param sfWebRequest $request
+   */
   private function verificarFotosYGuardar($request)
   {
     $num_foto = 1;
@@ -74,31 +91,75 @@ class minutaActions extends sfActions
       {
         $this->guardarFoto($request, $num_foto);
       }
-      
+
       $num_foto++;
     }
   }
-  
+
+  /**
+   * Método que verifica si existen razones agregadas por la que un evento pueda 
+   * superar los 999MVAmin y que las mismas correspondan con las de la bd. 
+   * También manda verificar que la misma razon no sea agregada mas de una vez
+   * 
+   * @param sfWebRequest $request
+   */
   private function verificarRazonesMVAminYGuardar($request)
   {
-    $cont = 1;
+    $num_razon = 1;
     $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
 
-    while ($request->getParameter('razon' . $cont))
+    // Mientras existan razones agregadas...
+    while ($request->getParameter('razon' . $num_razon))
     {
       foreach ($razones as $razon_de_razones)
-      {
-        if ($request->getParameter('razon' . $cont) == $razon_de_razones->getRazon())
+      { // Se verifica que la razon agregada sea una correcta comparandola con las de la BD
+        if ($request->getParameter('razon' . $num_razon) == $razon_de_razones->getRazon())
         {
-          $this->guardarEventoRazon($request, $cont, $razon_de_razones->getId());
-          break;          
+          // Si no fue agregada mas de una vez procedemos a guardarla
+          if (!$this->verificarSiLaRazonYaFueAgregada($num_razon, $request))
+          {
+            $this->guardarEventoRazon($request, $num_razon, $razon_de_razones->getId());
+          }
+
+          break;
         }
-      }   
-      
-      $cont++;
+      }
+
+      $num_razon++;
     }
   }
-  
+
+  /**
+   * Método que verifica si una razon fue agregada mas de una vez al mismo evento.
+   * 
+   * @param integer $num_razon_a_verificar
+   * @param sfWebRequest $request
+   * @return boolean
+   */
+  private function verificarSiLaRazonYaFueAgregada($num_razon_a_verificar, $request)
+  {
+    $num_razon = $num_razon_a_verificar + 1;
+
+    // Mientras existan razones agregadas siguientes a la razon a verificar...
+    while ($request->getParameter('razon' . $num_razon))
+    {// si la razon fue agregada mas de una vez
+      if ($request->getParameter('razon' . $num_razon_a_verificar) == $request->getParameter('razon' . $num_razon))
+      {
+        return true;
+      }
+
+      $num_razon++;
+    }
+
+    return false;
+  }
+
+  /**
+   * Método que verifica si fue agregada el resumen de la bitacora del evento 
+   * para ser guardada en bd.
+   * 
+   * @param sfWebRequest $request
+   */
   private function verificarBitacoraYGuardar($request)
   {
     if ($request->getParameter('bitacora') != "")
@@ -111,6 +172,12 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que verifica si fue agregada acciones y recomendaciones al evento 
+   * para ser guardada en bd.
+   * 
+   * @param sfWebRequest $request
+   */
   private function verificarAccionesYRecomendacionesYGuardar($request)
   {
     if ($request->getParameter('acciones'))
@@ -123,54 +190,102 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que verifica si fueron agregados compromisos con sus respectivos
+   * responsables, mandando a verificar que los mismo no se repitan para dicho
+   * compromiso.
+   * 
+   * @param sfWebRequest $request
+   */
   private function verificarCompromisosYResponsablesYGuardar($request)
   {
-    $cont = 1;
+    $num_comp = 1;
 
-    while ($request->getParameter('compromiso' . $cont))
+    // Mientras existan compromisos agregados...
+    while ($request->getParameter('compromiso' . $num_comp))
     {
-      $cont2 = 1;
-      
-      $compromiso = new SAF_VARIO();
-      $compromiso->setIdEvento(4);
-      $compromiso->setTipo('COMPROMISO');
-      $compromiso->setDescripcion($request->getParameter('compromiso' . $cont));
-      $compromiso->setFDuracionEstimada('2012-05-20');
-      $compromiso->setStatus('PENDIENTE');
-      $compromiso->save();
+      $num_resp = 1;
 
-      while ($request->getParameter('responsable_compromiso' . $cont . $cont2))
+      if ($compromiso = $this->guardarCompromiso($request, $num_comp))
       {
-        $responsable_compromiso = $request->getParameter('responsable_compromiso' . $cont . $cont2);
-        
-        $comp_ue = new SAF_COMP_UE();
-        $comp_ue->setIdCompromiso($compromiso);
-        $comp_ue->setIdUe($responsable_compromiso);
-        $comp_ue->save();
-        
-        $cont2++;
+        // Mientras existan responsables para ese compromiso
+        while ($id_resp_comp = $request->getParameter('responsable_compromiso' . $num_comp . $num_resp))
+        {
+          // Si no has sido agregado, se guarda.
+          if (!$this->verificarSiElResponsableYaFueAgregado($num_resp, $num_comp, $request))
+          {
+            $this->guardarResponsableCompromiso($id_resp_comp, $compromiso);
+          }
+
+          $num_resp++;
+        }        
+      }
+      
+      $num_comp++;
+    }
+  }
+
+  /**
+   * Método que verifica si un responsable fue agregado para un mismo compromiso
+   * y evento mas de una vez.
+   * 
+   * @param integer $num_resp_a_verificar
+   * @param integer $num_comp
+   * @param sfWebRequest $request
+   * @return boolean
+   */
+  private function verificarSiElResponsableYaFueAgregado($num_resp_a_verificar, $num_comp, $request)
+  {
+    $num_resp = $num_resp_a_verificar + 1;
+
+    // Mientras existan responsables siguientes al responsable a verificar...
+    while ($id_resp_comp = $request->getParameter('responsable_compromiso' . $num_comp . $num_resp))
+    {
+      // Si el responsable se repite (fue agregado mas de una vez)
+      if ($id_resp_comp == $request->getParameter('responsable_compromiso' . $num_comp . $num_resp_a_verificar))
+      {
+        return true;
       }
 
-      $cont++;
+      $num_resp++;
     }
+
+    return false;
   }
-  
+
+  /**
+   * Método que sube al servidor un archivo de foto y guarda la información 
+   * en bd, si la misma no se encuentra subida o repetida.
+   * 
+   * @param sfWebRequest $request
+   * @param type $num_foto
+   */
   private function guardarFoto($request, $num_foto)
   {
-    $foto = new SAF_FOTO();
-    $foto->setTitulo($request->getParameter('titulo_foto' . $num_foto));
-    $foto->setSubTitulo($request->getParameter('sub_titulo_foto' . $num_foto));
-    $foto->setDir("subidas/" . $_FILES["foto" . $num_foto]["name"]);
-    $foto->setIdEvento(4);  // ACOMODAR
-
-    if (!file_exists($foto->getDir()))
+    // Si no existe el archivo en la carpeta "subidas" entonces guardamos.
+    if (!file_exists("subidas/" . $_FILES["foto" . $num_foto]["name"]))
     {
+      $foto = new SAF_FOTO();
+
+      $foto->setTitulo($request->getParameter('titulo_foto' . $num_foto));
+      $foto->setSubTitulo($request->getParameter('sub_titulo_foto' . $num_foto));
+      $foto->setDir("subidas/" . $_FILES["foto" . $num_foto]["name"]);
+      $foto->setIdEvento(4);  // ACOMODAR
+
+      $foto->save();
+
+      // Subimos la foto al servidor
       move_uploaded_file($_FILES["foto" . $num_foto]["tmp_name"], $foto->getDir());
     }
-
-    $foto->save();
   }
 
+  /**
+   * Método que guarda la razon y los MVAmin correspondiente a un evento
+   * 
+   * @param sfWebRequest $request
+   * @param integer $num_razon
+   * @param integer $id_razon
+   */
   private function guardarEventoRazon($request, $num_razon, $id_razon)
   {
     $evento_razon = new SAF_EVENTO_RAZON();
@@ -179,10 +294,49 @@ class minutaActions extends sfActions
     $evento_razon->setMvaMin($request->getParameter('mva_razon' . $num_razon));
     $evento_razon->save();
   }
-  
-  private function guardarCompromiso()
+
+  /**
+   * Método que guarda un compromiso correspondiente a un evento si la fecha
+   * de duración estimada es correcta. (Mayor a la hora actual)
+   * 
+   * @param sfWebRequest $request
+   * @param integer $num_comp
+   * @return SAF_VARIO | boolean
+   */
+  private function guardarCompromiso($request, $num_comp)
   {
-    
+    $f_compuesta = explode('T', $request->getParameter('f_duracion_estimada_comp' . $num_comp));
+    $f_duracion_estimada = $f_compuesta[0] . ' ' . $f_compuesta[1];
+
+    // Si la fecha de estimación elegida es mayor a la fecha del sistema
+    if (strtotime($f_duracion_estimada) > time())
+    {
+      $compromiso = new SAF_VARIO();
+      $compromiso->setIdEvento(4);
+      $compromiso->setTipo('COMPROMISO');
+      $compromiso->setDescripcion($request->getParameter('compromiso' . $num_comp));
+      $compromiso->setFDuracionEstimada($f_duracion_estimada);
+      $compromiso->setStatus('PENDIENTE');
+      $compromiso->save();
+
+      return $compromiso;
+    }
+
+    return false;
+  }
+
+  /**
+   * Método que guarda el o los responsables correspondiente a un compromiso y evento
+   * 
+   * @param type $responsable
+   * @param type $compromiso
+   */
+  private function guardarResponsableCompromiso($responsable, $compromiso)
+  {
+    $comp_ue = new SAF_COMP_UE();
+    $comp_ue->setIdCompromiso($compromiso);
+    $comp_ue->setIdUe($responsable);
+    $comp_ue->save();
   }
 
 }

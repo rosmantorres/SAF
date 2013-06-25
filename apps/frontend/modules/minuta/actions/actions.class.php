@@ -10,11 +10,19 @@
  */
 class minutaActions extends sfActions
 {
+  private $msj_error = '';
+  
   public function executeIndex(sfWebRequest $request)
   {
     $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find(4);
   }
 
+  public function executeInicioDesarrollo(sfWebRequest $request)
+  {
+    $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
+            ->getEventosConvocatoria(2);
+  }
+  
   /**
    * Acción que manda a procesar todo el desarrollo que se le hizo a un evento
    * 
@@ -27,6 +35,8 @@ class minutaActions extends sfActions
     $this->verificarBitacoraYGuardar($request);
     $this->verificarAccionesYRecomendacionesYGuardar($request);
     $this->verificarCompromisosYResponsablesYGuardar($request);
+    $this->getUser()->setFlash('error', $this->msj_error);
+    $this->redirect('minuta/index');
   }
 
   /**
@@ -90,6 +100,11 @@ class minutaActions extends sfActions
               ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 50))
       {
         $this->guardarFoto($request, $num_foto);
+      }
+      else
+      {
+        $this->msj_error = $this->msj_error . '° El formato o tamaño de la imagen ' . 
+                $request->getParameter('titulo_foto' . $num_foto) . ' no es valido. ';
       }
 
       $num_foto++;
@@ -276,6 +291,12 @@ class minutaActions extends sfActions
 
       // Subimos la foto al servidor
       move_uploaded_file($_FILES["foto" . $num_foto]["tmp_name"], $foto->getDir());
+    }
+    else
+    {
+      $this->msj_error = $this->msj_error . '° La imagen ' . 
+              $request->getParameter('titulo_foto' . $num_foto) . 
+              ' ya se encontraba subida al servidor. ';
     }
   }
 

@@ -12,5 +12,12 @@
  */
 class SAF_VARIO extends BaseSAF_VARIO
 {
-
+  public function getResponsables()
+  {
+    return Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')
+            ->createQuery('ue')
+            ->innerJoin('ue.SAF_COMP_UE cue')
+            ->where('cue.id_compromiso = ?', $this->getId())
+            ->execute();
+  }
 }

@@ -12,5 +12,8 @@
  */
 class SAF_RAZON_MVAMIN extends BaseSAF_RAZON_MVAMIN
 {
-
+  public function __toString()
+  {
+    return $this->getRazon();
+  }
 }

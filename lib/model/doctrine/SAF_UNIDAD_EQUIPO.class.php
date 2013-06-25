@@ -12,5 +12,8 @@
  */
 class SAF_UNIDAD_EQUIPO extends BaseSAF_UNIDAD_EQUIPO
 {
-
+  public function __toString()
+  {
+    return $this->getNombre();
+  }
 }

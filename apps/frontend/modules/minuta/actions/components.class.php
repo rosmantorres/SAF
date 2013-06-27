@@ -10,25 +10,24 @@
  */
 class minutaComponents extends sfComponents
 {
+
   public function executeMostrarDesarrolloEvento()
   {
-    $this->fotos = Doctrine_Core::getTable('SAF_FOTO')
-            ->createQuery()
+    $this->fotos = Doctrine_Core::getTable('SAF_FOTO')->createQuery()
             ->where('id_evento = ?', $this->evento)
             ->execute();
 
-    $this->razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')
-            ->createQuery('e_r')
-            ->where('e_r.id_evento = ?', $this->evento)
-            ->innerJoin('e_r.SAF_RAZON_MVAMIN r')
+    $this->razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->createQuery()
+            ->where('id_evento = ?', $this->evento)
             ->execute();
 
-    $varios = Doctrine_Core::getTable('SAF_VARIO')
-            ->createQuery()
+    $varios = Doctrine_Core::getTable('SAF_VARIO')->createQuery()
             ->where('id_evento = ?', $this->evento)
             ->orderBy('tipo')
             ->execute();
-    
+
+    $this->compromisos = array();
+
     foreach ($varios as $vario)
     {
       if ($vario->getTipo() == 'BITACORA')
@@ -39,10 +38,11 @@ class minutaComponents extends sfComponents
       {
         $this->acciones_recomendaciones = $vario->getDescripcion();
       }
-    }    
-    
-    $this->compromisos = $varios;
-    
+      elseif ($vario->getTipo() == 'COMPROMISO')
+      {
+        array_push($this->compromisos, $vario);
+      }
+    }
   }
 
 }

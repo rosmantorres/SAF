@@ -10,11 +10,33 @@
  */
 class minutaActions extends sfActions
 {
+
   private $msj_error = '';
-  
-  public function executeIndex(sfWebRequest $request)
+
+  public function executeDesarrollarEvento(sfWebRequest $request)
   {
-    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find(4);
+    $id_evento = $request->getParameter('id');
+
+    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento);
+
+    $this->fotos = $this->obtenerFotosDelEvento($id_evento);
+
+    $this->razones = $this->obtenerRazonesDelEvento($id_evento);
+
+    $this->data_razones = $this->obtenerRazonesMVAmin();
+
+    $this->resumen_bitacora = $this->obtenerResumenBitacoraDelEvento($id_evento);
+
+    $this->acciones_recomendaciones = $this->obtenerAccionesYRecomendacionesDelEvento($id_evento);
+
+    $this->compromisos = $this->obtenerCompromisosDelEvento($id_evento);
+
+    $this->data_ue = $this->obtenerUnidadesEquipos();
+  }
+
+  public function executeIndex()
+  {
+    
   }
 
   public function executeInicioDesarrollo(sfWebRequest $request)
@@ -22,7 +44,7 @@ class minutaActions extends sfActions
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosConvocatoria(2);
   }
-  
+
   /**
    * Acción que manda a procesar todo el desarrollo que se le hizo a un evento
    * 
@@ -30,34 +52,35 @@ class minutaActions extends sfActions
    */
   public function executeProcesarEvento(sfWebRequest $request)
   {
+    $id_evento = $request->getParameter('id');
+
+    $this->reiniciarFotosDelEvento($id_evento);
     $this->verificarFotosYGuardar($request);
+
+    $this->reiniciarRazonesDelEvento($id_evento);
     $this->verificarRazonesMVAminYGuardar($request);
+
+    $this->reiniciarResumenBitacoraDelEvento($id_evento);
     $this->verificarBitacoraYGuardar($request);
+
+    $this->reiniciarAccionesYRecomendacionesDelEvento($id_evento);
     $this->verificarAccionesYRecomendacionesYGuardar($request);
+
+    $this->reiniciarCompromisosDelEvento($id_evento);
     $this->verificarCompromisosYResponsablesYGuardar($request);
+
     $this->getUser()->setFlash('error', $this->msj_error);
-    $this->redirect('minuta/index');
+    $this->redirect('minuta/desarrollarEvento?id=' . $request->getParameter('id'));
   }
 
   /**
-   * Acción que retorna todas las razones disponibles por la que un evento supera los 999MVAmin
-   * 
-   * @param sfWebRequest $request
-   * @return string
+   * Acción que retorna todas las razones disponibles por la que un evento supera
+   * los 999MVAmin. Se necesita esta acción ya que se llama desde minuta.js
+   * a través del método ajax. Los js pueden solo llamar acciones (execute).
    */
-  public function executeRazonesMVAmin(sfWebRequest $request)
+  public function executeRazonesMVAmin()
   {
-    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
-
-    $data_source = '';
-
-    foreach ($razones as $razon)
-    {
-      $data_source = $data_source . '"' . $razon->getRazon() . '",';
-    }
-
-    // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
-    return $this->renderText(substr($data_source, 0, -1));
+    return $this->renderText($this->obtenerRazonesMVAmin());
   }
 
   /**
@@ -82,8 +105,8 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que verifica si existen fotos agregadas y que las mismas cumplan con 
-   * el tipo de formato y con el tamaño, para despues mandarlas a guardar en bd.
+   * Método que comienza con el proceso de verificación de las imagenes para
+   * despues proceder a guardar en bd.
    * 
    * @param sfWebRequest $request
    */
@@ -91,23 +114,49 @@ class minutaActions extends sfActions
   {
     $num_foto = 1;
 
+    // Mientras existan fotos agregadas...
     while ($request->getParameter('titulo_foto' . $num_foto))
-    {
-      $tipo = $_FILES["foto" . $num_foto]["type"];
-      $tamano = $_FILES["foto" . $num_foto]["size"] / 1024;
-
-      if ((($tipo == "image/gif") || ($tipo == "image/jpeg") ||
-              ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 50))
+    { // Si se seleccionó una foto para subir al servidor
+      if ($_FILES["foto" . $num_foto]["name"])
+      { // Si el formato y el tamaño del archivo es correcto
+        if ($this->verificarFormatoYTamahnoFoto($request, $num_foto))
+        {
+          $this->guardarFoto($request, $num_foto);
+        }
+      }
+      else // Si no se seleccionó una foto para subir al servidor
       {
         $this->guardarFoto($request, $num_foto);
       }
-      else
-      {
-        $this->msj_error = $this->msj_error . '° El formato o tamaño de la imagen ' . 
-                $request->getParameter('titulo_foto' . $num_foto) . ' no es valido. ';
-      }
 
       $num_foto++;
+    }
+  }
+
+  /**
+   * Método que verifica si el tamaño y formato del archivo de la imagen,
+   * cumple con los requisitos del sistema.
+   * 
+   * @param sfWebRequest $request
+   * @param integer $num_foto
+   * @return boolean
+   */
+  public function verificarFormatoYTamahnoFoto($request, $num_foto)
+  {
+    $tipo = $_FILES["foto" . $num_foto]["type"];
+    $tamano = $_FILES["foto" . $num_foto]["size"] / 1024;
+
+    if ((($tipo == "image/gif") || ($tipo == "image/jpeg") ||
+            ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 50))
+    {
+      return true;
+    }
+    else
+    {
+      $this->msj_error = $this->msj_error . '° El formato o tamaño de la imagen ' .
+              $request->getParameter('titulo_foto' . $num_foto) . ' no es valido. ';
+
+      return false;
     }
   }
 
@@ -170,8 +219,8 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que verifica si fue agregada el resumen de la bitacora del evento 
-   * para ser guardada en bd.
+   * Método que verifica si fue agregada el resumen de la 
+   * bitacora del evento para ser guardada en bd.
    * 
    * @param sfWebRequest $request
    */
@@ -179,11 +228,7 @@ class minutaActions extends sfActions
   {
     if ($request->getParameter('bitacora') != "")
     {
-      $bitacora = new SAF_VARIO();
-      $bitacora->setIdEvento(4);
-      $bitacora->setTipo('BITACORA');
-      $bitacora->setDescripcion($request->getParameter('bitacora'));
-      $bitacora->save();
+      $this->guardarResumenBitacora($request);
     }
   }
 
@@ -197,11 +242,7 @@ class minutaActions extends sfActions
   {
     if ($request->getParameter('acciones'))
     {
-      $acciones_y_recomendaciones = new SAF_VARIO();
-      $acciones_y_recomendaciones->setIdEvento(4);
-      $acciones_y_recomendaciones->setTipo('ACCIONES_Y_RECOMENDACIONES');
-      $acciones_y_recomendaciones->setDescripcion($request->getParameter('acciones'));
-      $acciones_y_recomendaciones->save();
+      $this->guardarAccionesYRecomendaciones($request);
     }
   }
 
@@ -233,9 +274,9 @@ class minutaActions extends sfActions
           }
 
           $num_resp++;
-        }        
+        }
       }
-      
+
       $num_comp++;
     }
   }
@@ -269,35 +310,205 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que sube al servidor un archivo de foto y guarda la información 
-   * en bd, si la misma no se encuentra subida o repetida.
+   * 
+   * @return type
+   */
+  private function obtenerFotosDelEvento($id_evento)
+  {
+    return Doctrine_Core::getTable('SAF_FOTO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->execute();
+  }
+
+  /**
+   * 
+   * @return type
+   */
+  private function obtenerRazonesDelEvento($id_evento)
+  {
+    return Doctrine_Core::getTable('SAF_EVENTO_RAZON')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->execute();
+  }
+
+  /**
+   * 
+   * @return type
+   */
+  private function obtenerResumenBitacoraDelEvento($id_evento)
+  {
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->andWhere('tipo = ?', "BITACORA")
+                    ->fetchOne();
+  }
+
+  /**
+   * 
+   * @return type
+   */
+  private function obtenerAccionesYRecomendacionesDelEvento($id_evento)
+  {
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->andWhere('tipo = ?', "ACCIONES_Y_RECOMENDACIONES")
+                    ->fetchOne();
+  }
+
+  /**
+   * 
+   * @return type
+   */
+  private function obtenerCompromisosDelEvento($id_evento)
+  {
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->andWhere('tipo = ?', "COMPROMISO")
+                    ->execute();
+  }
+
+  /**
+   * Método que retorna todas las razones disponibles por la que un 
+   * evento supera los 999MVAmin, pero en un string con formato específico.
+   * 
+   * @return type
+   */
+  private function obtenerRazonesMVAmin()
+  {
+    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
+
+    $data_source = '';
+
+    foreach ($razones as $razon)
+    {
+      $data_source = $data_source . '"' . $razon->getRazon() . '",';
+    }
+
+    // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
+    return substr($data_source, 0, -1);
+  }
+
+  private function obtenerUnidadesEquipos()
+  {
+    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
+
+    return $unidades;
+  }
+
+  /**
+   * Método que reinicia o borra todos los registros SAF_FOTO de la BD
+   * correspondientes a un evento.
+   */
+  private function reiniciarFotosDelEvento($id_evento)
+  {
+    $fotos = $this->obtenerFotosDelEvento($id_evento);
+
+    foreach ($fotos as $foto)
+    {
+      // Borra el registro SAF_FOTO de la BD
+      $foto->delete();
+    }
+  }
+
+  private function reiniciarRazonesDelEvento($id_evento)
+  {
+    $razones = $this->obtenerRazonesDelEvento($id_evento);
+
+    foreach ($razones as $razon)
+    {
+      // Borra el registro SAF_EVENTO_RAZON de la BD
+      $razon->delete();
+    }
+  }
+
+  private function reiniciarResumenBitacoraDelEvento($id_evento)
+  {
+    if ($bitacora = $this->obtenerResumenBitacoraDelEvento($id_evento))
+    {
+      $bitacora->delete();
+    }
+  }
+
+  private function reiniciarAccionesYRecomendacionesDelEvento($id_evento)
+  {
+    if ($acciones_recomendaciones = $this->obtenerAccionesYRecomendacionesDelEvento($id_evento))
+    {
+      $acciones_recomendaciones->delete();
+    }
+  }
+
+  private function reiniciarCompromisosDelEvento($id_evento)
+  {
+    $compromisos = $this->obtenerCompromisosDelEvento($id_evento);
+
+    foreach ($compromisos as $compromiso)
+    {
+      $responsables = Doctrine_Core::getTable('SAF_COMP_UE')
+              ->createQuery()
+              ->where('id_compromiso = ?', $compromiso)
+              ->execute();
+
+      foreach ($responsables as $responsable)
+      {
+        // Borra el registro SAF_COMP_UE de la BD
+        $responsable->delete();
+      }
+
+      // Borra el registro SAF_VARIO de la BD
+      $compromiso->delete();
+    }
+  }
+
+  /**
+   * Método que suprime un archivo de foto del servidor. Cuando ya no se necesita
+   * 
+   * @param string $dir
+   */
+  private function suprimirFotoServidor($dir)
+  {
+    // Si existe la foto en el servidor
+    if (file_exists($dir))
+    { // Se borra la foto
+      unlink($dir);
+    }
+  }
+
+  /**
+   * Método que sube al servidor un archivo de foto y guarda la información en BD.
    * 
    * @param sfWebRequest $request
    * @param type $num_foto
    */
   private function guardarFoto($request, $num_foto)
   {
-    // Si no existe el archivo en la carpeta "subidas" entonces guardamos.
-    if (!file_exists("subidas/" . $_FILES["foto" . $num_foto]["name"]))
+    if ($_FILES["foto" . $num_foto]["name"])
     {
-      $foto = new SAF_FOTO();
-
-      $foto->setTitulo($request->getParameter('titulo_foto' . $num_foto));
-      $foto->setSubTitulo($request->getParameter('sub_titulo_foto' . $num_foto));
-      $foto->setDir("subidas/" . $_FILES["foto" . $num_foto]["name"]);
-      $foto->setIdEvento(4);  // ACOMODAR
-
-      $foto->save();
-
-      // Subimos la foto al servidor
-      move_uploaded_file($_FILES["foto" . $num_foto]["tmp_name"], $foto->getDir());
+      $tipo_archivo = explode('.', $_FILES["foto" . $num_foto]["name"]);
+      $nombre_foto = 'subidas/SAF' . mt_rand() . '.' . $tipo_archivo[1];
+      if ($request->getParameter('id_foto' . $num_foto))
+      {
+        $this->suprimirFotoServidor($request->getParameter('id_foto' . $num_foto));
+      }
     }
     else
     {
-      $this->msj_error = $this->msj_error . '° La imagen ' . 
-              $request->getParameter('titulo_foto' . $num_foto) . 
-              ' ya se encontraba subida al servidor. ';
+      $nombre_foto = $request->getParameter('id_foto' . $num_foto);
     }
+
+    $foto = new SAF_FOTO();
+    $foto->setTitulo($request->getParameter('titulo_foto' . $num_foto));
+    $foto->setSubTitulo($request->getParameter('sub_titulo_foto' . $num_foto));
+    $foto->setDir($nombre_foto);
+    $foto->setIdEvento($request->getParameter('id'));
+
+    $foto->save();
+
+    move_uploaded_file($_FILES["foto" . $num_foto]["tmp_name"], $nombre_foto);
   }
 
   /**
@@ -310,10 +521,28 @@ class minutaActions extends sfActions
   private function guardarEventoRazon($request, $num_razon, $id_razon)
   {
     $evento_razon = new SAF_EVENTO_RAZON();
-    $evento_razon->setIdEvento(4);
+    $evento_razon->setIdEvento($request->getParameter('id'));
     $evento_razon->setIdRazon($id_razon);
     $evento_razon->setMvaMin($request->getParameter('mva_razon' . $num_razon));
     $evento_razon->save();
+  }
+
+  private function guardarResumenBitacora($request)
+  {
+    $bitacora = new SAF_VARIO();
+    $bitacora->setIdEvento($request->getParameter('id'));
+    $bitacora->setTipo('BITACORA');
+    $bitacora->setDescripcion($request->getParameter('bitacora'));
+    $bitacora->save();
+  }
+
+  private function guardarAccionesYRecomendaciones($request)
+  {
+    $acciones_y_recomendaciones = new SAF_VARIO();
+    $acciones_y_recomendaciones->setIdEvento($request->getParameter('id'));
+    $acciones_y_recomendaciones->setTipo('ACCIONES_Y_RECOMENDACIONES');
+    $acciones_y_recomendaciones->setDescripcion($request->getParameter('acciones'));
+    $acciones_y_recomendaciones->save();
   }
 
   /**
@@ -333,7 +562,7 @@ class minutaActions extends sfActions
     if (strtotime($f_duracion_estimada) > time())
     {
       $compromiso = new SAF_VARIO();
-      $compromiso->setIdEvento(4);
+      $compromiso->setIdEvento($request->getParameter('id'));
       $compromiso->setTipo('COMPROMISO');
       $compromiso->setDescripcion($request->getParameter('compromiso' . $num_comp));
       $compromiso->setFDuracionEstimada($f_duracion_estimada);

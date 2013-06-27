@@ -1,5 +1,6 @@
 var cant_fotos = 0;
 var cant_razones = 0;
+var cant_acciones_recomendaciones = 0;
 var cant_compromisos = 0;
 
 function VerificarCant()
@@ -15,7 +16,19 @@ function VerificarCant()
 
   if (cant_razones > 0)
     jQuery('#remover_razon').show();
-  
+
+  if (cant_acciones_recomendaciones == 0)
+  {
+    jQuery('#remover_acciones').hide();
+    jQuery('#agregar_acciones').show();
+  }
+
+  if (cant_acciones_recomendaciones > 0)
+  {
+    jQuery('#remover_acciones').show();
+    jQuery('#agregar_acciones').hide();
+  }
+
   if (cant_compromisos == 0)
     jQuery('#remover_compromiso').hide();
 
@@ -28,7 +41,7 @@ function Agregar(en, data, cant_respon)
   if (en == 'imagen')
   {
     campo = '<div id="imagen_agregada">\n\
-              <input type="text" class="span4" name="titulo_foto' + cant_fotos + '" placeholder="Indique el titulo" required /><br>\n\
+              <input type="text" class="span5" name="titulo_foto' + cant_fotos + '" placeholder="Indique el titulo" required /><br>\n\
               <input type="text" class="span6" name="sub_titulo_foto' + cant_fotos + '" placeholder="Indique el sub-titulo" /><br>\n\
               <input type="file" name="foto' + cant_fotos + '" accept="image/png, image/gif, image/jpeg, image/jpg" required>\n\
              </div>';
@@ -38,7 +51,7 @@ function Agregar(en, data, cant_respon)
   if (en == 'razon')
   {
     campo = '<div id="razon_agregada">\n\
-               <input type="text" class="span3" name="razon' + cant_razones + '" data-provide="typeahead" data-items="3" data-matcher="" data-source=[' + data + '] autocomplete="off" placeholder="Indique razón" required />\n\
+               <input type="text" class="span3" name="razon' + cant_razones + '" data-provide="typeahead" data-items="3" data-source=[' + data + '] autocomplete="off" placeholder="Indique razón" required />\n\
                <input type="number" class="span1" name="mva_razon' + cant_razones + '" placeholder="Cant" required/> MVAmin\n\
              </div>';
 
@@ -55,26 +68,32 @@ function Agregar(en, data, cant_respon)
   }
 
   if (en == 'compromiso')
-  {     
+  {
     var select = ' ';
-    for (var i=1; i<= cant_respon; i++)
-    {          
-      select = select + '<select class="span1" name="responsable_compromiso' + cant_compromisos + i +'" required><option></option>' + data + '</select> ';
+    for (var i = 1; i <= cant_respon; i++)
+    {
+      select = select + '<select class="span1" name="responsable_compromiso' + cant_compromisos + i + '" required><option></option>' + data + '</select> ';
     }
-      
+
     campo = '<div id="compromiso_agregado">\n\
                <small><b>Duración estimada del compromiso:</b></small>\n\
                <br><input name="f_duracion_estimada_comp' + cant_compromisos + '" type="datetime-local" required />\n\
                <textarea name="compromiso' + cant_compromisos + '" class="input-block-level" rows="3" placeholder="Indique el compromiso y luego los responsables" required></textarea> '
-               + select +
+            + select +
             '</div>';
-    
+
     jQuery('#compromisos').append(campo);
   }
 }
 
 jQuery('document').ready(function()
 {
+  cant_fotos = jQuery('#cant_fotos').val();
+  cant_razones = jQuery('#cant_razones').val();
+  cant_acciones_recomendaciones = jQuery('#cant_acciones').val();
+  cant_compromisos = jQuery('#cant_compromisos').val();
+  VerificarCant();
+
   jQuery('#agregar_imagen').click(function()
   {
     cant_fotos++;
@@ -101,7 +120,7 @@ jQuery('document').ready(function()
   {
     $.ajax({
       type: "POST",
-      url: "minuta/razonesMVAmin",
+      url: "razonesMVAmin",
       data: {},
       success: function(respuesta) {
         if (respuesta)
@@ -154,33 +173,33 @@ jQuery('document').ready(function()
   jQuery('#agregar_compromiso').click(function()
   {
     var cant = prompt('Ingrese la cantidad de responsables para el compromiso:', 1);
-    
-    if (!isNaN(cant) && cant!=null && cant>0)
+
+    if (!isNaN(cant) && cant != null && cant > 0)
     {
       $.ajax({
-      type: "POST",
-      url: "minuta/unidadEquipo",
-      data: {},
-      success: function(respuesta) {
-        if (respuesta)
-        {
-          cant_compromisos++;
+        type: "POST",
+        url: "unidadEquipo",
+        data: {},
+        success: function(respuesta) {
+          if (respuesta)
+          {
+            cant_compromisos++;
 
-          Agregar('compromiso', respuesta, cant);
+            Agregar('compromiso', respuesta, cant);
 
-          VerificarCant();
+            VerificarCant();
+          }
         }
-       }
       });
     }
     else if (isNaN(cant))
-      alert ('Error:: No introdujo un valor númerico');
+      alert('Error:: No introdujo un valor númerico');
     else if (cant == 0)
-      alert ('Error:: Debe introducir al menos un responsable');
+      alert('Error:: Debe introducir al menos un responsable');
 
     return false;
   });
-  
+
   jQuery('#remover_compromiso').click(function()
   {
     cant_compromisos--;
@@ -191,6 +210,6 @@ jQuery('document').ready(function()
 
     return false;
   });
-  
+
 });
 

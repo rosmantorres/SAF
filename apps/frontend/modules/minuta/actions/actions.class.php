@@ -10,15 +10,46 @@
  */
 class minutaActions extends sfActions
 {
-
+  // Mensaje con todos los errores que se le muestra 
+  // al usuario durante el desarrollo de un evento
   private $msj_error = '';
 
+  /**
+   * Acción que muestra la lista o todas las minutas creadas
+   */
+  public function executeListar()
+  {
+    
+  }
+
+  /**
+   * Acción que muestra los eventos de la convocatoria a desarrollar, mostrando
+   * el desarrollo que se le ha hecho a c/u y dando la opcion de poder editarlo.
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeInicioDesarrollo(sfWebRequest $request)
+  {
+    $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
+            ->getEventosConvocatoria(1);
+    
+    $this->forward404Unless($this->eventos);
+  }
+
+  /**
+   * Acción que comienza con el desarrollo de un evento (edición) y a su vez 
+   * muestra pasadas ediciones ya desarrolladas por el usuario si fuese el caso.
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeDesarrollarEvento(sfWebRequest $request)
   {
     $id_evento = $request->getParameter('id');
 
     $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento);
 
+    $this->forward404Unless($this->evento);
+    
     $this->fotos = $this->obtenerFotosDelEvento($id_evento);
 
     $this->razones = $this->obtenerRazonesDelEvento($id_evento);
@@ -33,20 +64,9 @@ class minutaActions extends sfActions
 
     $this->data_ue = $this->obtenerUnidadesEquipos();
   }
-
-  public function executeIndex()
-  {
-    
-  }
-
-  public function executeInicioDesarrollo(sfWebRequest $request)
-  {
-    $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosConvocatoria(2);
-  }
-
+  
   /**
-   * Acción que manda a procesar todo el desarrollo que se le hizo a un evento
+   * Acción que procesa todo el desarrollo que se le hizo a un evento.
    * 
    * @param sfWebRequest $request
    */
@@ -69,7 +89,15 @@ class minutaActions extends sfActions
     $this->reiniciarCompromisosDelEvento($id_evento);
     $this->verificarCompromisosYResponsablesYGuardar($request);
 
-    $this->getUser()->setFlash('error', $this->msj_error);
+    if ($this->msj_error != '')
+    {
+      $this->getUser()->setFlash('error', $this->msj_error);      
+    }
+    else
+    {
+      $this->getUser()->setFlash('notice', 'Desarrollo procesado Exitosamente!');
+    }  
+    
     $this->redirect('minuta/desarrollarEvento?id=' . $request->getParameter('id'));
   }
 
@@ -84,14 +112,19 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Acción que retorna todas las unidades que siempre asisten al CAF
+   * Acción que retorna todas las unidades que siempre asisten al CAF.  
+   * Se necesita esta acción ya que se llama desde minuta.js a través 
+   * del método ajax. Los js pueden solo llamar acciones (execute).
    * 
    * @param sfWebRequest $request
-   * @return string
+   * @return type
    */
   public function executeUnidadEquipo(sfWebRequest $request)
   {
-    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
+    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')
+            ->createQuery()
+            ->orderBy('nombre')
+            ->execute();
 
     $data_source = '';
 
@@ -102,6 +135,36 @@ class minutaActions extends sfActions
 
     // Enviamos todas las unidades sin la ultima coma (,). Ejem: "u1","u2","u3"
     return $this->renderText($data_source);
+  }
+  
+  /**
+   * Acción que retorna todo el personal agregado en la bd.
+   * Se necesita esta acción ya que se llama desde minuta.js a través 
+   * del método ajax. Los js pueden solo llamar acciones (execute).
+   * 
+   * @param sfWebRequest $request
+   * @return type
+   */
+  public function executePersonal(sfWebRequest $request)
+  {
+    $personal = Doctrine_Core::getTable('SAF_PERSONAL')
+            ->createQuery()
+            ->execute();
+    
+    $data_source = '';
+
+    foreach ($personal as $persona)
+    {
+      $data_source = $data_source . '"' . $persona->getCI() . '",';
+    }
+
+    // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
+    return $this->renderText(substr($data_source, 0, -1));
+  }
+
+  public function executeFinalizarMinuta(sfWebRequest $request)
+  {
+    
   }
 
   /**
@@ -310,8 +373,10 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que obtiene todas las fotos que tiene un evento específico.
    * 
-   * @return type
+   * @param integer $id_evento
+   * @return Doctrine_Collection SAF_FOTO
    */
   private function obtenerFotosDelEvento($id_evento)
   {
@@ -322,8 +387,11 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que obtiene todas las razones de un evento específico por la que 
+   * se supera los 999MVAmin.
    * 
-   * @return type
+   * @param integer $id_evento
+   * @return Doctrine_Collection SAF_EVENTO_RAZON
    */
   private function obtenerRazonesDelEvento($id_evento)
   {
@@ -334,8 +402,10 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que obtiene el resumen de la bitacora de un evento específico.
    * 
-   * @return type
+   * @param integer $id_evento
+   * @return SAF_VARIO
    */
   private function obtenerResumenBitacoraDelEvento($id_evento)
   {
@@ -347,8 +417,10 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que obtiene las acciones y recomendaciones de un evento específico.
    * 
-   * @return type
+   * @param integer $id_evento
+   * @return SAF_VARIO
    */
   private function obtenerAccionesYRecomendacionesDelEvento($id_evento)
   {
@@ -360,8 +432,10 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que obtiene todos los compromisos de un evento específico
    * 
-   * @return type
+   * @param integer $id_evento
+   * @return Doctrine_Collection SAF_VARIO
    */
   private function obtenerCompromisosDelEvento($id_evento)
   {
@@ -373,10 +447,10 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que retorna todas las razones disponibles por la que un 
-   * evento supera los 999MVAmin, pero en un string con formato específico.
+   * Método que retorna string con formato específico de todas las razones 
+   * disponibles por lo que un evento supera los 999MVAmin.
    * 
-   * @return type
+   * @return string
    */
   private function obtenerRazonesMVAmin()
   {
@@ -393,6 +467,11 @@ class minutaActions extends sfActions
     return substr($data_source, 0, -1);
   }
 
+  /**
+   * Método que retorna todas las unidades que asisten a los comité
+   * 
+   * @return Doctrine_Collection SAF_UNIDAD_EQUIPO
+   */
   private function obtenerUnidadesEquipos()
   {
     $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
@@ -403,6 +482,8 @@ class minutaActions extends sfActions
   /**
    * Método que reinicia o borra todos los registros SAF_FOTO de la BD
    * correspondientes a un evento.
+   * 
+   * @param integer $id_evento
    */
   private function reiniciarFotosDelEvento($id_evento)
   {
@@ -415,6 +496,12 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que reinicia o borra todos los registros SAF_EVENTO_RAZON de la BD
+   * correspondientes a un evento. (Razones por la que supera los 999MVAmin).
+   * 
+   * @param integer $id_evento
+   */
   private function reiniciarRazonesDelEvento($id_evento)
   {
     $razones = $this->obtenerRazonesDelEvento($id_evento);
@@ -426,6 +513,12 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que reinicia o borra el registro SAF_VARIO (BITACORA) de la BD
+   * correspondiente a un evento.
+   * 
+   * @param integer $id_evento
+   */
   private function reiniciarResumenBitacoraDelEvento($id_evento)
   {
     if ($bitacora = $this->obtenerResumenBitacoraDelEvento($id_evento))
@@ -434,6 +527,12 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que reinicia o borra el registro SAF_VARIO (ACCIONES_Y_RECOMENDACIONES) 
+   * de la BD correspondiente a un evento.
+   * 
+   * @param integer $id_evento
+   */
   private function reiniciarAccionesYRecomendacionesDelEvento($id_evento)
   {
     if ($acciones_recomendaciones = $this->obtenerAccionesYRecomendacionesDelEvento($id_evento))
@@ -442,6 +541,12 @@ class minutaActions extends sfActions
     }
   }
 
+  /**
+   * Método que reinicia o borra todos los registros SAF_VARIO (COMPROMISO) y
+   * SAF_COMP_UE (RESPONSABLES) de la BD correspondientes a un evento.
+   * 
+   * @param integer $id_evento
+   */
   private function reiniciarCompromisosDelEvento($id_evento)
   {
     $compromisos = $this->obtenerCompromisosDelEvento($id_evento);
@@ -465,7 +570,7 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que suprime un archivo de foto del servidor. Cuando ya no se necesita
+   * Método que suprime un archivo de foto del servidor. Cuando ya no se necesita.
    * 
    * @param string $dir
    */
@@ -482,7 +587,7 @@ class minutaActions extends sfActions
    * Método que sube al servidor un archivo de foto y guarda la información en BD.
    * 
    * @param sfWebRequest $request
-   * @param type $num_foto
+   * @param integer $num_foto
    */
   private function guardarFoto($request, $num_foto)
   {
@@ -527,6 +632,11 @@ class minutaActions extends sfActions
     $evento_razon->save();
   }
 
+  /**
+   * Método que guarda el resumen de la bitácora correspondiente a un evento.
+   * 
+   * @param sfWebRequest $request
+   */
   private function guardarResumenBitacora($request)
   {
     $bitacora = new SAF_VARIO();
@@ -536,6 +646,11 @@ class minutaActions extends sfActions
     $bitacora->save();
   }
 
+  /**
+   * Método que guarda las acciones y recomendaciones correspondiente a un evento.
+   * 
+   * @param sfWebRequest $request
+   */
   private function guardarAccionesYRecomendaciones($request)
   {
     $acciones_y_recomendaciones = new SAF_VARIO();
@@ -547,7 +662,7 @@ class minutaActions extends sfActions
 
   /**
    * Método que guarda un compromiso correspondiente a un evento si la fecha
-   * de duración estimada es correcta. (Mayor a la hora actual)
+   * de duración estimada es correcta. (Mayor a la hora actual).
    * 
    * @param sfWebRequest $request
    * @param integer $num_comp
@@ -576,7 +691,7 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que guarda el o los responsables correspondiente a un compromiso y evento
+   * Método que guarda el o los responsables correspondiente a un compromiso y evento.
    * 
    * @param type $responsable
    * @param type $compromiso

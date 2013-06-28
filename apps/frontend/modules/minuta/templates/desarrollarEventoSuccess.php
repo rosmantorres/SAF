@@ -1,4 +1,4 @@
-<?php slot('title', 'SAF .::Dessarrollo del Evento::.') ?>
+<?php slot('title', 'SAF .::Desarrollo del Evento::.') ?>
 <?php slot('menu_activo_minuta', 'active') ?>
 
 <?php use_javascript('minuta') ?>
@@ -49,7 +49,7 @@
       </h6>
     </td>
     <td>
-      <form action="<?php echo url_for('minuta/procesarEvento?id='. $evento->getId()) ?>" method="POST" enctype="multipart/form-data">        
+      <form id="guardar_desarrollo_evento" action="<?php echo url_for('minuta/procesarEvento?id=' . $evento->getId()) ?>" method="POST" enctype="multipart/form-data">        
 
         <pre><i class="icon-tag"></i> IMÁGENES: (Formatos válidos gif, jpeg, jpg, png)</pre>
         <div style="margin: 15px;" id="imagenes"> 
@@ -153,7 +153,7 @@
                 <?php foreach ($compromiso->getResponsables() as $responsable) : ?>
 
                   <?php $j++ ?>
-                  <select class="span1" name="responsable_compromiso<?php echo $i . $j ?>" required>
+                  <select class="span3" name="responsable_compromiso<?php echo $i . $j ?>" required>
                     <option></option>
                     <?php foreach ($data_ue as $ue) : ?>
                       <?php if ($ue->getId() == $responsable->getId()) : ?>
@@ -174,9 +174,14 @@
         </div>
 
         <hr>
-        <button class="btn btn-small btn-primary" type="submit" style="alignment-adjust: ">
-          <i class="icon"></i> Enviar
-        </button>
+        <div align="center">
+          <button class="btn btn-small btn-primary" type="submit" >
+            <i class="icon-briefcase"></i> GUARDAR DESARROLLO DEL EVENTO
+          </button>
+          <a href="<?php echo url_for('minuta/inicioDesarrollo') ?>" id="cancelar_proceso" class="btn btn-small">
+            <i class="icon-remove"></i> CANCELAR PROCESO
+          </a>
+        </div>
       </form>
     </td>
   </tr>

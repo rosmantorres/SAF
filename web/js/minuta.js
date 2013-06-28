@@ -2,6 +2,7 @@ var cant_fotos = 0;
 var cant_razones = 0;
 var cant_acciones_recomendaciones = 0;
 var cant_compromisos = 0;
+var cant_asistentes = 0;
 
 function VerificarCant()
 {
@@ -34,6 +35,12 @@ function VerificarCant()
 
   if (cant_compromisos > 0)
     jQuery('#remover_compromiso').show();
+  
+  if (cant_asistentes == 0)
+    jQuery('#remover_asistente').hide();
+
+  if (cant_asistentes > 0)
+    jQuery('#remover_asistente').show();
 }
 
 function Agregar(en, data, cant_respon)
@@ -72,7 +79,7 @@ function Agregar(en, data, cant_respon)
     var select = ' ';
     for (var i = 1; i <= cant_respon; i++)
     {
-      select = select + '<select class="span1" name="responsable_compromiso' + cant_compromisos + i + '" required><option></option>' + data + '</select> ';
+      select = select + '<select class="span3" name="responsable_compromiso' + cant_compromisos + i + '" required><option></option>' + data + '</select> ';
     }
 
     campo = '<div id="compromiso_agregado">\n\
@@ -83,6 +90,15 @@ function Agregar(en, data, cant_respon)
             '</div>';
 
     jQuery('#compromisos').append(campo);
+  }
+
+  if (en == 'asistente')
+  {
+    campo = '<div id="asistente_agregado">\n\
+                <input type="number" class="span2" name="ci_personal' + cant_asistentes + '" data-provide="typeahead" data-items="4" data-source=[' + data + '] autocomplete="off" placeholder="Indique Cédula ' +cant_asistentes+ '" required />\n\
+             </div>';
+
+    jQuery('#asistentes').append(campo);
   }
 }
 
@@ -208,6 +224,55 @@ jQuery('document').ready(function()
 
     VerificarCant();
 
+    return false;
+  });
+
+  jQuery('#agregar_asistente').click(function()
+  {
+    $.ajax({
+      type: "POST",
+      url: "personal",
+      data: {},
+      success: function(respuesta) {
+        if (respuesta)
+        {
+          cant_asistentes++;
+
+          Agregar('asistente', respuesta);
+
+          VerificarCant();
+        }
+      }
+    });
+
+    return false;
+
+  });
+  
+  jQuery('#remover_asistente').click(function()
+  {
+    cant_asistentes--;
+
+    jQuery('#asistente_agregado:last-child').remove();
+
+    VerificarCant();
+
+    return false;
+  });
+
+  jQuery('#guardar_desarrollo_evento').submit(function()
+  {
+    if (confirm("¿Desea continuar con el proceso de guardado?")) {
+      return true;
+    }
+    return false;
+  });
+
+  jQuery('#cancelar_proceso').click(function()
+  {
+    if (confirm("¿Desea CANCELAR el proceso de desarrollo?")) {
+      return true;
+    }
     return false;
   });
 

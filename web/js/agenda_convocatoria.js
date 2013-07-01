@@ -39,7 +39,7 @@ jQuery('document').ready(function()
         });      
     }
     return false;
-  })
+  });
   
   jQuery('#form_agenda_guardar').submit(function() 
   {
@@ -47,7 +47,7 @@ jQuery('document').ready(function()
       return true;    
     }
     return false;
-  })
+  });
   
   jQuery('#agenda_pendiente').click(function()
   {

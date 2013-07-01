@@ -29,7 +29,7 @@ jQuery('document').ready(function()
         });      
     }
     return false;
-  })
+  });
   
   jQuery('#form_guardar_convocatoria').submit(function() 
   {
@@ -37,6 +37,25 @@ jQuery('document').ready(function()
       return true;    
     }
     return false;
-  })
+  });
   
+  jQuery('#realizar_comite').click(function()
+  {
+    if (confirm("¿Deseas comenzar con el CAF?")){
+      return true;    
+    }
+    return false;
+  });
+  
+  jQuery('#suspender_convocatoria').click(function()
+  {
+    if (confirm("La convocatoria se suspenderá por siempre. ¿Deseas continuar?")){
+      var motivo = prompt('Motivo de la suspencion:');
+      if (motivo != '' && motivo != null)
+        document.location.href = $(this).val() + '&motivo=' + motivo;
+      else
+        alert('Error:: No introdujo ningun motivo para la convocatoria');
+    }
+    return false;
+  })
 });

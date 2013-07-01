@@ -35,7 +35,7 @@ function VerificarCant()
 
   if (cant_compromisos > 0)
     jQuery('#remover_compromiso').show();
-  
+
   if (cant_asistentes == 0)
     jQuery('#remover_asistente').hide();
 
@@ -95,7 +95,7 @@ function Agregar(en, data, cant_respon)
   if (en == 'asistente')
   {
     campo = '<div id="asistente_agregado">\n\
-                <input type="number" class="span2" name="ci_personal' + cant_asistentes + '" data-provide="typeahead" data-items="4" data-source=[' + data + '] autocomplete="off" placeholder="Indique Cédula ' +cant_asistentes+ '" required />\n\
+                <input type="number" class="span2" name="ci_personal' + cant_asistentes + '" data-provide="typeahead" data-items="4" data-source=[' + data + '] autocomplete="off" placeholder="Indique Cédula ' + cant_asistentes + '" required />\n\
              </div>';
 
     jQuery('#asistentes').append(campo);
@@ -108,6 +108,7 @@ jQuery('document').ready(function()
   cant_razones = jQuery('#cant_razones').val();
   cant_acciones_recomendaciones = jQuery('#cant_acciones').val();
   cant_compromisos = jQuery('#cant_compromisos').val();
+  cant_asistentes = jQuery('#cant_asistentes').val();
   VerificarCant();
 
   jQuery('#agregar_imagen').click(function()
@@ -136,7 +137,7 @@ jQuery('document').ready(function()
   {
     $.ajax({
       type: "POST",
-      url: "razonesMVAmin",
+      url: "../../razonesMVAmin",
       data: {},
       success: function(respuesta) {
         if (respuesta)
@@ -194,7 +195,7 @@ jQuery('document').ready(function()
     {
       $.ajax({
         type: "POST",
-        url: "unidadEquipo",
+        url: "../../unidadEquipo",
         data: {},
         success: function(respuesta) {
           if (respuesta)
@@ -231,7 +232,7 @@ jQuery('document').ready(function()
   {
     $.ajax({
       type: "POST",
-      url: "personal",
+      url: "../personal",
       data: {},
       success: function(respuesta) {
         if (respuesta)
@@ -248,7 +249,7 @@ jQuery('document').ready(function()
     return false;
 
   });
-  
+
   jQuery('#remover_asistente').click(function()
   {
     cant_asistentes--;
@@ -273,6 +274,19 @@ jQuery('document').ready(function()
     if (confirm("¿Desea CANCELAR el proceso de desarrollo?")) {
       return true;
     }
+    return false;
+  });
+
+  jQuery('#guardar_minuta').submit(function()
+  {
+    if (cant_asistentes > 0)
+    {
+      if (confirm("¿Desea continuar con el proceso de guardado?"))
+        return true;
+    }
+    else
+      alert('Error:: No agregó ningún asistente.');
+    
     return false;
   });
 

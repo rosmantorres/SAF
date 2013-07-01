@@ -9,9 +9,8 @@
   </a>
 </h6>
 
-<br>
 <?php if (count($convocatorias) > 0) : ?>
-
+  <br>
   <table class="table table-bordered table-hover">
     <thead style="background-color: #d8d9d7">
       <tr>

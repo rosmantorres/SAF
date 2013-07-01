@@ -1,14 +1,20 @@
+<?php use_javascript('convocatoria.js') ?>
+
 <?php slot('title', 'SAF .::Vista Convocatoria::.') ?>
 <?php slot('menu_activo_convocatoria','active') ?>
 
-<h5 class="muted"><i class="icon-eye-open"></i> VISTA CONVOCATORIA </h5>
+<h5 class="muted"><i class="icon-eye-open"></i> VISTA CONVOCATORIA  N° <?php echo $convocatoria->getId() ?> </h5>
 
 <br>
 <small><i class="icon-info-sign"></i> 
   <?php if ($convocatoria->getStatus() == 'ACTIVA'): ?>
-  La convocatoria esta <b style="color: green">ACTIVA</b> para realizar el comité en la fecha indicada.
+    La convocatoria esta <b style="color: green">ACTIVA</b> para 
+    <a href="<?php echo url_for('@cambiar_status_convocatoria?id=' . $convocatoria . '&status=EJECUCION') ?>" id="realizar_comite"> 
+      <i class="icon-edit"></i> realizar el comité  
+    </a> 
+    en la fecha indicada.
   <?php elseif ($convocatoria->getStatus() == 'EJECUCION'): ?>
-  La convocatoria esta en <b style="color: #149bdf">EJECUCIÓN</b>. Se esta realizando el comité.
+    La convocatoria esta en <b style="color: #149bdf">EJECUCIÓN</b>. Se esta realizando el comité.
   <?php elseif ($convocatoria->getStatus() == 'TERMINADA'): ?>
     La convocatoria esta <b>TERMINADA</b>. Comité realizado exitosamente.
   <?php elseif ($convocatoria->getStatus() == 'SUSPENDIDA'): ?>
@@ -38,7 +44,13 @@
       <?php echo $convocatoria->getObservacion() ?>      
     </td>
     <td width="260px">      
-      <small>    
+      <small>   
+        <?php if ($convocatoria->getStatus() == 'ACTIVA') : ?> 
+          <i class="icon-warning-sign"></i><b> Suspender </b>
+          <input type="checkbox" id="suspender_convocatoria" value="<?php echo url_for('@cambiar_status_convocatoria?id=' . $convocatoria->getId() . '&status=SUSPENDIDA') ?>" />
+          <br>
+        <?php endif; ?>
+        
         <u><b>Fecha de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <?php echo $convocatoria->getCreatedAt() ?>
         

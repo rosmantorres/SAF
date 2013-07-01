@@ -178,11 +178,14 @@
           <button class="btn btn-small btn-primary" type="submit" >
             <i class="icon-briefcase"></i> GUARDAR DESARROLLO DEL EVENTO
           </button>
-          <a href="<?php echo url_for('minuta/inicioDesarrollo') ?>" id="cancelar_proceso" class="btn btn-small">
+          <a href="<?php echo url_for('@inicio_desarrollo?id=' . $evento->getIdConvocatoria()) ?>" id="cancelar_proceso" class="btn btn-small">
             <i class="icon-remove"></i> CANCELAR PROCESO
           </a>
         </div>
       </form>
+      <small><b><u>Nota</u></b>: Es importante guardar solo cuando se piense que ya se tiene todo el
+      desarrollo del evento terminado, esto por razones de rendimiento. NUNCA se debe guardar
+      por cada sección (Imagenes, Razones, ect) desarrollada.</small>
     </td>
   </tr>
 </table>

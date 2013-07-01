@@ -48,6 +48,11 @@ class agenda_convocatoriaActions extends sfActions
     $this->forward404Unless($this->eventos);
   }
 
+  /**
+   * Acción que coloca una agenda como pendiente.
+   * 
+   * @param sfWebRequest $request
+   */
   public function executeColocarPendiente(sfWebRequest $request)
   {
      $this->forward404Unless(

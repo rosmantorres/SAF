@@ -51,6 +51,31 @@ class convocatoriaActions extends sfActions
   }
 
   /**
+   * Acción que cambia el status de una convocatoria 
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeCambiarStatus(sfWebRequest $request)
+  {
+    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($request->getParameter('id'));
+        
+    $convocatoria->setStatus($request->getParameter('status'));
+    
+    if ($request->getParameter('status') == 'EJECUCION')
+    {
+      $convocatoria->save();
+      $this->redirect('@nueva_minuta?id=' . $request->getParameter('id'));
+    }
+    elseif ($request->getParameter('status') == 'SUSPENDIDA')
+    {
+      $convocatoria->setMotivoSuspencion($request->getParameter('motivo'));
+      $convocatoria->save();
+      $this->redirect('@mostrar_convocatoria?id=' . $request->getParameter('id'));
+    }
+  }
+  
+  /**
    * Acción que carga todos los eventos de una agenda para despues 
    * tener la posibilidad de agregarlos a la convocatoria
    * 

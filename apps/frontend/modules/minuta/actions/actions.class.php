@@ -10,6 +10,7 @@
  */
 class minutaActions extends sfActions
 {
+
   // Mensaje con todos los errores que se le muestra 
   // al usuario durante el desarrollo de un evento
   private $msj_error = '';
@@ -19,7 +20,21 @@ class minutaActions extends sfActions
    */
   public function executeListar()
   {
-    
+    $this->minutas = Doctrine_Core::getTable('SAF_MINUTA')->createQuery()->execute();
+  }
+
+  /**
+   * Acción que crea una nueva minuta
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeNueva(sfWebRequest $request)
+  {
+    $minuta = new SAF_MINUTA();
+    $minuta->setIdConvocatoria($request->getParameter('id'));
+    $minuta->save();
+
+    $this->redirect('@inicio_desarrollo?id=' . $request->getParameter('id'));
   }
 
   /**
@@ -31,9 +46,20 @@ class minutaActions extends sfActions
   public function executeInicioDesarrollo(sfWebRequest $request)
   {
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosConvocatoria(1);
-    
+            ->getEventosConvocatoria($request->getParameter('id'));
+
     $this->forward404Unless($this->eventos);
+
+    $this->asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')
+            ->createQuery()
+            ->where('id_convocatoria = ?', $request->getParameter('id'))
+            ->execute();
+
+    $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')
+            ->createQuery()
+            ->execute();
+
+    $this->minuta = $request->getParameter('id');
   }
 
   /**
@@ -49,7 +75,7 @@ class minutaActions extends sfActions
     $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento);
 
     $this->forward404Unless($this->evento);
-    
+
     $this->fotos = $this->obtenerFotosDelEvento($id_evento);
 
     $this->razones = $this->obtenerRazonesDelEvento($id_evento);
@@ -64,7 +90,7 @@ class minutaActions extends sfActions
 
     $this->data_ue = $this->obtenerUnidadesEquipos();
   }
-  
+
   /**
    * Acción que procesa todo el desarrollo que se le hizo a un evento.
    * 
@@ -91,14 +117,14 @@ class minutaActions extends sfActions
 
     if ($this->msj_error != '')
     {
-      $this->getUser()->setFlash('error', $this->msj_error);      
+      $this->getUser()->setFlash('error', $this->msj_error);
     }
     else
     {
       $this->getUser()->setFlash('notice', 'Desarrollo procesado Exitosamente!');
-    }  
-    
-    $this->redirect('minuta/desarrollarEvento?id=' . $request->getParameter('id'));
+    }
+
+    $this->redirect('@desarrollar_evento?id=' . $request->getParameter('id'));
   }
 
   /**
@@ -136,7 +162,7 @@ class minutaActions extends sfActions
     // Enviamos todas las unidades sin la ultima coma (,). Ejem: "u1","u2","u3"
     return $this->renderText($data_source);
   }
-  
+
   /**
    * Acción que retorna todo el personal agregado en la bd.
    * Se necesita esta acción ya que se llama desde minuta.js a través 
@@ -150,7 +176,7 @@ class minutaActions extends sfActions
     $personal = Doctrine_Core::getTable('SAF_PERSONAL')
             ->createQuery()
             ->execute();
-    
+
     $data_source = '';
 
     foreach ($personal as $persona)
@@ -164,7 +190,75 @@ class minutaActions extends sfActions
 
   public function executeFinalizarMinuta(sfWebRequest $request)
   {
-    
+    $this->reiniciarAsistencia($request->getParameter('id'));
+    $this->verificarMinutaYGuardar($request);
+    $this->getUser()->setFlash('notice', 'Status guardado exitosamente!');
+    $this->redirect('@inicio_desarrollo?id=' . $request->getParameter('id'));
+  }
+
+  public function verificarMinutaYGuardar($request)
+  {
+    $num_persona = 1;
+    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->createQuery()->execute();
+
+    // Mientras existan personal agregados...
+    while ($request->getParameter('ci_personal' . $num_persona))
+    { // Verificar
+      foreach ($personal as $persona)
+      { // Se verifica que la persona agregada sea una correcta comparandola con las de la BD
+        if ($request->getParameter('ci_personal' . $num_persona) == $persona->getCi())
+        { // Si no fue agregada mas de una vez procedemos a guardarla
+          if (!$this->verificarSiLaPersonaYaFueAgregada($num_persona, $request))
+          {
+            $this->guardarAsistencia($request->getParameter('id'), $persona->getCi());
+          }
+
+          break;
+        }
+      }
+
+      $num_persona++;
+    }
+  }
+
+  private function verificarSiLaPersonaYaFueAgregada($num_persona_a_verificar, $request)
+  {
+    $num_persona = $num_persona_a_verificar + 1;
+
+    // Mientras existan personas agregadas siguientes a la persona a verificar...
+    while ($request->getParameter('ci_personal' . $num_persona))
+    { // si la persona fue agregada mas de una vez
+      if ($request->getParameter('ci_personal' . $num_persona_a_verificar) == $request->getParameter('ci_personal' . $num_persona))
+      {
+        return true;
+      }
+
+      $num_persona++;
+    }
+
+    return false;
+  }
+
+  private function reiniciarAsistencia($id)
+  {
+    $asistencias = Doctrine_Core::getTable('SAF_ASISTENCIA')
+            ->createQuery()
+            ->where('id_convocatoria = ?', $id)
+            ->execute();
+
+    foreach ($asistencias as $asistencia)
+    {
+      // Borra el registro SAF_ASISTENCIA de la BD
+      $asistencia->delete();
+    }
+  }
+
+  private function guardarAsistencia($id_convocatoria, $id_personal)
+  {
+    $asistencia = new SAF_ASISTENCIA();
+    $asistencia->setIdConvocatoria($id_convocatoria);
+    $asistencia->setIdPersonal($id_personal);
+    $asistencia->save();
   }
 
   /**

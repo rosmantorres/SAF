@@ -69,11 +69,27 @@ agregar_eventos_convocatoria:
 guardar_convocatoria:
   url: /convocatoria/nueva/guardar
   param: { module: convocatoria, action: guardarConvocatoria }
+ 
+cambiar_status_convocatoria:
+  url: /convocatoria/cambiar_status
+  param: { module: convocatoria, action: cambiarStatus }
   
 # Rutas para el modulo de minuta
 index_minuta:
   url: /minuta
-  param: { module: minuta, action: index }  
+  param: { module: minuta, action: listar }  
+  
+nueva_minuta:
+  url: /minuta/nueva
+  param: { module: minuta, action: nueva }
+
+inicio_desarrollo:
+  url: /minuta/desarrollo/:id
+  param: { module: minuta, action: inicioDesarrollo }
+  
+desarrollar_evento:
+  url: /minuta/desarrollo/desarrollar_evento/:id
+  param: { module: minuta, action: desarrollarEvento }
   
 # default rules
 homepage:

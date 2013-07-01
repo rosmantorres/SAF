@@ -7,16 +7,17 @@
  */
 class SAF_CONVOCATORIA_CAFTable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_CONVOCATORIA_CAFTable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF');
-    }
-    
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_CONVOCATORIA_CAFTable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF');
+  }
+
   /**
    * @return Doctrine_Colletion SAF_CONVOCATORIA_CAF
    */
@@ -24,4 +25,5 @@ class SAF_CONVOCATORIA_CAFTable extends Doctrine_Table
   {
     return $this->createQuery('a')->orderBy('created_at desc')->execute();
   }
+
 }

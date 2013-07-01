@@ -74,7 +74,25 @@ SAF_CONVOCATORIA_CAF:
       local: id
       foreign: id_convocatoria
       type: many
-    
+    SAF_MINUTA:
+      local: id
+      foreign: cod_min
+      type: one
+
+SAF_MINUTA:
+  connection: schema_saf
+  tableName: SAF_MINUTA
+  actAs: { Timestampable: ~ }
+  columns:
+    cod_min: { type: integer, primary: true, sequence: true }
+    id_convocatoria: { notnull: true, type: integer, unique: true }
+    dir_pdf: { type: string(50), notnull: false }
+  relations:
+    SAF_CONVOCATORIA_CAF:
+      local: id_convocatoria
+      foreign: id
+      type: one
+
 SAF_EVENTO:
   connection: schema_saf
   tableName: SAF_EVENTO

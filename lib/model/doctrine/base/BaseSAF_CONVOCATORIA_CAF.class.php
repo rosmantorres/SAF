@@ -19,6 +19,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @property string $c_caf
  * @property Doctrine_Collection $SAF_EVENTO
  * @property Doctrine_Collection $SAF_ASISTENCIA
+ * @property SAF_MINUTA $SAF_MINUTA
  * 
  * @method integer              getId()                Returns the current record's "id" value
  * @method string               getAsunto()            Returns the current record's "asunto" value
@@ -32,6 +33,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @method string               getCCaf()              Returns the current record's "c_caf" value
  * @method Doctrine_Collection  getSAFEVENTO()         Returns the current record's "SAF_EVENTO" collection
  * @method Doctrine_Collection  getSAFASISTENCIA()     Returns the current record's "SAF_ASISTENCIA" collection
+ * @method SAF_MINUTA           getSAFMINUTA()         Returns the current record's "SAF_MINUTA" value
  * @method SAF_CONVOCATORIA_CAF setId()                Sets the current record's "id" value
  * @method SAF_CONVOCATORIA_CAF setAsunto()            Sets the current record's "asunto" value
  * @method SAF_CONVOCATORIA_CAF setFecha()             Sets the current record's "fecha" value
@@ -44,6 +46,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @method SAF_CONVOCATORIA_CAF setCCaf()              Sets the current record's "c_caf" value
  * @method SAF_CONVOCATORIA_CAF setSAFEVENTO()         Sets the current record's "SAF_EVENTO" collection
  * @method SAF_CONVOCATORIA_CAF setSAFASISTENCIA()     Sets the current record's "SAF_ASISTENCIA" collection
+ * @method SAF_CONVOCATORIA_CAF setSAFMINUTA()         Sets the current record's "SAF_MINUTA" value
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -117,6 +120,10 @@ abstract class BaseSAF_CONVOCATORIA_CAF extends sfDoctrineRecord
         $this->hasMany('SAF_ASISTENCIA', array(
              'local' => 'id',
              'foreign' => 'id_convocatoria'));
+
+        $this->hasOne('SAF_MINUTA', array(
+             'local' => 'id',
+             'foreign' => 'cod_min'));
 
         $timestampable0 = new Doctrine_Template_Timestampable();
         $this->actAs($timestampable0);

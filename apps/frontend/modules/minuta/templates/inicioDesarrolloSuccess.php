@@ -22,7 +22,8 @@
           <i class="icon-minus-sign"></i> Remover Último <br>
         </a>
       </h6>
-      <form id="guardar_minuta" action="<?php echo url_for('minuta/finalizarMinuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
+
+      <form id="guardar_minuta" action="<?php echo url_for('minuta/guardarStatusMinuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
         <div align="center" style="margin: 15px;" id="asistentes">
           <!-- Este input es solo para obtener su valor desde minuta.js -->
           <input type="text" id="cant_asistentes" value="<?php echo count($asistentes) ?>" style="display: none"/>
@@ -38,20 +39,26 @@
           <?php endif; ?>
         </div>
 
-        <br>
-        <abbr title="Guarda el status actual de la minuta">
         <button class="btn btn-small btn-primary" type="submit">
-          <i class="icon-briefcase"></i> GUARDAR
-        </button></abbr>
+          <abbr title="Guarda el status actual de la minuta">
+            <i class="icon-briefcase"></i> GUARDAR
+          </abbr>
+        </button>        
         /
-        <abbr title="Se termina la edición de la minuta y se guarda el resultado en PDF">
-        <button class="btn btn-small btn-success" type="submit">
-        <i class="icon-hdd"></i> LISTO! (pdf) 
-        </button></abbr>
+        <a href="<?php echo url_for('minuta/finalizarMinuta?id=' . $minuta) ?>" id="terminar_minuta" class="btn btn-small btn-success">
+          <abbr title="Se termina la edición de la minuta y se guarda el resultado en PDF">
+            <i class="icon-hdd"></i> LISTO! (pdf) 
+          </abbr>
+        </a>
       </form>  
-      <small><b><u>Nota</u></b>: Es importante GUARDAR solo cuando se piense que 
-        ya se tiene todo el desarrollo de la minuta terminado para proceder con 
-        el boton de Listo! (pdf), esto por razones de rendimiento.</small>
+
+      <small>
+        <p align="justify">
+          <b><u>Nota</u></b>:  Es importante GUARDAR solo cuando se piense que 
+          ya se tiene todo el desarrollo de la minuta terminado para proceder con 
+          el boton de Listo! (pdf), esto por razones de rendimiento.
+        </p>
+      </small>
     </td>
     <td>&nbsp;&nbsp;</td>
     <td>

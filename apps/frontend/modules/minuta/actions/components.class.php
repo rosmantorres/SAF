@@ -13,18 +13,11 @@ class minutaComponents extends sfComponents
 
   public function executeMostrarDesarrolloEvento()
   {
-    $this->fotos = Doctrine_Core::getTable('SAF_FOTO')->createQuery()
-            ->where('id_evento = ?', $this->evento)
-            ->execute();
+    $this->fotos = Doctrine_Core::getTable('SAF_FOTO')->findByIdEvento($this->evento->getId());
 
-    $this->razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->createQuery()
-            ->where('id_evento = ?', $this->evento)
-            ->execute();
-
-    $varios = Doctrine_Core::getTable('SAF_VARIO')->createQuery()
-            ->where('id_evento = ?', $this->evento)
-            ->orderBy('tipo')
-            ->execute();
+    $this->razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->findByIdEvento($this->evento->getId());
+          
+    $varios = Doctrine_Core::getTable('SAF_VARIO')->findByIdEvento($this->evento->getId());
 
     $this->compromisos = array();
 

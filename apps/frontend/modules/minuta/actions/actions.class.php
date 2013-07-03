@@ -20,7 +20,7 @@ class minutaActions extends sfActions
    */
   public function executeListar()
   {
-    $this->minutas = Doctrine_Core::getTable('SAF_MINUTA')->createQuery()->execute();
+    $this->minutas = Doctrine_Core::getTable('SAF_MINUTA')->findAll();
   }
 
   /**
@@ -49,15 +49,11 @@ class minutaActions extends sfActions
             ->getEventosConvocatoria($request->getParameter('id'));
 
     $this->forward404Unless($this->eventos);
-
+    
     $this->asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')
-            ->createQuery()
-            ->where('id_convocatoria = ?', $request->getParameter('id'))
-            ->execute();
+            ->findByIdConvocatoria($request->getParameter('id'));           
 
-    $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')
-            ->createQuery()
-            ->execute();
+    $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
     $this->minuta = $request->getParameter('id');
   }
@@ -76,17 +72,17 @@ class minutaActions extends sfActions
 
     $this->forward404Unless($this->evento);
 
-    $this->fotos = $this->obtenerFotosDelEvento($id_evento);
+    $this->fotos = $this->evento->getSAFFOTO();
 
-    $this->razones = $this->obtenerRazonesDelEvento($id_evento);
+    $this->razones = $this->evento->getSAFEVENTORAZON();
 
     $this->data_razones = $this->obtenerRazonesMVAmin();
 
-    $this->resumen_bitacora = $this->obtenerResumenBitacoraDelEvento($id_evento);
+    $this->resumen_bitacora = $this->evento->getResumenBitacora();
 
-    $this->acciones_recomendaciones = $this->obtenerAccionesYRecomendacionesDelEvento($id_evento);
+    $this->acciones_recomendaciones = $this->evento->getAccionesYRecomendaciones();
 
-    $this->compromisos = $this->obtenerCompromisosDelEvento($id_evento);
+    $this->compromisos = $this->evento->getCompromisos();
 
     $this->data_ue = $this->obtenerUnidadesEquipos();
   }
@@ -147,10 +143,7 @@ class minutaActions extends sfActions
    */
   public function executeUnidadEquipo(sfWebRequest $request)
   {
-    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')
-            ->createQuery()
-            ->orderBy('nombre')
-            ->execute();
+    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
 
     $data_source = '';
 
@@ -173,9 +166,7 @@ class minutaActions extends sfActions
    */
   public function executePersonal(sfWebRequest $request)
   {
-    $personal = Doctrine_Core::getTable('SAF_PERSONAL')
-            ->createQuery()
-            ->execute();
+    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
     $data_source = '';
 
@@ -188,7 +179,12 @@ class minutaActions extends sfActions
     return $this->renderText(substr($data_source, 0, -1));
   }
 
-  public function executeFinalizarMinuta(sfWebRequest $request)
+  /**
+   * Acción que guarda el status actual de la minuta (Asistentes)
+   * 
+   * @param sfWebRequest $request
+   */
+  public function executeGuardarStatusMinuta(sfWebRequest $request)
   {
     $this->reiniciarAsistencia($request->getParameter('id'));
     $this->verificarMinutaYGuardar($request);
@@ -196,69 +192,194 @@ class minutaActions extends sfActions
     $this->redirect('@inicio_desarrollo?id=' . $request->getParameter('id'));
   }
 
-  public function verificarMinutaYGuardar($request)
+  public function executeFinalizarMinuta(sfWebRequest $request)
   {
-    $num_persona = 1;
-    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->createQuery()->execute();
+    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($request->getParameter('id'));
 
-    // Mientras existan personal agregados...
-    while ($request->getParameter('ci_personal' . $num_persona))
-    { // Verificar
-      foreach ($personal as $persona)
-      { // Se verifica que la persona agregada sea una correcta comparandola con las de la BD
-        if ($request->getParameter('ci_personal' . $num_persona) == $persona->getCi())
-        { // Si no fue agregada mas de una vez procedemos a guardarla
-          if (!$this->verificarSiLaPersonaYaFueAgregada($num_persona, $request))
-          {
-            $this->guardarAsistencia($request->getParameter('id'), $persona->getCi());
-          }
+    $asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')->createQuery()
+            ->where('id_convocatoria = ?', $request->getParameter('id'))
+            ->execute();
 
-          break;
+    $eventos = Doctrine_Core::getTable('SAF_EVENTO')
+            ->getEventosConvocatoria($request->getParameter('id'));
+
+    // Estableciendo la hora a formato español
+    setlocale(LC_ALL, "es_ES");
+
+    $pdf = new BaseFPDF();
+    $pdf->AliasNbPages();
+    $pdf->AddPage();
+
+    $pdf->Imprimir('ANÁLSIS DE FALLAS DE DISTRIBUCIÓN');
+    $pdf->Imprimir($convocatoria->getLugar(), 93, 10);
+    $pdf->Imprimir(strftime("%A %d de %B de %Y", strtotime($convocatoria->getFecha())) . ' - Hora: ' . $convocatoria->getHoraIni() . ' a ' . $convocatoria->getHoraFin(), 95, 10, 16);
+    $pdf->Imprimir('ASISTENTES', 10, 12, 12);
+
+    // ASISTENTES
+    $i = 0;
+    foreach ($asistentes as $asistente)
+    {
+      $i++;
+      $asist = $asistente->getSAFPERSONAL();
+      $pdf->Imprimir($i . ') ' . $asist->getSAFUNIDADEQUIPO(), 10, 9, 0);
+      $pdf->Imprimir($asist->getNombre() . ' ' . $asist->getApellido(), 80, 9);
+    }
+
+    // AGENDA DE REUNIÓN
+    $pdf->Ln(8);
+    $pdf->Imprimir('AGENDA DE REUNIÓN', 10, 12, 12);
+
+    // REVISIÓN DE LOS COMPROMISOS
+    $pdf->Imprimir('1. Revisión del status de los compromisos:', 20, 10, 10);
+
+    $pdf->Cell(20);
+    $pdf->Image(sfConfig::get('sf_web_dir') . '/subidas/compromisos.jpg', $pdf->GetX(), $pdf->GetY(), 155, 90);
+
+    $pdf->AddPage();
+
+    // REVISIÓN Y ANALISIS DE LAS INTERRUPCIONES
+    $pdf->Imprimir('2. Revisión y Análisis de las siguientes interrupciones:', 20, 10);
+
+    $cont_causa500 = 1;
+    $cont_imp = 1;
+    $cont_pro = 1;
+    foreach ($eventos as $evento)
+    {
+      if ($evento->getTipoFalla() == 'CAUSA-500' && $cont_causa500 == 1)
+      {
+        $pdf->Ln(10);
+        $pdf->Imprimir('INTERRUPCIONES CON ERROR DE OPERACIONES:', 30, 10, 8);
+        $cont_causa500++;
+      }
+
+      if ($evento->getTipoFalla() == 'IMPREVISTA' && $cont_imp == 1)
+      {
+        $pdf->Ln(10);
+        $pdf->Imprimir('INTERRUPCIONES IMPREVISTAS:', 30, 10, 8);
+        $cont_imp++;
+      }
+
+      if ($evento->getTipoFalla() == 'PROGRAMADA' && $cont_pro == 1)
+      {
+        $pdf->Ln(10);
+        $pdf->Imprimir('INTERRUPCIONES PROGRAMADAS:', 30, 10, 8);
+        $cont_pro++;
+      }
+
+      $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
+      $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
+      $pdf->Imprimir($text, 40, 10);
+    }
+
+    $pdf->AddPage();
+    $pdf->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 12);
+    foreach ($eventos as $evento)
+    {
+      $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
+      $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
+      $pdf->Imprimir($text, 20, 11, 12);
+
+      $pdf->Cell(30);
+      $pdf->SetFont('Times', '', 8);
+      $pdf->MultiCell(145, 4, utf8_decode($evento->getTrabajoRealizado()));
+      $pdf->Ln(2);
+      
+      $pdf->Imprimir('Núm Averia / Prop: ' . $evento->getNumAveria(), 135, 10, 0);  
+      $pdf->Imprimir('Operador: ' . $evento->getOperador(), 30, 10);
+      $pdf->Imprimir('Núm ROE: ' . $evento->getNumRoe(), 135, 10, 0);
+      $pdf->Imprimir('Cuadrilla: ' . $evento->getCuadrilla(), 30, 10);
+      $pdf->Imprimir('KVA Interrumpidos: ' . $evento->getKvaInt(), 135, 10, 0); 
+      $pdf->Imprimir('Programador: ' . $evento->getProgramador(), 30, 10);
+      $pdf->Imprimir('Región: ' . $evento->getRegion(), 135, 10, 0);
+      $pdf->Imprimir('Operador Responsable: ' . $evento->getOperadorResp(), 30, 10);
+      
+      $pdf->Ln(10);
+      
+      $fotos = Doctrine_Core::getTable('SAF_FOTO')->createQuery()
+              ->where('id_evento = ?', $evento)
+              ->execute();
+
+      foreach ($fotos as $foto)
+      {
+        $pdf->Imprimir($foto->getTitulo(), 30, 10, 5);
+        $pdf->Imprimir($foto->getSubTitulo(), 30, 10, 10);
+        $pdf->Cell(38);
+        $pdf->Image(sfConfig::get('sf_web_dir') . '/' . $foto->getDir(), $pdf->GetX(), $pdf->GetY(), 135, 70);
+        $pdf->Ln(73);
+      }
+
+      $razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->createQuery()
+              ->where('id_evento = ?', $evento)
+              ->execute();
+
+      if (count($razones) > 0)
+      {
+        $pdf->Imprimir('RAZONES POR LAS QUE PASA DE 999MVAmin:', 30, 10, 10);
+        foreach ($razones as $razon)
+        {
+          $pdf->Imprimir('- ' . $razon->getSAFRAZONMVAMIN() . ': ' . $razon->getMvaMin() . ' MVAmin', 40, 10, 5);
         }
       }
 
-      $num_persona++;
-    }
-  }
+      $pdf->Ln(9);
 
-  private function verificarSiLaPersonaYaFueAgregada($num_persona_a_verificar, $request)
-  {
-    $num_persona = $num_persona_a_verificar + 1;
+      $varios = Doctrine_Core::getTable('SAF_VARIO')->createQuery()
+              ->where('id_evento = ?', $evento)
+              ->orderBy('tipo')
+              ->execute();      
 
-    // Mientras existan personas agregadas siguientes a la persona a verificar...
-    while ($request->getParameter('ci_personal' . $num_persona))
-    { // si la persona fue agregada mas de una vez
-      if ($request->getParameter('ci_personal' . $num_persona_a_verificar) == $request->getParameter('ci_personal' . $num_persona))
+      foreach ($varios as $vario)
       {
-        return true;
+        if ($vario->getTipo() == 'BITACORA')
+        {
+          $pdf->Imprimir('RESUMEN DE LA BITÁCORA DEL EVENTO:', 30, 10, 12);
+          $pdf->Cell(40);
+          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
+          $pdf->Ln(8);
+        }
       }
 
-      $num_persona++;
+      $cont_comp = 1;
+      foreach ($varios as $vario)
+      {
+        if ($vario->getTipo() == 'ACCIONES_Y_RECOMENDACIONES')
+        {
+          $pdf->Imprimir('ACCIONES Y RECOMENDACIONES:', 30, 10, 12);
+          $pdf->Cell(40);
+          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
+          $pdf->Ln(8);
+        }
+        elseif ($vario->getTipo() == 'COMPROMISO')
+        {
+          if ($cont_comp == 1)
+          {
+            $pdf->Imprimir('COMPROMISOS:', 30, 10, 12);
+            $cont_comp++;
+          }    
+          $pdf->Imprimir('Fecha duración estimada: ' . $vario->getFDuracionEstimada(), 40, 10);
+          $pdf->Imprimir('Resp(s): ', 40, 10, 0);
+          foreach ($vario->getResponsables() as $responsable)
+          {
+            $pdf->Imprimir($responsable, 55, 10);
+          } 
+          $pdf->Ln(2);
+          $pdf->Cell(40);
+          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
+          $pdf->Ln(8);
+        }
+      }
+      
+      $pdf->AddPage();
     }
 
-    return false;
-  }
+    //$header = array('NumF328', 'Aver/Prop', 'Fecha', 'Región', 'Circuito', 'MVAmin', 'Op/Prog', 'Roe', 'TRABAJO REALIZADO');
+    //$header = array('NÚMERO R.I.', 'N° AVERIA / PROPOSICIÓN', 'FECHA', 'REGIÓN', 'CIRCUITO', 'MVAmin', 'OPERADOR / PROGRAMADOR', 'N° ROE', 'TRABAJO REALIZADO');
+    //$pdf->SetFont('Arial', '', 14);
+    //$pdf->FancyTable($header, $eventos);
 
-  private function reiniciarAsistencia($id)
-  {
-    $asistencias = Doctrine_Core::getTable('SAF_ASISTENCIA')
-            ->createQuery()
-            ->where('id_convocatoria = ?', $id)
-            ->execute();
-
-    foreach ($asistencias as $asistencia)
-    {
-      // Borra el registro SAF_ASISTENCIA de la BD
-      $asistencia->delete();
-    }
-  }
-
-  private function guardarAsistencia($id_convocatoria, $id_personal)
-  {
-    $asistencia = new SAF_ASISTENCIA();
-    $asistencia->setIdConvocatoria($id_convocatoria);
-    $asistencia->setIdPersonal($id_personal);
-    $asistencia->save();
+    $pdf->Output();
+    throw new sfStopException();
   }
 
   /**
@@ -467,79 +588,62 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que obtiene todas las fotos que tiene un evento específico.
+   * Método que le procede a la accion executeGuardarStatusMinuta verificandola
+   * antes de guardar el status con sus asistentes.
    * 
-   * @param integer $id_evento
-   * @return Doctrine_Collection SAF_FOTO
+   * @param sfWebRequest $request
    */
-  private function obtenerFotosDelEvento($id_evento)
+  public function verificarMinutaYGuardar($request)
   {
-    return Doctrine_Core::getTable('SAF_FOTO')
-                    ->createQuery()
-                    ->where('id_evento = ?', $id_evento)
-                    ->execute();
+    $num_persona = 1;
+    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
+
+    // Mientras existan personal agregados...
+    while ($request->getParameter('ci_personal' . $num_persona))
+    { // Verificar
+      foreach ($personal as $persona)
+      { // Se verifica que la persona agregada sea una correcta comparandola con las de la BD
+        if ($request->getParameter('ci_personal' . $num_persona) == $persona->getCi())
+        { // Si no fue agregada mas de una vez procedemos a guardarla
+          if (!$this->verificarSiLaPersonaYaFueAgregada($num_persona, $request))
+          {
+            $this->guardarAsistencia($request->getParameter('id'), $persona->getCi());
+          }
+
+          break;
+        }
+      }
+
+      $num_persona++;
+    }
   }
 
   /**
-   * Método que obtiene todas las razones de un evento específico por la que 
-   * se supera los 999MVAmin.
+   * Método que verifica si una persona (asistente al CAF) fue agregado
+   * dos veces a la reunión.
    * 
-   * @param integer $id_evento
-   * @return Doctrine_Collection SAF_EVENTO_RAZON
+   * @param integer $num_persona_a_verificar
+   * @param sfWebRequest $request
+   * @return boolean
    */
-  private function obtenerRazonesDelEvento($id_evento)
+  private function verificarSiLaPersonaYaFueAgregada($num_persona_a_verificar, $request)
   {
-    return Doctrine_Core::getTable('SAF_EVENTO_RAZON')
-                    ->createQuery()
-                    ->where('id_evento = ?', $id_evento)
-                    ->execute();
-  }
+    $num_persona = $num_persona_a_verificar + 1;
 
-  /**
-   * Método que obtiene el resumen de la bitacora de un evento específico.
-   * 
-   * @param integer $id_evento
-   * @return SAF_VARIO
-   */
-  private function obtenerResumenBitacoraDelEvento($id_evento)
-  {
-    return Doctrine_Core::getTable('SAF_VARIO')
-                    ->createQuery()
-                    ->where('id_evento = ?', $id_evento)
-                    ->andWhere('tipo = ?', "BITACORA")
-                    ->fetchOne();
-  }
+    // Mientras existan personas agregadas siguientes a la persona a verificar...
+    while ($request->getParameter('ci_personal' . $num_persona))
+    { // si la persona fue agregada mas de una vez
+      if ($request->getParameter('ci_personal' . $num_persona_a_verificar) == $request->getParameter('ci_personal' . $num_persona))
+      {
+        return true;
+      }
 
-  /**
-   * Método que obtiene las acciones y recomendaciones de un evento específico.
-   * 
-   * @param integer $id_evento
-   * @return SAF_VARIO
-   */
-  private function obtenerAccionesYRecomendacionesDelEvento($id_evento)
-  {
-    return Doctrine_Core::getTable('SAF_VARIO')
-                    ->createQuery()
-                    ->where('id_evento = ?', $id_evento)
-                    ->andWhere('tipo = ?', "ACCIONES_Y_RECOMENDACIONES")
-                    ->fetchOne();
-  }
+      $num_persona++;
+    }
 
-  /**
-   * Método que obtiene todos los compromisos de un evento específico
-   * 
-   * @param integer $id_evento
-   * @return Doctrine_Collection SAF_VARIO
-   */
-  private function obtenerCompromisosDelEvento($id_evento)
-  {
-    return Doctrine_Core::getTable('SAF_VARIO')
-                    ->createQuery()
-                    ->where('id_evento = ?', $id_evento)
-                    ->andWhere('tipo = ?', "COMPROMISO")
-                    ->execute();
+    return false;
   }
-
+  
   /**
    * Método que retorna string con formato específico de todas las razones 
    * disponibles por lo que un evento supera los 999MVAmin.
@@ -548,7 +652,7 @@ class minutaActions extends sfActions
    */
   private function obtenerRazonesMVAmin()
   {
-    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->createQuery()->execute();
+    $razones = Doctrine_Core::getTable('SAF_RAZON_MVAMIN')->findAll();
 
     $data_source = '';
 
@@ -568,20 +672,20 @@ class minutaActions extends sfActions
    */
   private function obtenerUnidadesEquipos()
   {
-    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->createQuery()->execute();
+    $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
 
     return $unidades;
   }
 
   /**
    * Método que reinicia o borra todos los registros SAF_FOTO de la BD
-   * correspondientes a un evento.
+   * correspondientes a un evento (SAF_EVENTO).
    * 
    * @param integer $id_evento
    */
   private function reiniciarFotosDelEvento($id_evento)
-  {
-    $fotos = $this->obtenerFotosDelEvento($id_evento);
+  {    
+    $fotos = Doctrine_Core::getTable('SAF_FOTO')->findByIdEvento($id_evento);
 
     foreach ($fotos as $foto)
     {
@@ -598,7 +702,7 @@ class minutaActions extends sfActions
    */
   private function reiniciarRazonesDelEvento($id_evento)
   {
-    $razones = $this->obtenerRazonesDelEvento($id_evento);
+    $razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->findByIdEvento($id_evento);
 
     foreach ($razones as $razon)
     {
@@ -609,13 +713,13 @@ class minutaActions extends sfActions
 
   /**
    * Método que reinicia o borra el registro SAF_VARIO (BITACORA) de la BD
-   * correspondiente a un evento.
+   * correspondiente a un evento (SAF_EVENTO).
    * 
    * @param integer $id_evento
    */
   private function reiniciarResumenBitacoraDelEvento($id_evento)
-  {
-    if ($bitacora = $this->obtenerResumenBitacoraDelEvento($id_evento))
+  { 
+    if ($bitacora = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento)->getResumenBitacora())
     {
       $bitacora->delete();
     }
@@ -623,13 +727,14 @@ class minutaActions extends sfActions
 
   /**
    * Método que reinicia o borra el registro SAF_VARIO (ACCIONES_Y_RECOMENDACIONES) 
-   * de la BD correspondiente a un evento.
+   * de la BD correspondiente a un evento (SAF_EVENTO).
    * 
    * @param integer $id_evento
    */
   private function reiniciarAccionesYRecomendacionesDelEvento($id_evento)
   {
-    if ($acciones_recomendaciones = $this->obtenerAccionesYRecomendacionesDelEvento($id_evento))
+    if ($acciones_recomendaciones = 
+            Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento)->getAccionesYRecomendaciones())
     {
       $acciones_recomendaciones->delete();
     }
@@ -637,32 +742,45 @@ class minutaActions extends sfActions
 
   /**
    * Método que reinicia o borra todos los registros SAF_VARIO (COMPROMISO) y
-   * SAF_COMP_UE (RESPONSABLES) de la BD correspondientes a un evento.
+   * SAF_COMP_UE (RESPONSABLES) de la BD correspondientes a un evento (SAF_EVENTO).
    * 
    * @param integer $id_evento
    */
   private function reiniciarCompromisosDelEvento($id_evento)
   {
-    $compromisos = $this->obtenerCompromisosDelEvento($id_evento);
+    $compromisos = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento)->getCompromisos();
 
     foreach ($compromisos as $compromiso)
     {
-      $responsables = Doctrine_Core::getTable('SAF_COMP_UE')
-              ->createQuery()
-              ->where('id_compromiso = ?', $compromiso)
-              ->execute();
+      $responsables = Doctrine_Core::getTable('SAF_COMP_UE')->findByIdCompromiso($compromiso->getId());             
 
       foreach ($responsables as $responsable)
       {
-        // Borra el registro SAF_COMP_UE de la BD
         $responsable->delete();
       }
 
-      // Borra el registro SAF_VARIO de la BD
       $compromiso->delete();
     }
   }
 
+  /**
+   * Método que reinicia o borra todos los registros de SAF_ASISTENCIA de 
+   * la BD correspondientes a un comité (SAF_CONVOCATORIA_CAF).
+   * 
+   * @param integer $id_convocatoria
+   */
+  private function reiniciarAsistencia($id_convocatoria)
+  {
+    $asistencias =
+            Doctrine_Core::getTable('SAF_ASISTENCIA')->findByIdConvocatoria($id_convocatoria);          
+    
+    foreach ($asistencias as $asistencia)
+    {
+      // Borra el registro SAF_ASISTENCIA de la BD
+      $asistencia->delete();
+    }
+  }
+  
   /**
    * Método que suprime un archivo de foto del servidor. Cuando ya no se necesita.
    * 
@@ -785,10 +903,10 @@ class minutaActions extends sfActions
   }
 
   /**
-   * Método que guarda el o los responsables correspondiente a un compromiso y evento.
+   * Método que guarda el responsable correspondiente a un compromiso y evento.
    * 
-   * @param type $responsable
-   * @param type $compromiso
+   * @param SAF_UNIDAD_EQUIPO $responsable
+   * @param SAF_VARIO $compromiso
    */
   private function guardarResponsableCompromiso($responsable, $compromiso)
   {
@@ -798,4 +916,18 @@ class minutaActions extends sfActions
     $comp_ue->save();
   }
 
+  /**
+   * Método que guarda la asistencia de la persona (SAF_PERSONAL)
+   * correspondiente al comité (SAF_CONVOCATORIA_CAF)
+   * 
+   * @param integer $id_convocatoria
+   * @param integer $id_personal
+   */
+  private function guardarAsistencia($id_convocatoria, $id_personal)
+  {
+    $asistencia = new SAF_ASISTENCIA();
+    $asistencia->setIdConvocatoria($id_convocatoria);
+    $asistencia->setIdPersonal($id_personal);
+    $asistencia->save();
+  }
 }

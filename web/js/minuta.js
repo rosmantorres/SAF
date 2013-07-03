@@ -289,6 +289,13 @@ jQuery('document').ready(function()
     
     return false;
   });
-
+  
+  jQuery('#terminar_minuta').click(function()
+  {
+    if (confirm("Al aceptar se terminará con el proceso de edición de la minuta. ¿Desea continuar?"))
+      return true;
+    
+    return false;
+  })
 });
 

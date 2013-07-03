@@ -16,4 +16,12 @@ class SAF_UNIDAD_EQUIPOTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO');
     }
+   
+    /**
+     * Misma definición de la sobrescritura. Solo se le agregó el order by
+     */
+    public function findAll($hydrationMode = null)
+    {
+      return $this->createQuery('dctrn_find')->orderBy('nombre')->execute(array(), $hydrationMode);
+    }
 }

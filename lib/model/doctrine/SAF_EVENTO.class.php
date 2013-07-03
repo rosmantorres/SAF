@@ -13,4 +13,67 @@
 class SAF_EVENTO extends BaseSAF_EVENTO
 {
 
+  /**
+   * Método sobrescrito que obtiene todas las fotos del evento.
+   * 
+   * @return Doctrine_Collection SAF_FOTO
+   */
+  public function getSAFFOTO()
+  {
+    return Doctrine_Core::getTable('SAF_FOTO')->findByIdEvento($this->getId());
+  }
+
+  /**
+   * Método sobrescrito que obtiene todas las razones del evento por la que 
+   * se supera los 999MVAmin.
+   * 
+   * @return Doctrine_Collection SAF_EVENTO_RAZON
+   */
+  public function getSAFEVENTORAZON()
+  {
+    return Doctrine_Core::getTable('SAF_EVENTO_RAZON')->findByIdEvento($this->getId());
+  }
+
+  /**
+   * Método que obtiene el resumen de la bitacora del evento.
+   * 
+   * @return SAF_VARIO
+   */
+  public function getResumenBitacora()
+  {    
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $this)
+                    ->andWhere('tipo = ?', "BITACORA")
+                    ->fetchOne();
+  }
+
+  /**
+   * Método que obtiene las acciones y recomendaciones del evento.
+   * 
+   * @return SAF_VARIO
+   */
+  public function getAccionesYRecomendaciones()
+  {
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $this)
+                    ->andWhere('tipo = ?', "ACCIONES_Y_RECOMENDACIONES")
+                    ->fetchOne();
+  }
+
+  /**
+   * Método que obtiene todos los compromisos del evento.
+   * 
+   * @return Doctrine_Collection SAF_VARIO
+   */
+  public function getCompromisos()
+  {
+    return Doctrine_Core::getTable('SAF_VARIO')
+                    ->createQuery()
+                    ->where('id_evento = ?', $this)
+                    ->andWhere('tipo = ?', "COMPROMISO")
+                    ->execute();
+  }
+
 }

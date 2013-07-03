@@ -13,4 +13,16 @@
 class SAF_ASISTENCIA extends BaseSAF_ASISTENCIA
 {
 
+  /**
+   * Método sobrescrito que retorna el objeto SAF_PERSONAL de SAF_ASISTENCIA, es 
+   * decir, si una persona asistio al comité entonces es retornado el objeto 
+   * SAF_PERSONAL para asi obtener todos sus atributos.
+   * 
+   * @return type
+   */
+  public function getSAFPERSONAL()
+  {
+    return Doctrine_Core::getTable('SAF_PERSONAL')->find($this->getIdPersonal());
+  }
+
 }

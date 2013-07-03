@@ -12,5 +12,14 @@
  */
 class SAF_PERSONAL extends BaseSAF_PERSONAL
 {
-
+  /**
+   * Método sobrescrito que retorna el objeto SAF_UNIDAD_EQUIPO de SAF_PERSONAL,
+   * es decir, retorna la unidad a la que pertence la persona.
+   * 
+   * @return type
+   */
+  public function getSAFUNIDADEQUIPO()
+  {
+    return Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->find($this->getIdUe());
+  }
 }

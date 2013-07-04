@@ -32,9 +32,9 @@
           <td><?php echo $minuta->getUpdatedAt() ?></td>
           <td>
             <small>
-              <?php if ($minuta->getDirPdf() == ''): ?> 
+              <?php if ($minuta->getLista() == 0): ?> 
                 <b style="color: #149bdf">Ejecución</b>
-              <?php elseif ($minuta->getDirPdf() != ''): ?>
+              <?php elseif ($minuta->getLista() != 0): ?>
                 <b>Terminada</b>              
               <?php endif; ?>
             </small>

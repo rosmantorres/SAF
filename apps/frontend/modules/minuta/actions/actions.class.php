@@ -32,6 +32,7 @@ class minutaActions extends sfActions
   {
     $minuta = new SAF_MINUTA();
     $minuta->setIdConvocatoria($request->getParameter('id'));
+    $minuta->setLista(0);
     $minuta->save();
 
     $this->redirect('@inicio_desarrollo?id=' . $request->getParameter('id'));
@@ -45,13 +46,22 @@ class minutaActions extends sfActions
    */
   public function executeInicioDesarrollo(sfWebRequest $request)
   {
+    $this->forward404Unless(Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+                    ->findOneById($request->getParameter('id')));
+
+    $minuta = Doctrine_Core::getTable('SAF_MINUTA')
+            ->findOneByIdConvocatoria($request->getParameter('id'));
+
+    if ($minuta && $minuta->getLista() == 1)
+    {
+      $this->visualizarMinuta($request->getParameter('id'));  
+    }
+
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosConvocatoria($request->getParameter('id'));
 
-    $this->forward404Unless($this->eventos);
-    
     $this->asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')
-            ->findByIdConvocatoria($request->getParameter('id'));           
+            ->findByIdConvocatoria($request->getParameter('id'));
 
     $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
@@ -192,193 +202,37 @@ class minutaActions extends sfActions
     $this->redirect('@inicio_desarrollo?id=' . $request->getParameter('id'));
   }
 
+  /**
+   * Acción que finaliza y da por lista una minuta.
+   * 
+   * @param sfWebRequest $request
+   * @throws sfStopException
+   */
   public function executeFinalizarMinuta(sfWebRequest $request)
   {
-    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
-            ->find($request->getParameter('id'));
+    $minuta = Doctrine_Core::getTable('SAF_MINUTA')
+            ->findOneByIdConvocatoria($request->getParameter('id'));
 
-    $asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')->createQuery()
-            ->where('id_convocatoria = ?', $request->getParameter('id'))
-            ->execute();
+    $minuta->setLista(1);
 
-    $eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosConvocatoria($request->getParameter('id'));
+    $minuta->save();
 
+    $this->visualizarMinuta($request->getParameter('id'));            
+  }
+  
+  public function visualizarMinuta($id_minuta)
+  {
     // Estableciendo la hora a formato español
     setlocale(LC_ALL, "es_ES");
 
-    $pdf = new BaseFPDF();
+    $pdf = new BaseFPDF($id_minuta);
+
     $pdf->AliasNbPages();
-    $pdf->AddPage();
 
-    $pdf->Imprimir('ANÁLSIS DE FALLAS DE DISTRIBUCIÓN');
-    $pdf->Imprimir($convocatoria->getLugar(), 93, 10);
-    $pdf->Imprimir(strftime("%A %d de %B de %Y", strtotime($convocatoria->getFecha())) . ' - Hora: ' . $convocatoria->getHoraIni() . ' a ' . $convocatoria->getHoraFin(), 95, 10, 16);
-    $pdf->Imprimir('ASISTENTES', 10, 12, 12);
-
-    // ASISTENTES
-    $i = 0;
-    foreach ($asistentes as $asistente)
-    {
-      $i++;
-      $asist = $asistente->getSAFPERSONAL();
-      $pdf->Imprimir($i . ') ' . $asist->getSAFUNIDADEQUIPO(), 10, 9, 0);
-      $pdf->Imprimir($asist->getNombre() . ' ' . $asist->getApellido(), 80, 9);
-    }
-
-    // AGENDA DE REUNIÓN
-    $pdf->Ln(8);
-    $pdf->Imprimir('AGENDA DE REUNIÓN', 10, 12, 12);
-
-    // REVISIÓN DE LOS COMPROMISOS
-    $pdf->Imprimir('1. Revisión del status de los compromisos:', 20, 10, 10);
-
-    $pdf->Cell(20);
-    $pdf->Image(sfConfig::get('sf_web_dir') . '/subidas/compromisos.jpg', $pdf->GetX(), $pdf->GetY(), 155, 90);
-
-    $pdf->AddPage();
-
-    // REVISIÓN Y ANALISIS DE LAS INTERRUPCIONES
-    $pdf->Imprimir('2. Revisión y Análisis de las siguientes interrupciones:', 20, 10);
-
-    $cont_causa500 = 1;
-    $cont_imp = 1;
-    $cont_pro = 1;
-    foreach ($eventos as $evento)
-    {
-      if ($evento->getTipoFalla() == 'CAUSA-500' && $cont_causa500 == 1)
-      {
-        $pdf->Ln(10);
-        $pdf->Imprimir('INTERRUPCIONES CON ERROR DE OPERACIONES:', 30, 10, 8);
-        $cont_causa500++;
-      }
-
-      if ($evento->getTipoFalla() == 'IMPREVISTA' && $cont_imp == 1)
-      {
-        $pdf->Ln(10);
-        $pdf->Imprimir('INTERRUPCIONES IMPREVISTAS:', 30, 10, 8);
-        $cont_imp++;
-      }
-
-      if ($evento->getTipoFalla() == 'PROGRAMADA' && $cont_pro == 1)
-      {
-        $pdf->Ln(10);
-        $pdf->Imprimir('INTERRUPCIONES PROGRAMADAS:', 30, 10, 8);
-        $cont_pro++;
-      }
-
-      $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
-      $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
-      $pdf->Imprimir($text, 40, 10);
-    }
-
-    $pdf->AddPage();
-    $pdf->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 12);
-    foreach ($eventos as $evento)
-    {
-      $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
-      $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
-      $pdf->Imprimir($text, 20, 11, 12);
-
-      $pdf->Cell(30);
-      $pdf->SetFont('Times', '', 8);
-      $pdf->MultiCell(145, 4, utf8_decode($evento->getTrabajoRealizado()));
-      $pdf->Ln(2);
-      
-      $pdf->Imprimir('Núm Averia / Prop: ' . $evento->getNumAveria(), 135, 10, 0);  
-      $pdf->Imprimir('Operador: ' . $evento->getOperador(), 30, 10);
-      $pdf->Imprimir('Núm ROE: ' . $evento->getNumRoe(), 135, 10, 0);
-      $pdf->Imprimir('Cuadrilla: ' . $evento->getCuadrilla(), 30, 10);
-      $pdf->Imprimir('KVA Interrumpidos: ' . $evento->getKvaInt(), 135, 10, 0); 
-      $pdf->Imprimir('Programador: ' . $evento->getProgramador(), 30, 10);
-      $pdf->Imprimir('Región: ' . $evento->getRegion(), 135, 10, 0);
-      $pdf->Imprimir('Operador Responsable: ' . $evento->getOperadorResp(), 30, 10);
-      
-      $pdf->Ln(10);
-      
-      $fotos = Doctrine_Core::getTable('SAF_FOTO')->createQuery()
-              ->where('id_evento = ?', $evento)
-              ->execute();
-
-      foreach ($fotos as $foto)
-      {
-        $pdf->Imprimir($foto->getTitulo(), 30, 10, 5);
-        $pdf->Imprimir($foto->getSubTitulo(), 30, 10, 10);
-        $pdf->Cell(38);
-        $pdf->Image(sfConfig::get('sf_web_dir') . '/' . $foto->getDir(), $pdf->GetX(), $pdf->GetY(), 135, 70);
-        $pdf->Ln(73);
-      }
-
-      $razones = Doctrine_Core::getTable('SAF_EVENTO_RAZON')->createQuery()
-              ->where('id_evento = ?', $evento)
-              ->execute();
-
-      if (count($razones) > 0)
-      {
-        $pdf->Imprimir('RAZONES POR LAS QUE PASA DE 999MVAmin:', 30, 10, 10);
-        foreach ($razones as $razon)
-        {
-          $pdf->Imprimir('- ' . $razon->getSAFRAZONMVAMIN() . ': ' . $razon->getMvaMin() . ' MVAmin', 40, 10, 5);
-        }
-      }
-
-      $pdf->Ln(9);
-
-      $varios = Doctrine_Core::getTable('SAF_VARIO')->createQuery()
-              ->where('id_evento = ?', $evento)
-              ->orderBy('tipo')
-              ->execute();      
-
-      foreach ($varios as $vario)
-      {
-        if ($vario->getTipo() == 'BITACORA')
-        {
-          $pdf->Imprimir('RESUMEN DE LA BITÁCORA DEL EVENTO:', 30, 10, 12);
-          $pdf->Cell(40);
-          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
-          $pdf->Ln(8);
-        }
-      }
-
-      $cont_comp = 1;
-      foreach ($varios as $vario)
-      {
-        if ($vario->getTipo() == 'ACCIONES_Y_RECOMENDACIONES')
-        {
-          $pdf->Imprimir('ACCIONES Y RECOMENDACIONES:', 30, 10, 12);
-          $pdf->Cell(40);
-          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
-          $pdf->Ln(8);
-        }
-        elseif ($vario->getTipo() == 'COMPROMISO')
-        {
-          if ($cont_comp == 1)
-          {
-            $pdf->Imprimir('COMPROMISOS:', 30, 10, 12);
-            $cont_comp++;
-          }    
-          $pdf->Imprimir('Fecha duración estimada: ' . $vario->getFDuracionEstimada(), 40, 10);
-          $pdf->Imprimir('Resp(s): ', 40, 10, 0);
-          foreach ($vario->getResponsables() as $responsable)
-          {
-            $pdf->Imprimir($responsable, 55, 10);
-          } 
-          $pdf->Ln(2);
-          $pdf->Cell(40);
-          $pdf->MultiCell(140, 6, utf8_decode($vario->getDescripcion()));
-          $pdf->Ln(8);
-        }
-      }
-      
-      $pdf->AddPage();
-    }
-
-    //$header = array('NumF328', 'Aver/Prop', 'Fecha', 'Región', 'Circuito', 'MVAmin', 'Op/Prog', 'Roe', 'TRABAJO REALIZADO');
-    //$header = array('NÚMERO R.I.', 'N° AVERIA / PROPOSICIÓN', 'FECHA', 'REGIÓN', 'CIRCUITO', 'MVAmin', 'OPERADOR / PROGRAMADOR', 'N° ROE', 'TRABAJO REALIZADO');
-    //$pdf->SetFont('Arial', '', 14);
-    //$pdf->FancyTable($header, $eventos);
-
+    $pdf->RellenarMinuta();
+    
     $pdf->Output();
+
     throw new sfStopException();
   }
 
@@ -643,7 +497,7 @@ class minutaActions extends sfActions
 
     return false;
   }
-  
+
   /**
    * Método que retorna string con formato específico de todas las razones 
    * disponibles por lo que un evento supera los 999MVAmin.
@@ -684,7 +538,7 @@ class minutaActions extends sfActions
    * @param integer $id_evento
    */
   private function reiniciarFotosDelEvento($id_evento)
-  {    
+  {
     $fotos = Doctrine_Core::getTable('SAF_FOTO')->findByIdEvento($id_evento);
 
     foreach ($fotos as $foto)
@@ -718,7 +572,7 @@ class minutaActions extends sfActions
    * @param integer $id_evento
    */
   private function reiniciarResumenBitacoraDelEvento($id_evento)
-  { 
+  {
     if ($bitacora = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento)->getResumenBitacora())
     {
       $bitacora->delete();
@@ -733,7 +587,7 @@ class minutaActions extends sfActions
    */
   private function reiniciarAccionesYRecomendacionesDelEvento($id_evento)
   {
-    if ($acciones_recomendaciones = 
+    if ($acciones_recomendaciones =
             Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento)->getAccionesYRecomendaciones())
     {
       $acciones_recomendaciones->delete();
@@ -752,7 +606,7 @@ class minutaActions extends sfActions
 
     foreach ($compromisos as $compromiso)
     {
-      $responsables = Doctrine_Core::getTable('SAF_COMP_UE')->findByIdCompromiso($compromiso->getId());             
+      $responsables = Doctrine_Core::getTable('SAF_COMP_UE')->findByIdCompromiso($compromiso->getId());
 
       foreach ($responsables as $responsable)
       {
@@ -772,15 +626,15 @@ class minutaActions extends sfActions
   private function reiniciarAsistencia($id_convocatoria)
   {
     $asistencias =
-            Doctrine_Core::getTable('SAF_ASISTENCIA')->findByIdConvocatoria($id_convocatoria);          
-    
+            Doctrine_Core::getTable('SAF_ASISTENCIA')->findByIdConvocatoria($id_convocatoria);
+
     foreach ($asistencias as $asistencia)
     {
       // Borra el registro SAF_ASISTENCIA de la BD
       $asistencia->delete();
     }
   }
-  
+
   /**
    * Método que suprime un archivo de foto del servidor. Cuando ya no se necesita.
    * 
@@ -930,4 +784,5 @@ class minutaActions extends sfActions
     $asistencia->setIdPersonal($id_personal);
     $asistencia->save();
   }
+
 }

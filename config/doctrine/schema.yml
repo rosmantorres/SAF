@@ -86,7 +86,7 @@ SAF_MINUTA:
   columns:
     cod_min: { type: integer, primary: true, sequence: true }
     id_convocatoria: { notnull: true, type: integer, unique: true }
-    dir_pdf: { type: string(50), notnull: false }
+    lista: { type: integer, notnull: true }
   relations:
     SAF_CONVOCATORIA_CAF:
       local: id_convocatoria

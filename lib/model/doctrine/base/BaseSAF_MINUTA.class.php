@@ -9,16 +9,16 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_MINUTA', 'schema_saf');
  * 
  * @property integer $cod_min
  * @property integer $id_convocatoria
- * @property string $dir_pdf
+ * @property integer $lista
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
  * 
  * @method integer              getCodMin()               Returns the current record's "cod_min" value
  * @method integer              getIdConvocatoria()       Returns the current record's "id_convocatoria" value
- * @method string               getDirPdf()               Returns the current record's "dir_pdf" value
+ * @method integer              getLista()                Returns the current record's "lista" value
  * @method SAF_CONVOCATORIA_CAF getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" value
  * @method SAF_MINUTA           setCodMin()               Sets the current record's "cod_min" value
  * @method SAF_MINUTA           setIdConvocatoria()       Sets the current record's "id_convocatoria" value
- * @method SAF_MINUTA           setDirPdf()               Sets the current record's "dir_pdf" value
+ * @method SAF_MINUTA           setLista()                Sets the current record's "lista" value
  * @method SAF_MINUTA           setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" value
  * 
  * @package    Proyecto_SAF
@@ -41,10 +41,9 @@ abstract class BaseSAF_MINUTA extends sfDoctrineRecord
              'type' => 'integer',
              'unique' => true,
              ));
-        $this->hasColumn('dir_pdf', 'string', 50, array(
-             'type' => 'string',
-             'notnull' => false,
-             'length' => 50,
+        $this->hasColumn('lista', 'integer', null, array(
+             'type' => 'integer',
+             'notnull' => true,
              ));
     }
 

@@ -14,14 +14,14 @@ abstract class BaseSAF_MINUTAFormFilter extends BaseFormFilterDoctrine
   {
     $this->setWidgets(array(
       'id_convocatoria' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'add_empty' => true)),
-      'dir_pdf'         => new sfWidgetFormFilterInput(),
+      'lista'           => new sfWidgetFormFilterInput(array('with_empty' => false)),
       'created_at'      => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
       'updated_at'      => new sfWidgetFormFilterDate(array('from_date' => new sfWidgetFormDate(), 'to_date' => new sfWidgetFormDate(), 'with_empty' => false)),
     ));
 
     $this->setValidators(array(
       'id_convocatoria' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'column' => 'id')),
-      'dir_pdf'         => new sfValidatorPass(array('required' => false)),
+      'lista'           => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
       'created_at'      => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
       'updated_at'      => new sfValidatorDateRange(array('required' => false, 'from_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 00:00:00')), 'to_date' => new sfValidatorDateTime(array('required' => false, 'datetime_output' => 'Y-m-d 23:59:59')))),
     ));
@@ -45,7 +45,7 @@ abstract class BaseSAF_MINUTAFormFilter extends BaseFormFilterDoctrine
     return array(
       'cod_min'         => 'Number',
       'id_convocatoria' => 'ForeignKey',
-      'dir_pdf'         => 'Text',
+      'lista'           => 'Number',
       'created_at'      => 'Date',
       'updated_at'      => 'Date',
     );

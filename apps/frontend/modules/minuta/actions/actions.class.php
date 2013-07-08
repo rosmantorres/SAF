@@ -54,7 +54,7 @@ class minutaActions extends sfActions
 
     if ($minuta && $minuta->getLista() == 1)
     {
-      $this->visualizarMinuta($request->getParameter('id'));  
+      $this->visualizarMinuta($minuta);
     }
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
@@ -76,11 +76,17 @@ class minutaActions extends sfActions
    */
   public function executeDesarrollarEvento(sfWebRequest $request)
   {
-    $id_evento = $request->getParameter('id');
-
-    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($id_evento);
+    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($request->getParameter('id'));
 
     $this->forward404Unless($this->evento);
+
+    $minuta = Doctrine_Core::getTable('SAF_MINUTA')
+            ->findOneByIdConvocatoria($this->evento->getIdConvocatoria());
+
+    if ($minuta && $minuta->getLista() == 1)
+    {
+      $this->visualizarMinuta($minuta);
+    }
 
     $this->fotos = $this->evento->getSAFFOTO();
 
@@ -210,6 +216,13 @@ class minutaActions extends sfActions
    */
   public function executeFinalizarMinuta(sfWebRequest $request)
   {
+    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($request->getParameter('id'));
+
+    $convocatoria->setStatus('TERMINADA');
+
+    $convocatoria->save();
+
     $minuta = Doctrine_Core::getTable('SAF_MINUTA')
             ->findOneByIdConvocatoria($request->getParameter('id'));
 
@@ -217,22 +230,33 @@ class minutaActions extends sfActions
 
     $minuta->save();
 
-    $this->visualizarMinuta($request->getParameter('id'));            
+    $this->getUser()->setFlash('notice', 'La minuta n° ' . $minuta->getCodMin() . ' ha sido terminada exitosamente!');
+    
+    $this->redirect('@index_minuta');
+    //$this->visualizarMinuta($minuta);
   }
-  
-  public function visualizarMinuta($id_minuta)
+
+  /**
+   * Acción que visualiza el desarrollo (Minuta) del CAF en formato PDF. Se
+   * Recibe la minuta para concordar con el nombre de la acción pero realmente
+   * lo que importa es el id de la convocatoria, ya que alli esta todo el desarrollo.
+   * 
+   * @param SAF_MINUTA $minuta
+   * @throws sfStopException
+   */
+  public function visualizarMinuta($minuta)
   {
     // Estableciendo la hora a formato español
     setlocale(LC_ALL, "es_ES");
 
-    $pdf = new BaseFPDF($id_minuta);
+    $pdf = new MinutaPDF($minuta->getIdConvocatoria());
 
     $pdf->AliasNbPages();
 
-    $pdf->RellenarMinuta();
+    $pdf->RellenarMinuta();    
     
     $pdf->Output();
-
+    
     throw new sfStopException();
   }
 

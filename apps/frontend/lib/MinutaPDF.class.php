@@ -1,6 +1,6 @@
 <?php
 
-class BaseFPDF extends FPDF
+class MinutaPDF extends FPDF
 {
 
   // Propiedades
@@ -9,7 +9,7 @@ class BaseFPDF extends FPDF
   private $eventos;
 
   // Constructor
-  function BaseFPDF($id_convocatoria, $orientation = 'P', $unit = 'mm', $size = 'Letter')
+  function MinutaPDF($id_convocatoria, $orientation = 'P', $unit = 'mm', $size = 'Letter')
   {
     parent::FPDF($orientation, $unit, $size);
 
@@ -52,7 +52,7 @@ class BaseFPDF extends FPDF
 
     $this->RellenarIndice();
 
-    $this->RellenarDesarrolloReunion();
+    $this->RellenarDesarrolloReunion();        
   }
 
   // Rellena el titulo de la minuta
@@ -146,10 +146,14 @@ class BaseFPDF extends FPDF
   {
     $this->AddPage();
 
-    $this->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 12);
+    $this->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 18);
+    
+    $addPage = count($this->eventos);
 
     foreach ($this->eventos as $evento)
     {
+      $addPage--;
+      
       $this->RellenarDescripcionDelEvento($evento);
 
       $this->RellenarFotosDelEvento($evento);
@@ -164,7 +168,7 @@ class BaseFPDF extends FPDF
 
       $this->RellenarCompromisosDelEvento($evento, $varios);
 
-      $this->AddPage();
+      if ($addPage > 0) $this->AddPage();
     }
   }
 

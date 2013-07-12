@@ -15,6 +15,41 @@ class minutaActions extends sfActions
   // al usuario durante el desarrollo de un evento
   private $msj_error = '';
 
+  public function executeCharts()
+  {
+    $this->indicador = Doctrine_Core::getTable('SAF_ASISTENCIA')->getIndicadorAsistencia();
+
+    $this->max_valor_ind = 0;
+
+    foreach ($this->indicador as $indicador)
+    {
+      if ($this->max_valor_ind < $indicador['ASISTENCIA'])
+      {
+        $this->max_valor_ind = $indicador['ASISTENCIA'];
+      }
+    }
+
+    switch ($this->max_valor_ind) {
+      case $this->max_valor_ind <= 8:
+        $this->scala = 2;
+        break;
+      case $this->max_valor_ind <= 16:
+        $this->scala = 4;
+        break;
+      case $this->max_valor_ind <= 24:
+        $this->scala = 6;
+        break;
+      case $this->max_valor_ind <= 32:
+        $this->scala = 8;
+        break;
+      default:
+        $this->scala = 10;
+        break;
+    }
+    
+    $this->unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
+  }
+
   /**
    * Acción que muestra la lista o todas las minutas creadas
    */
@@ -231,7 +266,7 @@ class minutaActions extends sfActions
     $minuta->save();
 
     $this->getUser()->setFlash('notice', 'La minuta n° ' . $minuta->getCodMin() . ' ha sido terminada exitosamente!');
-    
+
     $this->redirect('@index_minuta');
     //$this->visualizarMinuta($minuta);
   }
@@ -253,10 +288,10 @@ class minutaActions extends sfActions
 
     $pdf->AliasNbPages();
 
-    $pdf->RellenarMinuta();    
-    
+    $pdf->RellenarMinuta();
+
     $pdf->Output();
-    
+
     throw new sfStopException();
   }
 
@@ -771,7 +806,6 @@ class minutaActions extends sfActions
       $compromiso->setTipo('COMPROMISO');
       $compromiso->setDescripcion($request->getParameter('compromiso' . $num_comp));
       $compromiso->setFDuracionEstimada($f_duracion_estimada);
-      $compromiso->setStatus('PENDIENTE');
       $compromiso->save();
 
       return $compromiso;
@@ -791,6 +825,7 @@ class minutaActions extends sfActions
     $comp_ue = new SAF_COMP_UE();
     $comp_ue->setIdCompromiso($compromiso);
     $comp_ue->setIdUe($responsable);
+    $comp_ue->setStatus('PENDIENTE');
     $comp_ue->save();
   }
 

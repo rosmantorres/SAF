@@ -15,11 +15,13 @@ abstract class BaseSAF_COMP_UEFormFilter extends BaseFormFilterDoctrine
     $this->setWidgets(array(
       'id_compromiso' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_VARIO'), 'add_empty' => true)),
       'id_ue'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_UNIDAD_EQUIPO'), 'add_empty' => true)),
+      'status'        => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
       'id_compromiso' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_VARIO'), 'column' => 'id')),
       'id_ue'         => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SAF_UNIDAD_EQUIPO'), 'column' => 'id')),
+      'status'        => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('saf_comp_ue_filters[%s]');
@@ -42,6 +44,7 @@ abstract class BaseSAF_COMP_UEFormFilter extends BaseFormFilterDoctrine
       'id'            => 'Number',
       'id_compromiso' => 'ForeignKey',
       'id_ue'         => 'ForeignKey',
+      'status'        => 'Text',
     );
   }
 }

@@ -7,13 +7,57 @@
  */
 class SAF_ASISTENCIATable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_ASISTENCIATable
-     */
-    public static function getInstance()
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_ASISTENCIATable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_ASISTENCIA');
+  }
+
+  public function getIndicadorAsistencia()
+  {
+    $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
+
+    $consulta = "
+      SELECT SAF_RESULT.UNIDAD_EQUIPO AS UNIDAD_EQUIPO, COUNT (SAF_RESULT.UNIDAD_EQUIPO) AS ASISTENCIA
+      FROM
+        (
+          SELECT conv.id AS CONVOCATORIA, ue.nombre AS UNIDAD_EQUIPO
+          FROM SAF_CONVOCATORIA_CAF conv
+          INNER JOIN SAF_ASISTENCIA asis ON conv.id = asis.id_convocatoria
+          INNER JOIN SAF_PERSONAL pers ON asis.id_personal = pers.ci
+          INNER JOIN SAF_UNIDAD_EQUIPO ue ON pers.id_ue = ue.id         
+          GROUP BY (conv.id, ue.nombre)
+        ) SAF_RESULT
+      GROUP BY SAF_RESULT.UNIDAD_EQUIPO ";
+
+    $sentencia = $conexion->execute($consulta);
+
+    return $sentencia->fetchAll(PDO::FETCH_BOTH);
+  }
+
+  public function getCategoriasDelIndicadorAsistencia($resultset)
+  {
+    $data = Array();
+    foreach ($resultset as $value)
     {
-        return Doctrine_Core::getTable('SAF_ASISTENCIA');
+      array_push($data, "'" . $value['UNIDAD_EQUIPO'] . "'");
     }
+    return implode(',', $data);
+  }
+
+  public function getSeriesDelIndicadorAsistencia($resultset)
+  {
+    $data = Array();
+    foreach ($resultset as $value)
+    {
+      array_push($data, $value['ASISTENCIA']);
+    }
+    return implode(',', $data);
+  }
+
 }

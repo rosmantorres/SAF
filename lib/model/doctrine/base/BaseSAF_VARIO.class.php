@@ -12,7 +12,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @property string $tipo
  * @property string $descripcion
  * @property timestamp $f_duracion_estimada
- * @property string $status
  * @property string $titulo
  * @property SAF_EVENTO $SAF_EVENTO
  * @property Doctrine_Collection $SAF_COMP_UE
@@ -22,7 +21,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @method string              getTipo()                Returns the current record's "tipo" value
  * @method string              getDescripcion()         Returns the current record's "descripcion" value
  * @method timestamp           getFDuracionEstimada()   Returns the current record's "f_duracion_estimada" value
- * @method string              getStatus()              Returns the current record's "status" value
  * @method string              getTitulo()              Returns the current record's "titulo" value
  * @method SAF_EVENTO          getSAFEVENTO()           Returns the current record's "SAF_EVENTO" value
  * @method Doctrine_Collection getSAFCOMPUE()           Returns the current record's "SAF_COMP_UE" collection
@@ -31,7 +29,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_VARIO', 'schema_saf');
  * @method SAF_VARIO           setTipo()                Sets the current record's "tipo" value
  * @method SAF_VARIO           setDescripcion()         Sets the current record's "descripcion" value
  * @method SAF_VARIO           setFDuracionEstimada()   Sets the current record's "f_duracion_estimada" value
- * @method SAF_VARIO           setStatus()              Sets the current record's "status" value
  * @method SAF_VARIO           setTitulo()              Sets the current record's "titulo" value
  * @method SAF_VARIO           setSAFEVENTO()           Sets the current record's "SAF_EVENTO" value
  * @method SAF_VARIO           setSAFCOMPUE()           Sets the current record's "SAF_COMP_UE" collection
@@ -69,11 +66,6 @@ abstract class BaseSAF_VARIO extends sfDoctrineRecord
              'notnull' => false,
              'type' => 'timestamp',
              'length' => 7,
-             ));
-        $this->hasColumn('status', 'string', 50, array(
-             'notnull' => false,
-             'type' => 'string',
-             'length' => 50,
              ));
         $this->hasColumn('titulo', 'string', 100, array(
              'notnull' => false,

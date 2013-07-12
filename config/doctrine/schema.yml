@@ -36,6 +36,7 @@ SAF_COMP_UE:
     id: { type: integer, primary: true, sequence: true }
     id_compromiso: { notnull: true, type: integer }
     id_ue: { notnull: true, type: integer }
+    status: { notnull: true, type: string(50) }
   relations:
     SAF_VARIO:
       local: id_compromiso
@@ -246,8 +247,7 @@ SAF_VARIO:
     id_evento: { notnull: true, type: integer }
     tipo: { notnull: true, type: string(50) }
     descripcion: { notnull: true, type: string(4000) }
-    f_duracion_estimada: { notnull: false, type: timestamp(7) }
-    status: { notnull: false, type: string(50) }
+    f_duracion_estimada: { notnull: false, type: timestamp(7) }    
     titulo: { notnull: false, type: string(100) }
   relations:
     SAF_EVENTO:

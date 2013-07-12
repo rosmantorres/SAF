@@ -7,13 +7,61 @@
  */
 class SAF_COMP_UETable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_COMP_UETable
-     */
-    public static function getInstance()
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_COMP_UETable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_COMP_UE');
+  }  
+
+  public function getCompromisos($unidades, $status)
+  {    
+    $data_series = array();
+
+    foreach ($unidades as $unidad)
     {
-        return Doctrine_Core::getTable('SAF_COMP_UE');
+      $resultset = $this->getIndicadorDeCompromisos($unidad->getId(),$status);
+
+      if ($resultset)
+      {
+        array_push($data_series, $resultset[0]['CANT_COMPROMISO']);
+      }
+      else
+      {
+        array_push($data_series, 0);
+      }
     }
+
+    return implode(',', $data_series);
+  }
+    
+  public function getIndicadorDeCompromisos($id_unidad, $status)
+  {
+    $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
+
+    $consulta = "
+      SELECT comp_ue.status AS STATUS, COUNT (comp_ue.status) AS CANT_COMPROMISO
+      FROM SAF_COMP_UE comp_ue    
+      WHERE comp_ue.id_ue = '$id_unidad' AND comp_ue.status = '$status'
+      GROUP BY comp_ue.status";
+
+    $sentencia = $conexion->execute($consulta);
+
+    return $sentencia->fetchAll(PDO::FETCH_BOTH);
+  }
+  
+  public function getCategoriasDelIndicadorDeCompromisos($unidades)
+  {
+    $data = Array();
+    foreach ($unidades as $unidad)
+    {
+      array_push($data, "'" . $unidad . "'");
+    }
+    return implode(',', $data);
+  }
+
 }

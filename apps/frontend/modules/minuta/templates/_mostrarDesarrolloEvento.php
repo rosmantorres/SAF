@@ -43,9 +43,6 @@
       <b><u>Fecha de duración estimada:</u></b> 
       <?php echo $compromiso->getFDuracionEstimada() ?><br>
 
-      <b><u>Status:</u></b> 
-      <?php echo $compromiso->getStatus() ?><br>
-
       <b><u>Responsables:</u></b>
       <?php foreach ($compromiso->getResponsables() as $responsable) : ?>
         <?php echo $responsable . ' ' ?>

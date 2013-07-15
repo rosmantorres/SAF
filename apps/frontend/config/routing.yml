@@ -91,6 +91,11 @@ desarrollar_evento:
   url: /minuta/desarrollo/desarrollar_evento/:id
   param: { module: minuta, action: desarrollarEvento }
   
+# Rutas para el modulo de estadisticas e indicadores
+index_estadisticas_indicadores:
+  url: /estadisticas_e_indicadores_de_gestion
+  param: { module: estadisticas_indicadores, action: charts }
+  
 # default rules
 homepage:
   url:   /

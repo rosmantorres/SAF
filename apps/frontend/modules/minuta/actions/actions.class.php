@@ -13,42 +13,7 @@ class minutaActions extends sfActions
 
   // Mensaje con todos los errores que se le muestra 
   // al usuario durante el desarrollo de un evento
-  private $msj_error = '';
-
-  public function executeCharts()
-  {
-    $this->indicador = Doctrine_Core::getTable('SAF_ASISTENCIA')->getIndicadorAsistencia();
-
-    $this->max_valor_ind = 0;
-
-    foreach ($this->indicador as $indicador)
-    {
-      if ($this->max_valor_ind < $indicador['ASISTENCIA'])
-      {
-        $this->max_valor_ind = $indicador['ASISTENCIA'];
-      }
-    }
-
-    switch ($this->max_valor_ind) {
-      case $this->max_valor_ind <= 8:
-        $this->scala = 2;
-        break;
-      case $this->max_valor_ind <= 16:
-        $this->scala = 4;
-        break;
-      case $this->max_valor_ind <= 24:
-        $this->scala = 6;
-        break;
-      case $this->max_valor_ind <= 32:
-        $this->scala = 8;
-        break;
-      default:
-        $this->scala = 10;
-        break;
-    }
-    
-    $this->unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
-  }
+  private $msj_error = '';  
 
   /**
    * Acción que muestra la lista o todas las minutas creadas

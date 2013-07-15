@@ -17,8 +17,56 @@ class SAF_COMP_UETable extends Doctrine_Table
   {
     return Doctrine_Core::getTable('SAF_COMP_UE');
   }  
+   
+  /**
+   * Método que obtiene con PDO todos los compromisos pendientes o terminados 
+   * para una determinada unidad.
+   * 
+   * @param int $id_unidad
+   * @param string $status
+   * @return resultset
+   */
+  public function getIndicadorDeCompromisos($id_unidad, $status)
+  {
+    $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
 
-  public function getCompromisos($unidades, $status)
+    $consulta = "
+      SELECT comp_ue.status AS STATUS, COUNT (comp_ue.status) AS CANT_COMPROMISO
+      FROM SAF_COMP_UE comp_ue    
+      WHERE comp_ue.id_ue = '$id_unidad' AND comp_ue.status = '$status'
+      GROUP BY comp_ue.status";
+
+    $sentencia = $conexion->execute($consulta);
+
+    return $sentencia->fetchAll(PDO::FETCH_BOTH);
+  }
+  
+  /**
+   * Método que toma todas las unidades retornandolas con coma (,)
+   * para las categorias del gráfico (indicador) que se genera con HighCharts.
+   * 
+   * @param Doctrine_Collection SAF_UNIDAD_EQUIPO $unidades
+   * @return implode
+   */
+  public function getCategoriasDelIndicadorDeCompromisos($unidades)
+  {
+    $data = Array();
+    foreach ($unidades as $unidad)
+    {
+      array_push($data, "'" . $unidad . "'");
+    }
+    return implode(',', $data);
+  }
+
+  /**
+   * Método que toma todos los compromisos (cant) adquiridos por las unidades 
+   * según el status que se desee, retornandolos con coma (,). 
+   * 
+   * @param Doctrine_Collection SAF_UNIDAD_EQUIPO $unidades
+   * @param string $status
+   * @return implode
+   */
+  public function getSeriesDelIndicadorDeCompromisos($unidades, $status)
   {    
     $data_series = array();
 
@@ -38,30 +86,4 @@ class SAF_COMP_UETable extends Doctrine_Table
 
     return implode(',', $data_series);
   }
-    
-  public function getIndicadorDeCompromisos($id_unidad, $status)
-  {
-    $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
-
-    $consulta = "
-      SELECT comp_ue.status AS STATUS, COUNT (comp_ue.status) AS CANT_COMPROMISO
-      FROM SAF_COMP_UE comp_ue    
-      WHERE comp_ue.id_ue = '$id_unidad' AND comp_ue.status = '$status'
-      GROUP BY comp_ue.status";
-
-    $sentencia = $conexion->execute($consulta);
-
-    return $sentencia->fetchAll(PDO::FETCH_BOTH);
-  }
-  
-  public function getCategoriasDelIndicadorDeCompromisos($unidades)
-  {
-    $data = Array();
-    foreach ($unidades as $unidad)
-    {
-      array_push($data, "'" . $unidad . "'");
-    }
-    return implode(',', $data);
-  }
-
 }

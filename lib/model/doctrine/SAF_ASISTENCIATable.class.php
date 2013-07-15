@@ -18,6 +18,11 @@ class SAF_ASISTENCIATable extends Doctrine_Table
     return Doctrine_Core::getTable('SAF_ASISTENCIA');
   }
 
+  /**
+   * Método que obtiene con PDO las unidades con sus respectivas asistencia (cant).
+   * 
+   * @return resultset
+   */
   public function getIndicadorAsistencia()
   {
     $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
@@ -40,6 +45,13 @@ class SAF_ASISTENCIATable extends Doctrine_Table
     return $sentencia->fetchAll(PDO::FETCH_BOTH);
   }
 
+  /**
+   * Método que toma todas las unidades del resulset retornandolas con coma (,)
+   * para las categorias del gráfico (indicador) que se genera con HighCharts.
+   * 
+   * @param type $resultset
+   * @return implode
+   */
   public function getCategoriasDelIndicadorAsistencia($resultset)
   {
     $data = Array();
@@ -50,6 +62,13 @@ class SAF_ASISTENCIATable extends Doctrine_Table
     return implode(',', $data);
   }
 
+  /**
+   * Método que toda la cantidad de asistencia de cada unidad retornandolas con
+   * coma(,) para las series del gráfico (indicador) que se genera con HighCharts.
+   * 
+   * @param type $resultset
+   * @return implode
+   */
   public function getSeriesDelIndicadorAsistencia($resultset)
   {
     $data = Array();

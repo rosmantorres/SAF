@@ -13,7 +13,7 @@ class minutaActions extends sfActions
 
   // Mensaje con todos los errores que se le muestra 
   // al usuario durante el desarrollo de un evento
-  private $msj_error = '';  
+  private $msj_error = '';
 
   /**
    * Acción que muestra la lista o todas las minutas creadas
@@ -66,6 +66,8 @@ class minutaActions extends sfActions
     $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
     $this->minuta = $request->getParameter('id');
+    
+    $this->minuta_obj = $minuta;
   }
 
   /**
@@ -157,7 +159,7 @@ class minutaActions extends sfActions
    * @param sfWebRequest $request
    * @return type
    */
-  public function executeUnidadEquipo(sfWebRequest $request)
+  public function executeUnidadEquipo()
   {
     $unidades = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
 
@@ -180,7 +182,7 @@ class minutaActions extends sfActions
    * @param sfWebRequest $request
    * @return type
    */
-  public function executePersonal(sfWebRequest $request)
+  public function executePersonal()
   {
     $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
@@ -194,7 +196,7 @@ class minutaActions extends sfActions
     // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
     return $this->renderText(substr($data_source, 0, -1));
   }
-
+    
   /**
    * Acción que guarda el status actual de la minuta (Asistentes)
    * 
@@ -202,6 +204,15 @@ class minutaActions extends sfActions
    */
   public function executeGuardarStatusMinuta(sfWebRequest $request)
   {
+    $minuta = Doctrine_Core::getTable('SAF_MINUTA')->find($request->getParameter('id'));
+    
+    $this->verificarFotosMinuta($minuta, $request);
+
+    if ($this->msj_error != '')
+    {
+      $this->getUser()->setFlash('error', $this->msj_error);
+    }
+    
     $this->reiniciarAsistencia($request->getParameter('id'));
     $this->verificarMinutaYGuardar($request);
     $this->getUser()->setFlash('notice', 'Status guardado exitosamente!');
@@ -233,7 +244,6 @@ class minutaActions extends sfActions
     $this->getUser()->setFlash('notice', 'La minuta n° ' . $minuta->getCodMin() . ' ha sido terminada exitosamente!');
 
     $this->redirect('@index_minuta');
-    //$this->visualizarMinuta($minuta);
   }
 
   /**
@@ -297,13 +307,13 @@ class minutaActions extends sfActions
    * @param integer $num_foto
    * @return boolean
    */
-  public function verificarFormatoYTamahnoFoto($request, $num_foto)
+  private function verificarFormatoYTamahnoFoto($request, $num_foto)
   {
     $tipo = $_FILES["foto" . $num_foto]["type"];
     $tamano = $_FILES["foto" . $num_foto]["size"] / 1024;
 
     if ((($tipo == "image/gif") || ($tipo == "image/jpeg") ||
-            ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 50))
+            ($tipo == "image/jpg") || ($tipo == "image/png")) && ($tamano < 100))
     {
       return true;
     }
@@ -466,12 +476,46 @@ class minutaActions extends sfActions
   }
 
   /**
+   * Método que verifica las imagenes de la minuta (Status de los compromisos y 
+   * de las asistencias) para asi subir las imagenes y guardar en bd.
+   * 
+   * @param SAF_MINUTA $minuta
+   * @param sfWebRequest $request
+   */
+  private function verificarFotosMinuta($minuta, $request)
+  {
+    for ($i = 1; $i <= 2; $i++)
+    {
+      if ($_FILES["foto$i"]["name"])
+      { // Si el formato y el tamaño del archivo es correcto
+        if ($this->verificarFormatoYTamahnoFoto($request, $i))
+        {
+          $tipo_archivo = explode('.', $_FILES["foto$i"]["name"]);
+          $nombre_foto = 'subidas/SAF' . mt_rand() . '.' . $tipo_archivo[1];
+          if ($i == 1)
+          {
+            $this->suprimirFotoServidor($minuta->getImgCompromisos());
+            $minuta->setImgCompromisos($nombre_foto);
+          }
+          else
+          {
+            $this->suprimirFotoServidor($minuta->getImgAsistencias());
+            $minuta->setImgAsistencias($nombre_foto);
+          }
+          $minuta->save();
+          move_uploaded_file($_FILES["foto$i"]["tmp_name"], $nombre_foto);
+        }
+      }
+    }
+  }
+  
+  /**
    * Método que le procede a la accion executeGuardarStatusMinuta verificandola
    * antes de guardar el status con sus asistentes.
    * 
    * @param sfWebRequest $request
    */
-  public function verificarMinutaYGuardar($request)
+  private function verificarMinutaYGuardar($request)
   {
     $num_persona = 1;
     $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();

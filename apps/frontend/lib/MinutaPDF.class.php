@@ -7,6 +7,7 @@ class MinutaPDF extends FPDF
   private $convocatoria;
   private $asistentes;
   private $eventos;
+  private $minuta;
 
   // Constructor
   function MinutaPDF($id_convocatoria, $orientation = 'P', $unit = 'mm', $size = 'Letter')
@@ -21,6 +22,8 @@ class MinutaPDF extends FPDF
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosConvocatoria($id_convocatoria);
+
+    $this->minuta = Doctrine_Core::getTable('SAF_MINUTA')->findOneByIdConvocatoria($id_convocatoria);
   }
 
   // Cabecera de página
@@ -48,11 +51,11 @@ class MinutaPDF extends FPDF
 
     $this->RellenarAsistentes();
 
-    $this->RellenarStatusCompromisos();
+    $this->RellenarStatusCompromisosYAsistencias();
 
     $this->RellenarIndice();
 
-    $this->RellenarDesarrolloReunion();        
+    $this->RellenarDesarrolloReunion();
   }
 
   // Rellena el titulo de la minuta
@@ -85,16 +88,35 @@ class MinutaPDF extends FPDF
     $this->Ln(8);
   }
 
-  // Rellena el status de los compromisos adquiridos (Imagen)
-  function RellenarStatusCompromisos()
+  // Rellena el status de los compromisos adquiridos y las asistencias a los comité (Imagenes)
+  function RellenarStatusCompromisosYAsistencias()
   {
     $this->Imprimir('AGENDA DE REUNIÓN', 10, 12, 12);
 
-    $this->Imprimir('1. Revisión del status de los compromisos:', 20, 10, 10);
+    if ($this->minuta->getImgCompromisos())
+    {
+      $this->RellenarImagenesDeLaMinuta('1. Revisión del status de los compromisos:', 
+              $this->minuta->getImgCompromisos());
+      $this->Ln(100);
+    }
+    
+    if ($this->minuta->getImgAsistencias())
+    {
+      $this->RellenarImagenesDeLaMinuta('2. Revisión del status de las asistencias:', 
+              $this->minuta->getImgAsistencias());     
+    }
+  }
 
-    $this->Cell(20);
+  // Rellena o pinta las imagenes correspondientes a la minuta (Compromisos y Asistencias)
+  function RellenarImagenesDeLaMinuta($texto, $dir_img)
+  {
+    $this->Imprimir($texto, 20, 10, 12);
 
-    $this->Image(sfConfig::get('sf_web_dir') . '/subidas/compromisos.jpg', $this->GetX(), $this->GetY(), 155, 90);
+    $this->Cell(22);
+
+    $this->Cell(155, 98, '', 1, 0, 'C');
+
+    $this->Image(sfConfig::get('sf_web_dir') . '/' . $dir_img , 33, $this->GetY() + 1, 153, 95);
   }
 
   // Rellena el indice de las interrupciones que se analizaran
@@ -147,13 +169,13 @@ class MinutaPDF extends FPDF
     $this->AddPage();
 
     $this->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 18);
-    
+
     $addPage = count($this->eventos);
 
     foreach ($this->eventos as $evento)
     {
       $addPage--;
-      
+
       $this->RellenarDescripcionDelEvento($evento);
 
       $this->RellenarFotosDelEvento($evento);
@@ -162,13 +184,14 @@ class MinutaPDF extends FPDF
 
       $varios = Doctrine_Core::getTable('SAF_VARIO')->findByIdEvento($evento->getID());
 
-      $this->RellenarBitacoraDelEvento($evento, $varios);
+      $this->RellenarBitacoraDelEvento($varios);
 
-      $this->RellenarAccionesYRecomendacionesDelEvento($evento, $varios);
+      $this->RellenarAccionesYRecomendacionesDelEvento($varios);
 
-      $this->RellenarCompromisosDelEvento($evento, $varios);
+      $this->RellenarCompromisosDelEvento($varios);
 
-      if ($addPage > 0) $this->AddPage();
+      if ($addPage > 0)
+        $this->AddPage();
     }
   }
 
@@ -240,7 +263,7 @@ class MinutaPDF extends FPDF
   }
 
   // Rellena la bitácora del evento en la sección "Desarrollo de la reunión"
-  function RellenarBitacoraDelEvento($evento, $registros_varios)
+  function RellenarBitacoraDelEvento($registros_varios)
   {
     foreach ($registros_varios as $registro)
     {
@@ -256,7 +279,7 @@ class MinutaPDF extends FPDF
   }
 
   // Rellena las acciones y recomendaciones del evento en la sección "Desarrollo de la reunión"
-  function RellenarAccionesYRecomendacionesDelEvento($evento, $registros_varios)
+  function RellenarAccionesYRecomendacionesDelEvento($registros_varios)
   {
     foreach ($registros_varios as $registro)
     {
@@ -272,7 +295,7 @@ class MinutaPDF extends FPDF
   }
 
   // Rellena los compromisos del evento en la sección "Desarrollo de la reunión"
-  function RellenarCompromisosDelEvento($evento, $registros_varios)
+  function RellenarCompromisosDelEvento($registros_varios)
   {
     $cont_comp = 1;
 

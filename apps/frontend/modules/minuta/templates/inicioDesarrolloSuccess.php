@@ -6,24 +6,24 @@
 <h5 class="muted"><i class="icon-edit"></i> DESARROLLO DEL COMITÉ DE ANALISIS DE FALLAS </h5>
 
 <br>
-<table width="100%" border="0">
-  <tr valign="top">
-    <td width="20%">
-      <pre><i class="icon-tag"></i> ASISTENTES </pre>
+<form id="guardar_minuta" action="<?php echo url_for('minuta/guardarStatusMinuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
+  <table width="100%" border="0">
+    <tr valign="top">
+      <td width="20%">
+        <pre><i class="icon-tag"></i> ASISTENTES </pre>
 
-      <h6 class="muted">
-        &nbsp;&nbsp;
-        <a href="" id="agregar_asistente">
-          <i class="icon-plus-sign"></i> Agregar
-        </a> 
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="" id="remover_asistente" style="display: none">
-          <i class="icon-minus-sign"></i> Remover Último <br>
-        </a>
-      </h6>
+        <h6 class="muted">
+          &nbsp;&nbsp;
+          <a href="" id="agregar_asistente">
+            <i class="icon-plus-sign"></i> Agregar
+          </a> 
+          <br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="" id="remover_asistente" style="display: none">
+            <i class="icon-minus-sign"></i> Remover Último <br>
+          </a>
+        </h6>
 
-      <form id="guardar_minuta" action="<?php echo url_for('minuta/guardarStatusMinuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
         <div align="center" style="margin: 15px;" id="asistentes">
           <!-- Este input es solo para obtener su valor desde minuta.js -->
           <input type="text" id="cant_asistentes" value="<?php echo count($asistentes) ?>" style="display: none"/>
@@ -50,51 +50,66 @@
             <i class="icon-hdd"></i> LISTO! (pdf) 
           </abbr>
         </a>
-      </form>  
 
-      <small>
-        <p align="justify">
-          <b><u>Nota</u></b>:  Es importante GUARDAR solo cuando se piense que 
-          ya se tiene todo el desarrollo de la minuta terminado para proceder con 
-          el boton de Listo! (pdf), esto por razones de rendimiento.
-        </p>
-      </small>
-    </td>
-    <td>&nbsp;&nbsp;</td>
-    <td>
-      <pre><i class="icon-tag"></i> AGENDA DE REUNIÓN </pre>
+        <small>
+          <p align="justify">
+            <b><u>Nota</u></b>:  Es importante GUARDAR solo cuando se piense que 
+            ya se tiene todo el desarrollo de la minuta terminado para proceder con 
+            el boton de Listo! (pdf), esto por razones de rendimiento.
+          </p>
+        </small>
+      </td>
+      <td>&nbsp;&nbsp;</td>
+      <td>
+        <pre><i class="icon-tag"></i> AGENDA DE REUNIÓN </pre>
 
-      <!-- 1. Revisión de los compromisos: -->
-      <h6 class="muted"> 
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        1. Revisión de los compromisos: 
-      </h6>
-      <div align="center"> <?php echo image_tag('/subidas/compromisos.JPG', 'size=750x750') ?> </div>
-
-      <!-- 2. Revisión y Análisis de las siguientes interrupciones: -->
-      <br>
-      <h6 class="muted">
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        2. Revisión y Análisis de las siguientes interrupciones: 
-      </h6> 
-      <table align="center" width="90%" border="0">
-        <tr>
-          <td>
-            <div class="accordion" id="accordion">
-              <?php $cont = 0 ?>
-              <?php foreach ($eventos as $evento) : ?>
-                <h6>
-                  <a href="<?php echo url_for('@desarrollar_evento?id=' . $evento) ?>">
-                    <i class="icon-pencil"></i> Editar
-                  </a>
-                </h6>
-                <?php $cabecera = "(" . ++$cont . ") RI. " . $evento->getCEventoD() . " en circuito " . $evento->getCircuito() . " con " . $evento->getMvaMin() . " MVAmin" ?>    
-                <?php include_partial('global/acordeon', array('id_acordeon' => $cont, 'cabecera' => $cabecera, 'contenido' => $evento, 'sin_incluir_partial' => true)) ?> 
-              <?php endforeach; ?>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
+        <table border="0" width="90%" align="center">
+          <tr align="center">
+            <td>
+              <!-- 1. Revisión del status de los compromisos: -->
+              <h6 class="muted"> 1. Revisión del status de los compromisos: </h6>
+              <div style="width:95%; height:250px; border-width: 1px; border-style: solid; border-color: #ddd; ">
+                <?php if ($minuta_obj->getImgCompromisos()): ?>
+                  <?php echo image_tag('/' . $minuta_obj->getImgCompromisos()) ?>
+                <?php endif; ?>
+              </div>
+              <input type="file" name="foto1" accept="image/png, image/gif, image/jpeg, image/jpg" />
+            </td>
+            <td>
+              <!-- 2. Revisión del status de las asistencias: -->
+              <h6 class="muted"> 2. Revisión del status de las asistencias: </h6>
+              <div style="width:95%; height:250px; border-width: 1px; border-style: solid; border-color: #ddd; ">
+                <?php if ($minuta_obj->getImgAsistencias()): ?>
+                  <?php echo image_tag('/' . $minuta_obj->getImgAsistencias()) ?>
+                <?php endif; ?>
+              </div>
+              <input type="file" name="foto2" accept="image/png, image/gif, image/jpeg, image/jpg" />
+            </td>
+          </tr>
+        </table> 
+        
+        <!-- 3. Revisión y Análisis de las siguientes interrupciones: -->
+        <br>
+        <h6 align="center" class="muted">3. Revisión y Análisis de las siguientes interrupciones: </h6> 
+        <table align="center" width="90%" border="0">
+          <tr>
+            <td>
+              <div class="accordion" id="accordion">
+                <?php $cont = 0 ?>
+                <?php foreach ($eventos as $evento) : ?>
+                  <h6>
+                    <a href="<?php echo url_for('@desarrollar_evento?id=' . $evento) ?>">
+                      <i class="icon-pencil"></i> Editar
+                    </a>
+                  </h6>
+                  <?php $cabecera = "(" . ++$cont . ") RI. " . $evento->getCEventoD() . " en circuito " . $evento->getCircuito() . " con " . $evento->getMvaMin() . " MVAmin" ?>    
+                  <?php include_partial('global/acordeon', array('id_acordeon' => $cont, 'cabecera' => $cabecera, 'contenido' => $evento, 'sin_incluir_partial' => true)) ?> 
+                <?php endforeach; ?>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</form>

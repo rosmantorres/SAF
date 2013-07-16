@@ -11,22 +11,9 @@
 class estadisticas_indicadoresActions extends sfActions
 {
 
-  /**
-   * Acción que manda a gráficar las estadisticas e indicadores correspondientes.
-   */
+  // Acción que manda a gráficar las estadisticas e indicadores correspondientes.
   public function executeCharts()
   {
-    $this->indicador =
-            Doctrine_Core::getTable('SAF_ASISTENCIA')->getIndicadorAsistencia();
-
-    $this->num_asistencias =
-            $this->getCantidadDeAsistenciasHechas($this->indicador);
-
-    $this->scala =
-            $this->getScalaDelIndicadorDeAsistencia($this->num_asistencias);
-
-    $this->unidades =
-            Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->findAll();
   }
 
   /**

@@ -16,4 +16,14 @@ class SAF_MINUTATable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('SAF_MINUTA');
     }
+    
+    /**
+     * Misma documentación. Solo se le agrego orderBy
+     */
+    public function findAll($hydrationMode = null)
+    {
+      return $this->createQuery('dctrn_find')
+              ->orderBy('created_at desc')
+              ->execute(array(), $hydrationMode);
+    }
 }

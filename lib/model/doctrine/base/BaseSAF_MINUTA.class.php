@@ -10,15 +10,21 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_MINUTA', 'schema_saf');
  * @property integer $cod_min
  * @property integer $id_convocatoria
  * @property integer $lista
+ * @property string $img_compromisos
+ * @property string $img_asistencias
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
  * 
  * @method integer              getCodMin()               Returns the current record's "cod_min" value
  * @method integer              getIdConvocatoria()       Returns the current record's "id_convocatoria" value
  * @method integer              getLista()                Returns the current record's "lista" value
+ * @method string               getImgCompromisos()       Returns the current record's "img_compromisos" value
+ * @method string               getImgAsistencias()       Returns the current record's "img_asistencias" value
  * @method SAF_CONVOCATORIA_CAF getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" value
  * @method SAF_MINUTA           setCodMin()               Sets the current record's "cod_min" value
  * @method SAF_MINUTA           setIdConvocatoria()       Sets the current record's "id_convocatoria" value
  * @method SAF_MINUTA           setLista()                Sets the current record's "lista" value
+ * @method SAF_MINUTA           setImgCompromisos()       Sets the current record's "img_compromisos" value
+ * @method SAF_MINUTA           setImgAsistencias()       Sets the current record's "img_asistencias" value
  * @method SAF_MINUTA           setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" value
  * 
  * @package    Proyecto_SAF
@@ -44,6 +50,14 @@ abstract class BaseSAF_MINUTA extends sfDoctrineRecord
         $this->hasColumn('lista', 'integer', null, array(
              'type' => 'integer',
              'notnull' => true,
+             ));
+        $this->hasColumn('img_compromisos', 'string', 500, array(
+             'type' => 'string',
+             'length' => 500,
+             ));
+        $this->hasColumn('img_asistencias', 'string', 500, array(
+             'type' => 'string',
+             'length' => 500,
              ));
     }
 

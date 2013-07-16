@@ -18,6 +18,8 @@ abstract class BaseSAF_MINUTAForm extends BaseFormDoctrine
       'cod_min'         => new sfWidgetFormInputHidden(),
       'id_convocatoria' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'), 'add_empty' => false)),
       'lista'           => new sfWidgetFormInputText(),
+      'img_compromisos' => new sfWidgetFormTextarea(),
+      'img_asistencias' => new sfWidgetFormTextarea(),
       'created_at'      => new sfWidgetFormDateTime(),
       'updated_at'      => new sfWidgetFormDateTime(),
     ));
@@ -26,6 +28,8 @@ abstract class BaseSAF_MINUTAForm extends BaseFormDoctrine
       'cod_min'         => new sfValidatorChoice(array('choices' => array($this->getObject()->get('cod_min')), 'empty_value' => $this->getObject()->get('cod_min'), 'required' => false)),
       'id_convocatoria' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_CONVOCATORIA_CAF'))),
       'lista'           => new sfValidatorInteger(),
+      'img_compromisos' => new sfValidatorString(array('max_length' => 500, 'required' => false)),
+      'img_asistencias' => new sfValidatorString(array('max_length' => 500, 'required' => false)),
       'created_at'      => new sfValidatorDateTime(),
       'updated_at'      => new sfValidatorDateTime(),
     ));

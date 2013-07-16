@@ -88,6 +88,8 @@ SAF_MINUTA:
     cod_min: { type: integer, primary: true, sequence: true }
     id_convocatoria: { notnull: true, type: integer, unique: true }
     lista: { type: integer, notnull: true }
+    img_compromisos: { type: string(500) }
+    img_asistencias: { type: string(500) }
   relations:
     SAF_CONVOCATORIA_CAF:
       local: id_convocatoria

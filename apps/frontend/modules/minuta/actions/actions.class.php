@@ -54,7 +54,7 @@ class minutaActions extends sfActions
 
     if ($minuta && $minuta->getLista() == 1)
     {
-      $this->visualizarMinuta($minuta);
+      $this->redirect('@visualizar_minuta?id=' . $minuta->getCodMin());
     }
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
@@ -66,7 +66,7 @@ class minutaActions extends sfActions
     $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
 
     $this->minuta = $request->getParameter('id');
-    
+
     $this->minuta_obj = $minuta;
   }
 
@@ -196,7 +196,7 @@ class minutaActions extends sfActions
     // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
     return $this->renderText(substr($data_source, 0, -1));
   }
-    
+
   /**
    * Acción que guarda el status actual de la minuta (Asistentes)
    * 
@@ -205,14 +205,14 @@ class minutaActions extends sfActions
   public function executeGuardarStatusMinuta(sfWebRequest $request)
   {
     $minuta = Doctrine_Core::getTable('SAF_MINUTA')->find($request->getParameter('id'));
-    
+
     $this->verificarFotosMinuta($minuta, $request);
 
     if ($this->msj_error != '')
     {
       $this->getUser()->setFlash('error', $this->msj_error);
     }
-    
+
     $this->reiniciarAsistencia($request->getParameter('id'));
     $this->verificarMinutaYGuardar($request);
     $this->getUser()->setFlash('notice', 'Status guardado exitosamente!');
@@ -251,15 +251,18 @@ class minutaActions extends sfActions
    * Recibe la minuta para concordar con el nombre de la acción pero realmente
    * lo que importa es el id de la convocatoria, ya que alli esta todo el desarrollo.
    * 
-   * @param SAF_MINUTA $minuta
+   * @param sfWebRequest $request
    * @throws sfStopException
    */
-  public function visualizarMinuta($minuta)
+  public function executeVisualizarMinuta(sfWebRequest $request)
   {
     // Estableciendo la hora a formato español
     setlocale(LC_ALL, "es_ES");
 
-    $pdf = new MinutaPDF($minuta->getIdConvocatoria());
+    $this->forward404Unless($minuta = Doctrine_Core::getTable('SAF_MINUTA')
+            ->find($request->getParameter('id')));
+    
+    $pdf = new MinutaPDF($minuta);
 
     $pdf->AliasNbPages();
 
@@ -508,7 +511,7 @@ class minutaActions extends sfActions
       }
     }
   }
-  
+
   /**
    * Método que le procede a la accion executeGuardarStatusMinuta verificandola
    * antes de guardar el status con sus asistentes.

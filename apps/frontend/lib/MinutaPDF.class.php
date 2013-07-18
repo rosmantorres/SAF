@@ -10,20 +10,20 @@ class MinutaPDF extends FPDF
   private $minuta;
 
   // Constructor
-  function MinutaPDF($id_convocatoria, $orientation = 'P', $unit = 'mm', $size = 'Letter')
+  function MinutaPDF($minuta, $orientation = 'P', $unit = 'mm', $size = 'Letter')
   {
     parent::FPDF($orientation, $unit, $size);
 
+    $this->minuta = $minuta;
+    
     $this->convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
-            ->find($id_convocatoria);
+            ->find($this->minuta->getIdConvocatoria());
 
     $this->asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')
-            ->findByIdConvocatoria($id_convocatoria);
+            ->findByIdConvocatoria($this->convocatoria->getId());
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosConvocatoria($id_convocatoria);
-
-    $this->minuta = Doctrine_Core::getTable('SAF_MINUTA')->findOneByIdConvocatoria($id_convocatoria);
+            ->getEventosConvocatoria($this->convocatoria->getId());    
   }
 
   // Cabecera de página

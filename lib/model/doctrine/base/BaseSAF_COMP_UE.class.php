@@ -11,24 +11,24 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_COMP_UE', 'schema_saf');
  * @property integer $id_compromiso
  * @property integer $id_ue
  * @property string $status
+ * @property string $acciones
  * @property SAF_VARIO $SAF_VARIO
  * @property SAF_UNIDAD_EQUIPO $SAF_UNIDAD_EQUIPO
- * @property Doctrine_Collection $SAF_TAREA_REALIZADA_COMP
  * 
- * @method integer             getId()                       Returns the current record's "id" value
- * @method integer             getIdCompromiso()             Returns the current record's "id_compromiso" value
- * @method integer             getIdUe()                     Returns the current record's "id_ue" value
- * @method string              getStatus()                   Returns the current record's "status" value
- * @method SAF_VARIO           getSAFVARIO()                 Returns the current record's "SAF_VARIO" value
- * @method SAF_UNIDAD_EQUIPO   getSAFUNIDADEQUIPO()          Returns the current record's "SAF_UNIDAD_EQUIPO" value
- * @method Doctrine_Collection getSAFTAREAREALIZADACOMP()    Returns the current record's "SAF_TAREA_REALIZADA_COMP" collection
- * @method SAF_COMP_UE         setId()                       Sets the current record's "id" value
- * @method SAF_COMP_UE         setIdCompromiso()             Sets the current record's "id_compromiso" value
- * @method SAF_COMP_UE         setIdUe()                     Sets the current record's "id_ue" value
- * @method SAF_COMP_UE         setStatus()                   Sets the current record's "status" value
- * @method SAF_COMP_UE         setSAFVARIO()                 Sets the current record's "SAF_VARIO" value
- * @method SAF_COMP_UE         setSAFUNIDADEQUIPO()          Sets the current record's "SAF_UNIDAD_EQUIPO" value
- * @method SAF_COMP_UE         setSAFTAREAREALIZADACOMP()    Sets the current record's "SAF_TAREA_REALIZADA_COMP" collection
+ * @method integer           getId()                Returns the current record's "id" value
+ * @method integer           getIdCompromiso()      Returns the current record's "id_compromiso" value
+ * @method integer           getIdUe()              Returns the current record's "id_ue" value
+ * @method string            getStatus()            Returns the current record's "status" value
+ * @method string            getAcciones()          Returns the current record's "acciones" value
+ * @method SAF_VARIO         getSAFVARIO()          Returns the current record's "SAF_VARIO" value
+ * @method SAF_UNIDAD_EQUIPO getSAFUNIDADEQUIPO()   Returns the current record's "SAF_UNIDAD_EQUIPO" value
+ * @method SAF_COMP_UE       setId()                Sets the current record's "id" value
+ * @method SAF_COMP_UE       setIdCompromiso()      Sets the current record's "id_compromiso" value
+ * @method SAF_COMP_UE       setIdUe()              Sets the current record's "id_ue" value
+ * @method SAF_COMP_UE       setStatus()            Sets the current record's "status" value
+ * @method SAF_COMP_UE       setAcciones()          Sets the current record's "acciones" value
+ * @method SAF_COMP_UE       setSAFVARIO()          Sets the current record's "SAF_VARIO" value
+ * @method SAF_COMP_UE       setSAFUNIDADEQUIPO()   Sets the current record's "SAF_UNIDAD_EQUIPO" value
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -58,6 +58,10 @@ abstract class BaseSAF_COMP_UE extends sfDoctrineRecord
              'type' => 'string',
              'length' => 50,
              ));
+        $this->hasColumn('acciones', 'string', 4000, array(
+             'type' => 'string',
+             'length' => 4000,
+             ));
     }
 
     public function setUp()
@@ -70,9 +74,5 @@ abstract class BaseSAF_COMP_UE extends sfDoctrineRecord
         $this->hasOne('SAF_UNIDAD_EQUIPO', array(
              'local' => 'id_ue',
              'foreign' => 'id'));
-
-        $this->hasMany('SAF_TAREA_REALIZADA_COMP', array(
-             'local' => 'id',
-             'foreign' => 'id_comp_ue'));
     }
 }

@@ -37,6 +37,7 @@ SAF_COMP_UE:
     id_compromiso: { notnull: true, type: integer }
     id_ue: { notnull: true, type: integer }
     status: { notnull: true, type: string(50) }
+    acciones: { type: string(4000) }
   relations:
     SAF_VARIO:
       local: id_compromiso
@@ -46,10 +47,6 @@ SAF_COMP_UE:
       local: id_ue
       foreign: id
       type: one
-    SAF_TAREA_REALIZADA_COMP:
-      local: id
-      foreign: id_comp_ue
-      type: many
       
 SAF_CONVOCATORIA_CAF:
   connection: schema_saf
@@ -206,20 +203,6 @@ SAF_EVENTO_RAZON:
       type: one
     SAF_RAZON_MVAMIN:
       local: id_razon
-      foreign: id
-      type: one
-      
-SAF_TAREA_REALIZADA_COMP:
-  connection: schema_saf
-  tableName: SAF_TAREA_REALIZADA_COMP
-  actAs: { Timestampable: ~ }
-  columns:
-    id: { type: integer, primary: true, sequence: true }
-    id_comp_ue: { notnull: true, type: integer }
-    descripcion: { notnull: false, type: string(1000) }
-  relations:
-    SAF_COMP_UE:
-      local: id_comp_ue
       foreign: id
       type: one
       

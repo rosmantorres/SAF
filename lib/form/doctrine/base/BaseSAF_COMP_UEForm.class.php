@@ -19,6 +19,7 @@ abstract class BaseSAF_COMP_UEForm extends BaseFormDoctrine
       'id_compromiso' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_VARIO'), 'add_empty' => false)),
       'id_ue'         => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_UNIDAD_EQUIPO'), 'add_empty' => false)),
       'status'        => new sfWidgetFormInputText(),
+      'acciones'      => new sfWidgetFormTextarea(),
     ));
 
     $this->setValidators(array(
@@ -26,6 +27,7 @@ abstract class BaseSAF_COMP_UEForm extends BaseFormDoctrine
       'id_compromiso' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_VARIO'))),
       'id_ue'         => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SAF_UNIDAD_EQUIPO'))),
       'status'        => new sfValidatorString(array('max_length' => 50)),
+      'acciones'      => new sfValidatorString(array('max_length' => 4000, 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('saf_comp_ue[%s]');

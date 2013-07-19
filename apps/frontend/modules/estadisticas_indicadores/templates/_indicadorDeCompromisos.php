@@ -1,9 +1,10 @@
 <script type="text/javascript">
-  
+
   var categorias = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getCategoriasDelIndicadorDeCompromisos($unidades); ?>);
-  var data_series_pendientes = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getSeriesDelIndicadorDeCompromisos($unidades,'PENDIENTE'); ?>);
-  var data_series_terminados = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getSeriesDelIndicadorDeCompromisos($unidades,'TERMINADO'); ?>);
-  
+  var data_series_pendientes = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getSeriesDelIndicadorDeCompromisos($unidades, 'PENDIENTE'); ?>);
+  var data_series_terminados = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getSeriesDelIndicadorDeCompromisos($unidades, 'TERMINADO'); ?>);
+  var data_series_confirmacion = new Array(<?php echo Doctrine_Core::getTable('SAF_COMP_UE')->getSeriesDelIndicadorDeCompromisos($unidades, 'CONFIRMACION'); ?>);
+
   $(document).ready(function() {
     $('#indicador_de_compromisos').highcharts({
       chart: {
@@ -30,13 +31,6 @@
           style: {
             color: 'black'
           }
-        },
-        stackLabels: {
-          enabled: true,
-          style: {
-            fontWeight: 'bold',
-            color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-          }
         }
       },
       legend: {
@@ -46,15 +40,17 @@
         floating: true,
       },
       tooltip: {
-        formatter: function() {
-          return '<b>' + this.x + '</b><br/>' +
-                  this.series.name + ': ' + this.y + '<br/>' +
-                  'Total: ' + this.point.stackTotal;
-        }
+        headerFormat: '<b><u span style="font-size:12px">{point.key}</u><table>',
+        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} </b></td></tr></b>',
+        footerFormat: '</table>',
+        shared: true,
+        useHTML: true
       },
       plotOptions: {
         column: {
-          stacking: 'normal',
+          pointWidth: 20,
+          borderColor: '#000000',
           dataLabels: {
             enabled: true,
             color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
@@ -67,8 +63,7 @@
           data: data_series_pendientes,
           dataLabels: {
             align: 'center',
-            x: 6,
-            y: -5
+            y: 60
           }
         }, {
           color: '#002a80',
@@ -76,8 +71,15 @@
           data: data_series_terminados,
           dataLabels: {
             align: 'center',
-            x: 6,
-            y: 4
+            y: 60
+          }
+        }, {
+          color: '#cccccc',
+          name: 'Por Confirmar (IO)',
+          data: data_series_confirmacion,
+          dataLabels: {
+            align: 'center',
+            y: 60
           }
         }]
     });

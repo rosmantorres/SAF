@@ -21,7 +21,7 @@
     </h6>           
   </div>
 
-  <form id="" action="<?php echo url_for('seguimiento_control/registrarAccionesComprimiso?id_comp=' . $resultset[$i]['ID_COMP']) ?>" method="POST">
+  <form id="" action="<?php echo url_for('@registrar_acciones_compromisos?id_comp=' . $resultset[$i]['ID_COMP']) ?>" method="POST">
     <div class="modal-body"> 
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
       <?php if ($resultset[$i]['STATUS_COMP'] != 'PENDIENTE'): ?>

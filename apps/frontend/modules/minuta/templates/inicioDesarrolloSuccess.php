@@ -6,7 +6,7 @@
 <h5 class="muted"><i class="icon-edit"></i> DESARROLLO DEL COMITÉ DE ANALISIS DE FALLAS </h5>
 
 <br>
-<form id="guardar_minuta" action="<?php echo url_for('minuta/guardarStatusMinuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
+<form id="guardar_minuta" action="<?php echo url_for('@guardar_status_minuta?id=' . $minuta) ?>" method="POST" enctype="multipart/form-data">
   <table width="100%" border="0">
     <tr valign="top">
       <td width="20%">
@@ -45,7 +45,7 @@
           </abbr>
         </button>        
         /
-        <a href="<?php echo url_for('minuta/finalizarMinuta?id=' . $minuta) ?>" id="terminar_minuta" class="btn btn-small btn-success">
+        <a href="<?php echo url_for('@finalizar_minuta?id=' . $minuta) ?>" id="terminar_minuta" class="btn btn-small btn-success">
           <abbr title="Se termina la edición de la minuta y se guarda el resultado en PDF">
             <i class="icon-hdd"></i> LISTO! (pdf) 
           </abbr>

@@ -49,7 +49,7 @@
       </h6>
     </td>
     <td>
-      <form id="guardar_desarrollo_evento" action="<?php echo url_for('minuta/procesarEvento?id=' . $evento->getId()) ?>" method="POST" enctype="multipart/form-data">        
+      <form id="guardar_desarrollo_evento" action="<?php echo url_for('@procesar_evento_minuta?id=' . $evento->getId()) ?>" method="POST" enctype="multipart/form-data">        
 
         <pre><i class="icon-tag"></i> IMÁGENES: (Formatos válidos gif, jpeg, jpg, png)</pre>
         <div style="margin: 15px;" id="imagenes"> 

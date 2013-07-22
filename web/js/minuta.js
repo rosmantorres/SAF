@@ -134,10 +134,10 @@ jQuery('document').ready(function()
   });
 
   jQuery('#agregar_razon').click(function()
-  {
+  {    
     $.ajax({
       type: "POST",
-      url: "../../razonesMVAmin",
+      url: "../../razones_mvamin",
       data: {},
       success: function(respuesta) {
         if (respuesta)
@@ -195,7 +195,7 @@ jQuery('document').ready(function()
     {
       $.ajax({
         type: "POST",
-        url: "../../unidadEquipo",
+        url: "../../unidad_equipo",
         data: {},
         success: function(respuesta) {
           if (respuesta)

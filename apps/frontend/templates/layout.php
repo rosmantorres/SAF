@@ -37,6 +37,9 @@
               <li class="<?php include_slot('menu_activo_estadisticas_indicadores') ?>">
                 <a href="<?php echo url_for('@index_estadisticas_indicadores') ?>">Estadisticas e Indicadores</a>
               </li>
+              <li class="<?php include_slot('menu_activo_seguimiento_control') ?>">
+                <a href="<?php echo url_for('@index_seguimiento_control') ?>">Seguimiento y Control</a>
+              </li>
 <!--              <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
               <li class="dropdown">

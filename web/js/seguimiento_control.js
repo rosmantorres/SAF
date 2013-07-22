@@ -8,7 +8,6 @@
 
 jQuery('document').ready(function()
 {
-  alert('hola');
   jQuery('#form_filtrar').submit(function() 
   {    
     jQuery('button[type="submit"]').hide();
@@ -19,9 +18,6 @@ jQuery('document').ready(function()
             jQuery('#info_aqui').html(datos_devueltos);
             jQuery('button[type="submit"]').show();
             jQuery('#loader').hide();
-            jQuery('#f_ini').val('');
-            jQuery('#f_fin').val('');
-            jQuery('#c_evento').val('');
           }
         });
 

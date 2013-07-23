@@ -18,7 +18,7 @@ class seguimiento_controlActions extends sfActions
   {    
     // Componiendo o creando el mensaje
     $mensaje = $this->getMailer()->composeAndSend(
-            array('edc.infored@laedc.com.ve' => 'SISTEMA DE ANALISIS DE FALLAS (SAF).'), 
+            array(sfConfig::get('app_correo_envio') => 'SISTEMA DE ANALISIS DE FALLAS (SAF)'), 
             array('andres.lecubarri@laedc.com.ve' => 'Sr Andres'), 
             'Asunto del mensaje', 
             <<<EOF
@@ -93,6 +93,7 @@ EOF
 
     if ($request->getParameter('confirmar_comp') == true)
     {
+      // Mensaje a IO para que confirme el compromiso.
       $comp_ue->setStatus('CONFIRMACION');
     }
 

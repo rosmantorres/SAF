@@ -240,6 +240,8 @@ class minutaActions extends sfActions
     $minuta->setLista(1);
 
     $minuta->save();
+    
+    // Mensaje pa too el mundo indicando que la minuta ya esta terminada y montada en el sitio web.
 
     $this->getUser()->setFlash('notice', 'La minuta n° ' . $minuta->getCodMin() . ' ha sido terminada exitosamente!');
 

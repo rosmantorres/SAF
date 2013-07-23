@@ -168,6 +168,7 @@ class agenda_convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_agenda', array());
         $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
+        // Enviar correo a Ing. De Operaciones.
         $this->redirect('@index_agenda');
       }
       else

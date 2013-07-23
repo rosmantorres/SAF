@@ -16,7 +16,7 @@ class convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeListar(sfWebRequest $request)
+  public function executeListar()
   {
     $this->convocatorias = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->getConvocatorias();
   }
@@ -26,7 +26,7 @@ class convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeNueva(sfWebRequest $request)
+  public function executeNueva()
   {
     $this->agendas_pendientes = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->getAgendasPendientes();
@@ -65,12 +65,14 @@ class convocatoriaActions extends sfActions
     if ($request->getParameter('status') == 'EJECUCION')
     {
       $convocatoria->save();
+      // Mensaje pa too el mundo indicando que la convocatoria esta en ejecucion
       $this->redirect('@nueva_minuta?id=' . $request->getParameter('id'));
     }
     elseif ($request->getParameter('status') == 'SUSPENDIDA')
     {
       $convocatoria->setMotivoSuspencion($request->getParameter('motivo'));
       $convocatoria->save();
+      // Mensaje pa too el mundo indicando que la convocatoria ha sido suspendida por xs motivos
       $this->redirect('@mostrar_convocatoria?id=' . $request->getParameter('id'));
     }
   }
@@ -135,7 +137,7 @@ class convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeVistaPreliminar(sfWebRequest $request)
+  public function executeVistaPreliminar()
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_convocatoria', array());
     $this->eventos = $eventos;
@@ -158,6 +160,7 @@ class convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_convocatoria', array());
         $this->getUser()->setFlash('notice', 'LA CONVOCATORIA FUE GUARDADA CON EXITO!');
+        // Correo pa too el mundo
         $this->redirect('@index_convocatoria');
       }
       else

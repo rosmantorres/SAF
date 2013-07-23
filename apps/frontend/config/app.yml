@@ -1,5 +1,7 @@
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/11-App
 
-# default values
-#all:
+# La variables aca son utilizadas de manera general para que no sean 
+# hardcodeadas dentro de las distinas clases de la aplicacion. 
+all:
+  correo_envio: edc.infored@laedc.com.ve

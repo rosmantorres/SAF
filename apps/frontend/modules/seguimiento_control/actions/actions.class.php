@@ -12,6 +12,26 @@ class seguimiento_controlActions extends sfActions
 {
 
   /**
+   * Borrar luego. Es solo de prueba
+   */
+  public function executeMail()
+  {    
+    // Componiendo o creando el mensaje
+    $mensaje = $this->getMailer()->composeAndSend(
+            array('edc.infored@laedc.com.ve' => 'SISTEMA DE ANALISIS DE FALLAS (SAF).'), 
+            array('andres.lecubarri@laedc.com.ve' => 'Sr Andres'), 
+            'Asunto del mensaje', 
+            <<<EOF
+Cuerpo del mensaje.
+EOF
+    );
+
+    //echo $this->getMailer()->send($mensaje);   
+
+   // $this->redirect('@index_seguimiento_control');
+  }
+
+  /**
    * Acción para el index del módulo
    */
   public function executeInicio()
@@ -49,7 +69,7 @@ class seguimiento_controlActions extends sfActions
       foreach ($unidades as $unidad)
       {
         if ($resultset = Doctrine_Core::getTable('SAF_COMP_UE')
-                ->getCompromisosDetalladosDeLaUnidad($unidad->getId(),$agregar_a_consulta))
+                ->getCompromisosDetalladosDeLaUnidad($unidad->getId(), $agregar_a_consulta))
         {
           array_push($this->array_resultset, $resultset);
         }
@@ -79,8 +99,9 @@ class seguimiento_controlActions extends sfActions
     $comp_ue->save();
 
     $this->getUser()->setFlash('notice', 'Compromiso modificado satisfactoriamente.');
-    
+
     $this->redirect('seguimiento_control/inicio');
   }
 
 }
+

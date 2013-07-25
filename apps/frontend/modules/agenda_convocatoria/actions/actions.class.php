@@ -10,6 +10,7 @@
  */
 class agenda_convocatoriaActions extends sfActions
 {
+
   /**
    * Acción que muestra la lista o todas las agendas creadas
    * 
@@ -55,24 +56,24 @@ class agenda_convocatoriaActions extends sfActions
    */
   public function executeColocarPendiente(sfWebRequest $request)
   {
-     $this->forward404Unless(
-             $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
-             ->find($request->getParameter('id')));
-     
-     if ($agenda->getPendiente() == 1)
-     {
-       $agenda->setPendiente(0);
-     }
-     elseif ($agenda->getPendiente() == 0)
-     {
-       $agenda->setPendiente(1);
-     }
-     
-     $agenda->save();
-     $this->getUser()->setFlash('notice', 'LA AGENDA FUE CAMBIADA DE ESTADO CON EXITO!');
-     $this->redirect('@mostrar_agenda?id='.$request->getParameter('id'));
+    $this->forward404Unless(
+            $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
+            ->find($request->getParameter('id')));
+
+    if ($agenda->getPendiente() == 1)
+    {
+      $agenda->setPendiente(0);
+    }
+    elseif ($agenda->getPendiente() == 0)
+    {
+      $agenda->setPendiente(1);
+    }
+
+    $agenda->save();
+    $this->getUser()->setFlash('notice', 'LA AGENDA FUE CAMBIADA DE ESTADO CON EXITO!');
+    $this->redirect('@mostrar_agenda?id=' . $request->getParameter('id'));
   }
-  
+
   /**
    * Acción que realizar busqueda de eventos según el filtro que se indique
    *
@@ -168,7 +169,6 @@ class agenda_convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_agenda', array());
         $this->getUser()->setFlash('notice', 'LA AGENDA FUE GUARDADA CON EXITO!');
-        // Enviar correo a Ing. De Operaciones.
         $this->redirect('@index_agenda');
       }
       else
@@ -184,7 +184,7 @@ class agenda_convocatoriaActions extends sfActions
       $this->redirect('@vista_preliminar_agenda');
     }
   }
-  
+
   /**
    * Método que consulta y retorna todas las INTERRUPCIONES según un rango
    * fecha y el tipo de interrupción, convirtiendolas de modelo a SAF_EVENTOS 
@@ -247,7 +247,7 @@ class agenda_convocatoriaActions extends sfActions
 
     return $evento;
   }
-  
+
   /**
    * Método que convierte del modelo INTERRUPCIONES a SAF_EVENTO
    * 
@@ -291,6 +291,11 @@ class agenda_convocatoriaActions extends sfActions
         $evento->setIdAgenda($agenda);
         $evento->save();
       }
+
+      // ENVIANDO EL CORREO DE AVISO
+      $correo = new Correo('AVISO SAF: Nueva Agenda Creada.', 'http://' . sfConfig::get('app_servidor_web') . '/agenda_convocatoria/mostrar/' . $agenda);
+      $correo->enviarA('ING. DE OPERACIONES');
+      $this->getMailer()->send($correo);
     }
     catch (Exception $exc)
     {
@@ -299,4 +304,5 @@ class agenda_convocatoriaActions extends sfActions
 
     return true;
   }
+
 }

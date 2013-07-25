@@ -59,24 +59,34 @@ class convocatoriaActions extends sfActions
   {
     $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
             ->find($request->getParameter('id'));
-        
+
     $convocatoria->setStatus($request->getParameter('status'));
-    
+
     if ($request->getParameter('status') == 'EJECUCION')
     {
       $convocatoria->save();
-      // Mensaje pa too el mundo indicando que la convocatoria esta en ejecucion
+
+      // ENVIANDO EL CORREO DE AVISO
+      $correo = new Correo('AVISO SAF: Convocatoria en ejecución', 'http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
+      $correo->enviarATodos();
+      $this->getMailer()->send($correo);
+
       $this->redirect('@nueva_minuta?id=' . $request->getParameter('id'));
     }
     elseif ($request->getParameter('status') == 'SUSPENDIDA')
     {
       $convocatoria->setMotivoSuspencion($request->getParameter('motivo'));
       $convocatoria->save();
-      // Mensaje pa too el mundo indicando que la convocatoria ha sido suspendida por xs motivos
+
+      // ENVIANDO EL CORREO DE AVISO
+      $correo = new Correo('AVISO SAF: Convocatoria Suspendida', 'Motivo: ' . $convocatoria->getMotivoSuspencion() .' http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
+      $correo->enviarATodos();
+      $this->getMailer()->send($correo);
+
       $this->redirect('@mostrar_convocatoria?id=' . $request->getParameter('id'));
     }
   }
-  
+
   /**
    * Acción que carga todos los eventos de una agenda para despues 
    * tener la posibilidad de agregarlos a la convocatoria
@@ -160,7 +170,6 @@ class convocatoriaActions extends sfActions
       {
         $this->getUser()->setAttribute('hist_eventos_convocatoria', array());
         $this->getUser()->setFlash('notice', 'LA CONVOCATORIA FUE GUARDADA CON EXITO!');
-        // Correo pa too el mundo
         $this->redirect('@index_convocatoria');
       }
       else
@@ -204,6 +213,11 @@ class convocatoriaActions extends sfActions
         $evento->setIdConvocatoria($convocatoria);
         $evento->save();
       }
+
+      // ENVIANDO EL CORREO DE AVISO
+      $correo = new Correo('AVISO SAF: Nueva Convocatoria Creada con fecha ' .$request->getParameter('f_convoca'), 'http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
+      $correo->enviarATodos();
+      $this->getMailer()->send($correo);
     }
     catch (Exception $exc)
     {

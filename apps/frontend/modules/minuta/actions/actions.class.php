@@ -240,8 +240,11 @@ class minutaActions extends sfActions
     $minuta->setLista(1);
 
     $minuta->save();
-    
-    // Mensaje pa too el mundo indicando que la minuta ya esta terminada y montada en el sitio web.
+
+    // ENVIANDO EL CORREO DE AVISO
+    $correo = new Correo('AVISO SAF: Minuta Finalizada', 'La minuta correspondiente a la convocatoria N°' . $convocatoria . ' ha sido terminada y disponible para descargarla. http://' . sfConfig::get('app_servidor_web') . '/minuta/PDF/' . $minuta->getCodMin());
+    $correo->enviarATodos();
+    $this->getMailer()->send($correo);
 
     $this->getUser()->setFlash('notice', 'La minuta n° ' . $minuta->getCodMin() . ' ha sido terminada exitosamente!');
 
@@ -263,7 +266,7 @@ class minutaActions extends sfActions
 
     $this->forward404Unless($minuta = Doctrine_Core::getTable('SAF_MINUTA')
             ->find($request->getParameter('id')));
-    
+
     $pdf = new MinutaPDF($minuta);
 
     $pdf->AliasNbPages();

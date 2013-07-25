@@ -12,26 +12,6 @@ class seguimiento_controlActions extends sfActions
 {
 
   /**
-   * Borrar luego. Es solo de prueba
-   */
-  public function executeMail()
-  {    
-    // Componiendo o creando el mensaje
-    $mensaje = $this->getMailer()->composeAndSend(
-            array(sfConfig::get('app_correo_envio') => 'SISTEMA DE ANALISIS DE FALLAS (SAF)'), 
-            array('andres.lecubarri@laedc.com.ve' => 'Sr Andres'), 
-            'Asunto del mensaje', 
-            <<<EOF
-Cuerpo del mensaje.
-EOF
-    );
-
-    //echo $this->getMailer()->send($mensaje);   
-
-   // $this->redirect('@index_seguimiento_control');
-  }
-
-  /**
    * Acción para el index del módulo
    */
   public function executeInicio()
@@ -93,7 +73,13 @@ EOF
 
     if ($request->getParameter('confirmar_comp') == true)
     {
-      // Mensaje a IO para que confirme el compromiso.
+      $und = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->find($comp_ue->getIdUe());
+      
+      // ENVIANDO EL CORREO DE AVISO
+      $correo = new Correo('AVISO SAF: Confirmación de Compromiso por ' . $und->getNombre() , 'http://' . sfConfig::get('app_servidor_web') . '/seguimiento_control');
+      $correo->enviarA('ING. DE OPERACIONES');
+      $this->getMailer()->send($correo);
+      
       $comp_ue->setStatus('CONFIRMACION');
     }
 

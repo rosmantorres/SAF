@@ -5,3 +5,4 @@
 # hardcodeadas dentro de las distinas clases de la aplicacion. 
 all:
   correo_envio: edc.infored@laedc.com.ve
+  servidor_web: localhost:2020

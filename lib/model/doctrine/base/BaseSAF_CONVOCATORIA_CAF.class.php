@@ -17,36 +17,36 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_CONVOCATORIA_CAF', 'schema_s
  * @property string $motivo_suspencion
  * @property string $observacion
  * @property string $c_caf
- * @property Doctrine_Collection $SAF_EVENTO
+ * @property Doctrine_Collection $SAF_EVENTO_CONVOCATORIA
  * @property Doctrine_Collection $SAF_ASISTENCIA
  * @property SAF_MINUTA $SAF_MINUTA
  * 
- * @method integer              getId()                Returns the current record's "id" value
- * @method string               getAsunto()            Returns the current record's "asunto" value
- * @method timestamp            getFecha()             Returns the current record's "fecha" value
- * @method string               getHoraIni()           Returns the current record's "hora_ini" value
- * @method string               getHoraFin()           Returns the current record's "hora_fin" value
- * @method string               getLugar()             Returns the current record's "lugar" value
- * @method string               getStatus()            Returns the current record's "status" value
- * @method string               getMotivoSuspencion()  Returns the current record's "motivo_suspencion" value
- * @method string               getObservacion()       Returns the current record's "observacion" value
- * @method string               getCCaf()              Returns the current record's "c_caf" value
- * @method Doctrine_Collection  getSAFEVENTO()         Returns the current record's "SAF_EVENTO" collection
- * @method Doctrine_Collection  getSAFASISTENCIA()     Returns the current record's "SAF_ASISTENCIA" collection
- * @method SAF_MINUTA           getSAFMINUTA()         Returns the current record's "SAF_MINUTA" value
- * @method SAF_CONVOCATORIA_CAF setId()                Sets the current record's "id" value
- * @method SAF_CONVOCATORIA_CAF setAsunto()            Sets the current record's "asunto" value
- * @method SAF_CONVOCATORIA_CAF setFecha()             Sets the current record's "fecha" value
- * @method SAF_CONVOCATORIA_CAF setHoraIni()           Sets the current record's "hora_ini" value
- * @method SAF_CONVOCATORIA_CAF setHoraFin()           Sets the current record's "hora_fin" value
- * @method SAF_CONVOCATORIA_CAF setLugar()             Sets the current record's "lugar" value
- * @method SAF_CONVOCATORIA_CAF setStatus()            Sets the current record's "status" value
- * @method SAF_CONVOCATORIA_CAF setMotivoSuspencion()  Sets the current record's "motivo_suspencion" value
- * @method SAF_CONVOCATORIA_CAF setObservacion()       Sets the current record's "observacion" value
- * @method SAF_CONVOCATORIA_CAF setCCaf()              Sets the current record's "c_caf" value
- * @method SAF_CONVOCATORIA_CAF setSAFEVENTO()         Sets the current record's "SAF_EVENTO" collection
- * @method SAF_CONVOCATORIA_CAF setSAFASISTENCIA()     Sets the current record's "SAF_ASISTENCIA" collection
- * @method SAF_CONVOCATORIA_CAF setSAFMINUTA()         Sets the current record's "SAF_MINUTA" value
+ * @method integer              getId()                      Returns the current record's "id" value
+ * @method string               getAsunto()                  Returns the current record's "asunto" value
+ * @method timestamp            getFecha()                   Returns the current record's "fecha" value
+ * @method string               getHoraIni()                 Returns the current record's "hora_ini" value
+ * @method string               getHoraFin()                 Returns the current record's "hora_fin" value
+ * @method string               getLugar()                   Returns the current record's "lugar" value
+ * @method string               getStatus()                  Returns the current record's "status" value
+ * @method string               getMotivoSuspencion()        Returns the current record's "motivo_suspencion" value
+ * @method string               getObservacion()             Returns the current record's "observacion" value
+ * @method string               getCCaf()                    Returns the current record's "c_caf" value
+ * @method Doctrine_Collection  getSAFEVENTOCONVOCATORIA()   Returns the current record's "SAF_EVENTO_CONVOCATORIA" collection
+ * @method Doctrine_Collection  getSAFASISTENCIA()           Returns the current record's "SAF_ASISTENCIA" collection
+ * @method SAF_MINUTA           getSAFMINUTA()               Returns the current record's "SAF_MINUTA" value
+ * @method SAF_CONVOCATORIA_CAF setId()                      Sets the current record's "id" value
+ * @method SAF_CONVOCATORIA_CAF setAsunto()                  Sets the current record's "asunto" value
+ * @method SAF_CONVOCATORIA_CAF setFecha()                   Sets the current record's "fecha" value
+ * @method SAF_CONVOCATORIA_CAF setHoraIni()                 Sets the current record's "hora_ini" value
+ * @method SAF_CONVOCATORIA_CAF setHoraFin()                 Sets the current record's "hora_fin" value
+ * @method SAF_CONVOCATORIA_CAF setLugar()                   Sets the current record's "lugar" value
+ * @method SAF_CONVOCATORIA_CAF setStatus()                  Sets the current record's "status" value
+ * @method SAF_CONVOCATORIA_CAF setMotivoSuspencion()        Sets the current record's "motivo_suspencion" value
+ * @method SAF_CONVOCATORIA_CAF setObservacion()             Sets the current record's "observacion" value
+ * @method SAF_CONVOCATORIA_CAF setCCaf()                    Sets the current record's "c_caf" value
+ * @method SAF_CONVOCATORIA_CAF setSAFEVENTOCONVOCATORIA()   Sets the current record's "SAF_EVENTO_CONVOCATORIA" collection
+ * @method SAF_CONVOCATORIA_CAF setSAFASISTENCIA()           Sets the current record's "SAF_ASISTENCIA" collection
+ * @method SAF_CONVOCATORIA_CAF setSAFMINUTA()               Sets the current record's "SAF_MINUTA" value
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -113,7 +113,7 @@ abstract class BaseSAF_CONVOCATORIA_CAF extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('SAF_EVENTO', array(
+        $this->hasMany('SAF_EVENTO_CONVOCATORIA', array(
              'local' => 'id',
              'foreign' => 'id_convocatoria'));
 

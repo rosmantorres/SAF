@@ -10,7 +10,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property integer $id
  * @property string $descripcion
  * @property integer $id_agenda
- * @property integer $id_convocatoria
  * @property string $status
  * @property integer $c_evento_t
  * @property integer $c_evento_d
@@ -32,7 +31,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property string $programador
  * @property string $operador_resp
  * @property SAF_AGENDA_CONVOCATORIA $SAF_AGENDA_CONVOCATORIA
- * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
+ * @property Doctrine_Collection $SAF_EVENTO_CONVOCATORIA
  * @property Doctrine_Collection $SAF_VARIO
  * @property Doctrine_Collection $SAF_FOTO
  * @property Doctrine_Collection $SAF_EVENTO_RAZON
@@ -40,7 +39,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method integer                 getId()                      Returns the current record's "id" value
  * @method string                  getDescripcion()             Returns the current record's "descripcion" value
  * @method integer                 getIdAgenda()                Returns the current record's "id_agenda" value
- * @method integer                 getIdConvocatoria()          Returns the current record's "id_convocatoria" value
  * @method string                  getStatus()                  Returns the current record's "status" value
  * @method integer                 getCEventoT()                Returns the current record's "c_evento_t" value
  * @method integer                 getCEventoD()                Returns the current record's "c_evento_d" value
@@ -62,14 +60,13 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method string                  getProgramador()             Returns the current record's "programador" value
  * @method string                  getOperadorResp()            Returns the current record's "operador_resp" value
  * @method SAF_AGENDA_CONVOCATORIA getSAFAGENDACONVOCATORIA()   Returns the current record's "SAF_AGENDA_CONVOCATORIA" value
- * @method SAF_CONVOCATORIA_CAF    getSAFCONVOCATORIACAF()      Returns the current record's "SAF_CONVOCATORIA_CAF" value
+ * @method Doctrine_Collection     getSAFEVENTOCONVOCATORIA()   Returns the current record's "SAF_EVENTO_CONVOCATORIA" collection
  * @method Doctrine_Collection     getSAFVARIO()                Returns the current record's "SAF_VARIO" collection
  * @method Doctrine_Collection     getSAFFOTO()                 Returns the current record's "SAF_FOTO" collection
  * @method Doctrine_Collection     getSAFEVENTORAZON()          Returns the current record's "SAF_EVENTO_RAZON" collection
  * @method SAF_EVENTO              setId()                      Sets the current record's "id" value
  * @method SAF_EVENTO              setDescripcion()             Sets the current record's "descripcion" value
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
- * @method SAF_EVENTO              setIdConvocatoria()          Sets the current record's "id_convocatoria" value
  * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
  * @method SAF_EVENTO              setCEventoT()                Sets the current record's "c_evento_t" value
  * @method SAF_EVENTO              setCEventoD()                Sets the current record's "c_evento_d" value
@@ -91,7 +88,7 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setProgramador()             Sets the current record's "programador" value
  * @method SAF_EVENTO              setOperadorResp()            Sets the current record's "operador_resp" value
  * @method SAF_EVENTO              setSAFAGENDACONVOCATORIA()   Sets the current record's "SAF_AGENDA_CONVOCATORIA" value
- * @method SAF_EVENTO              setSAFCONVOCATORIACAF()      Sets the current record's "SAF_CONVOCATORIA_CAF" value
+ * @method SAF_EVENTO              setSAFEVENTOCONVOCATORIA()   Sets the current record's "SAF_EVENTO_CONVOCATORIA" collection
  * @method SAF_EVENTO              setSAFVARIO()                Sets the current record's "SAF_VARIO" collection
  * @method SAF_EVENTO              setSAFFOTO()                 Sets the current record's "SAF_FOTO" collection
  * @method SAF_EVENTO              setSAFEVENTORAZON()          Sets the current record's "SAF_EVENTO_RAZON" collection
@@ -116,10 +113,6 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'length' => 500,
              ));
         $this->hasColumn('id_agenda', 'integer', null, array(
-             'notnull' => false,
-             'type' => 'integer',
-             ));
-        $this->hasColumn('id_convocatoria', 'integer', null, array(
              'notnull' => false,
              'type' => 'integer',
              ));
@@ -208,9 +201,9 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'local' => 'id_agenda',
              'foreign' => 'id'));
 
-        $this->hasOne('SAF_CONVOCATORIA_CAF', array(
-             'local' => 'id_convocatoria',
-             'foreign' => 'id'));
+        $this->hasMany('SAF_EVENTO_CONVOCATORIA', array(
+             'local' => 'id',
+             'foreign' => 'id_evento'));
 
         $this->hasMany('SAF_VARIO', array(
              'local' => 'id',

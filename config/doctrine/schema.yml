@@ -64,7 +64,7 @@ SAF_CONVOCATORIA_CAF:
     observacion: { notnull: false, type: string(1000) }
     c_caf: { notnull: false, type: string(100) }
   relations:
-    SAF_EVENTO:
+    SAF_EVENTO_CONVOCATORIA:
       local: id
       foreign: id_convocatoria
       type: many
@@ -75,6 +75,22 @@ SAF_CONVOCATORIA_CAF:
     SAF_MINUTA:
       local: id
       foreign: cod_min
+      type: one
+
+SAF_EVENTO_CONVOCATORIA:
+  connection: schema_saf
+  tableName: SAF_EVENTO_CONVOCATORIA
+  columns:
+    id_evento: { type: integer, primary: true }
+    id_convocatoria: { type: integer, primary: true }
+  relations:
+    SAF_EVENTO:
+      local: id_evento
+      foreign: id
+      type: one	  
+    SAF_CONVOCATORIA_CAF:
+      local: id_convocatoria
+      foreign: id
       type: one
 
 SAF_MINUTA:
@@ -99,8 +115,7 @@ SAF_EVENTO:
   columns:
     id: { type: integer, primary: true, sequence: true }
     descripcion: { type: string(500) }
-    id_agenda: { notnull: false, type: integer }
-    id_convocatoria: { notnull: false, type: integer }    
+    id_agenda: { notnull: false, type: integer }   
     status: { notnull: false, type: string(50) }
     c_evento_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }
@@ -126,10 +141,10 @@ SAF_EVENTO:
       local: id_agenda
       foreign: id
       type: one
-    SAF_CONVOCATORIA_CAF:
-      local: id_convocatoria
-      foreign: id
-      type: one
+    SAF_EVENTO_CONVOCATORIA:
+      local: id
+      foreign: id_evento
+      type: many
     SAF_VARIO:
       local: id
       foreign: id_evento

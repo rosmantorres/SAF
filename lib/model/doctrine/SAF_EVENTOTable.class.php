@@ -42,8 +42,8 @@ class SAF_EVENTOTable extends Doctrine_Table
   public function getEventosConvocatoria($id_convocatoria)
   {
     return $this->createQuery('e')
-            ->innerJoin('e.SAF_CONVOCATORIA_CAF c')
-            ->where('c.ID = ?',$id_convocatoria)
+            ->innerJoin('e.SAF_EVENTO_CONVOCATORIA ec')
+            ->where('ec.ID_CONVOCATORIA = ?',$id_convocatoria)
             ->orderBy('e.TIPO_FALLA')
             ->execute();
   }

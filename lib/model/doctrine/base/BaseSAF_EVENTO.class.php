@@ -10,7 +10,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @property integer $id
  * @property string $descripcion
  * @property integer $id_agenda
- * @property string $status
  * @property integer $c_evento_t
  * @property integer $c_evento_d
  * @property timestamp $f_hora_ini
@@ -39,7 +38,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method integer                 getId()                      Returns the current record's "id" value
  * @method string                  getDescripcion()             Returns the current record's "descripcion" value
  * @method integer                 getIdAgenda()                Returns the current record's "id_agenda" value
- * @method string                  getStatus()                  Returns the current record's "status" value
  * @method integer                 getCEventoT()                Returns the current record's "c_evento_t" value
  * @method integer                 getCEventoD()                Returns the current record's "c_evento_d" value
  * @method timestamp               getFHoraIni()                Returns the current record's "f_hora_ini" value
@@ -67,7 +65,6 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO', 'schema_saf');
  * @method SAF_EVENTO              setId()                      Sets the current record's "id" value
  * @method SAF_EVENTO              setDescripcion()             Sets the current record's "descripcion" value
  * @method SAF_EVENTO              setIdAgenda()                Sets the current record's "id_agenda" value
- * @method SAF_EVENTO              setStatus()                  Sets the current record's "status" value
  * @method SAF_EVENTO              setCEventoT()                Sets the current record's "c_evento_t" value
  * @method SAF_EVENTO              setCEventoD()                Sets the current record's "c_evento_d" value
  * @method SAF_EVENTO              setFHoraIni()                Sets the current record's "f_hora_ini" value
@@ -115,11 +112,6 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
         $this->hasColumn('id_agenda', 'integer', null, array(
              'notnull' => false,
              'type' => 'integer',
-             ));
-        $this->hasColumn('status', 'string', 50, array(
-             'notnull' => false,
-             'type' => 'string',
-             'length' => 50,
              ));
         $this->hasColumn('c_evento_t', 'integer', null, array(
              'notnull' => false,

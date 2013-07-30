@@ -1,14 +1,14 @@
 <script type="text/javascript">
 
-  var categorias = new Array(<?php echo Doctrine_Core::getTable('SAF_ASISTENCIA')->getCategoriasDelIndicadorAsistencia($indicador); ?>);
+  var categorias_asistencia = new Array(<?php echo Doctrine_Core::getTable('SAF_ASISTENCIA')->getCategoriasDelIndicadorAsistencia($indicador); ?>);
   var data_series = new Array(<?php echo Doctrine_Core::getTable('SAF_ASISTENCIA')->getSeriesDelIndicadorAsistencia($indicador); ?>);
-  var data_series2 = new Array();
+  var data_series2 = new Array();  
   for (var i = 0; i < data_series.length; i++)
   {
     data_series2[i] = data_series[i] / <?php echo $num_asistencias ?> * 100;
   }
 
-  $(document).ready(function() {
+  $(document).ready(function() {  
     $('#indicador_de_asistencia').highcharts({
       chart: {
         marginTop: 70,
@@ -17,7 +17,7 @@
         text: 'Indicador de Asistencias (2013)'
       },
       xAxis: [{
-          categories: categorias,
+          categories: categorias_asistencia,
           labels: {
             rotation: -90,
             align: 'right',

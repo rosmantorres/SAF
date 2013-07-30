@@ -57,6 +57,8 @@ class minutaActions extends sfActions
       $this->redirect('@visualizar_minuta?id=' . $minuta->getCodMin());
     }
 
+    $this->convocatoria = $request->getParameter('id');
+
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosConvocatoria($request->getParameter('id'));
 
@@ -83,12 +85,14 @@ class minutaActions extends sfActions
     $this->forward404Unless($this->evento);
 
     $minuta = Doctrine_Core::getTable('SAF_MINUTA')
-            ->findOneByIdConvocatoria($this->evento->getIdConvocatoria());
+            ->findOneByIdConvocatoria($request->getParameter('id_convocatoria'));
 
     if ($minuta && $minuta->getLista() == 1)
     {
       $this->visualizarMinuta($minuta);
     }
+
+    $this->convocatoria = $request->getParameter('id_convocatoria');
 
     $this->fotos = $this->evento->getSAFFOTO();
 
@@ -113,6 +117,7 @@ class minutaActions extends sfActions
   public function executeProcesarEvento(sfWebRequest $request)
   {
     $id_evento = $request->getParameter('id');
+    $id_convocatoria = $request->getParameter('id_convocatoria');
 
     $this->reiniciarFotosDelEvento($id_evento);
     $this->verificarFotosYGuardar($request);
@@ -129,6 +134,8 @@ class minutaActions extends sfActions
     $this->reiniciarCompromisosDelEvento($id_evento);
     $this->verificarCompromisosYResponsablesYGuardar($request);
 
+    $this->verificarStatusEvento($id_evento, $id_convocatoria, $request->getParameter('terminar_evento'));
+
     if ($this->msj_error != '')
     {
       $this->getUser()->setFlash('error', $this->msj_error);
@@ -138,7 +145,7 @@ class minutaActions extends sfActions
       $this->getUser()->setFlash('notice', 'Desarrollo procesado Exitosamente!');
     }
 
-    $this->redirect('@desarrollar_evento?id=' . $request->getParameter('id'));
+    $this->redirect('@desarrollar_evento?id=' . $id_evento . '&id_convocatoria=' . $id_convocatoria);
   }
 
   /**
@@ -481,6 +488,29 @@ class minutaActions extends sfActions
     }
 
     return false;
+  }
+
+  /**
+   *  Método que verifica si el status de un evento, para ver si ya esta o no analizado
+   * 
+   * @param int $id_evento
+   * @param string $status
+   */
+  private function verificarStatusEvento($id_evento, $id_convocatoria, $status)
+  {
+    $evento_convocatoria = Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')
+            ->getEventoConvocatoria($id_evento, $id_convocatoria);
+
+    if ($status == true)
+    {
+      $evento_convocatoria->setStatus('analizado');
+    }
+    else
+    {
+      $evento_convocatoria->setStatus(null);
+    }
+
+    $evento_convocatoria->save();
   }
 
   /**

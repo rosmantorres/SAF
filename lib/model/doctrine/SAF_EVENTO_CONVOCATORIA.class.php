@@ -12,5 +12,5 @@
  */
 class SAF_EVENTO_CONVOCATORIA extends BaseSAF_EVENTO_CONVOCATORIA
 {
-
+  
 }

@@ -88,11 +88,11 @@ inicio_desarrollo:
   param: { module: minuta, action: inicioDesarrollo }
   
 desarrollar_evento:
-  url: /minuta/desarrollo/desarrollar_evento/:id
+  url: /minuta/desarrollo/desarrollar_evento/:id/:id_convocatoria
   param: { module: minuta, action: desarrollarEvento }
   
 procesar_evento_minuta:
-  url: /minuta/procesar_evento/:id 
+  url: /minuta/procesar_evento/:id/:id_convocatoria
   param: { module: minuta, action: procesarEvento}
   
 agregar_razones_mvamin:

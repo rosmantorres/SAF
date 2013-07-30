@@ -2,12 +2,15 @@
 
 class myUser extends sfBasicSecurityUser
 {
+
+  private $resultado = '';
+
   /**
    * Método que agrega en la sesion del usuario (hist_eventos_filtrados), todos 
    * los eventos que fueron arrojados por el sistema durando el filtro.
    * 
    * @param array $eventos_filtrados
-   */  
+   */
   public function agregarEventosFiltradosAlHist($eventos_filtrados)
   {
     // Busca los eventos ya almacenados en la variable de sesion correspondiente.
@@ -33,9 +36,8 @@ class myUser extends sfBasicSecurityUser
    */
   public function agregarEventosCheckedAlHist($request, $sesion)
   {
-    $resultado = "";
-
     $hist_eventos_filtrados = $this->getAttribute('hist_eventos_filtrados', array());
+    $eventos_sesion = $this->getAttribute($sesion, array());
 
     // Verifica cuales checkbox fueron seleccionados
     foreach ($hist_eventos_filtrados as $evento_filtrado)
@@ -45,18 +47,27 @@ class myUser extends sfBasicSecurityUser
 
       if ($checkbox == true)
       {
-        if ($this->agregarSiNoExiste($evento_filtrado, $sesion))
+        $agregar = $this->verificarSiNoExisteEnLaSesion($evento_filtrado, $sesion);
+
+        if ($agregar && $sesion == 'hist_eventos_agenda')
         {
-          $resultado = $resultado . "<i class='icon-ok'></i> " . $evento_filtrado->getCEventoD() . "<br>";
+          $agregar = $this->verificarSiNoExisteEnBd($evento_filtrado->getCEventoD());
         }
-        else
+        elseif ($agregar && $sesion == 'hist_eventos_convocatoria')
         {
-          $resultado = $resultado . "<i class='icon-remove'></i> " . $evento_filtrado->getCEventoD() . "<br>";
+          $agregar = $this->verificarSiNoHaSidoAnalizado($evento_filtrado->getId(),$evento_filtrado->getCEventoD());
+        }
+
+        if ($agregar)
+        {
+          $this->resultado = $this->resultado . "<i class='icon-ok'></i> " . $evento_filtrado->getCEventoD() . "<br>";
+          array_push($eventos_sesion, $evento_filtrado);
+          $this->setAttribute($sesion, $eventos_sesion);
         }
       }
     }
 
-    return $resultado;
+    return $this->resultado;
   }
 
   /**
@@ -96,11 +107,10 @@ class myUser extends sfBasicSecurityUser
    * @param string $sesion - Donde se guardará
    * @return boolean - True si fue guardado
    */
-  private function agregarSiNoExiste($evento_checked, $sesion)
+  private function verificarSiNoExisteEnLaSesion($evento_checked, $sesion)
   {
     // Busca los eventos ya almacenados en la variable de sesión correspondiente
     // si el identificador no esta definido aun, entonces devuelve un array()
-
     $eventos_sesion = $this->getAttribute($sesion, array());
 
     // Se verifica si el evento_checked no esta en la variable de sesión.
@@ -108,13 +118,44 @@ class myUser extends sfBasicSecurityUser
     {
       if ($evento_sesion->getCEventoD() == $evento_checked->getCEventoD())
       {
+        $this->resultado = $this->resultado . "<i class='icon-remove'></i> " .
+                $evento_checked->getCEventoD() . " (Ya existe en la sesión)<br>";
         return false;
       }
     }
 
-    array_push($eventos_sesion, $evento_checked);
-    $this->setAttribute($sesion, $eventos_sesion);
+    return true;
+  }
+
+  private function verificarSiNoExisteEnBd($cod_evento)
+  {
+    // Se verifica si el evento no ha sido insertado en BD con anterioridad.
+    if ($evento = Doctrine_Core::getTable('SAF_EVENTO')->findOneByCEventoD($cod_evento))
+    {
+      $this->resultado = $this->resultado . "<i class='icon-remove'></i> " .
+              $evento->getCEventoD() . " (Ya existe en la agenda N° " . $evento->getIdAgenda() . ")<br>";
+      return false;
+    }
 
     return true;
   }
+
+  private function verificarSiNoHaSidoAnalizado($id_evento,$cod_evento)
+  {
+    $eventos = Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->findByIdEvento($id_evento);
+
+    foreach ($eventos as $evento)
+    {
+      if ($evento->getStatus() == 'analizado')
+      {
+        $this->resultado = $this->resultado . "<i class='icon-remove'></i> " .
+                $cod_evento . " (Ya fue analizado en la convocatoria N° " . 
+                $evento->getIdConvocatoria() . ")<br>";
+        return false;
+      }
+    }
+
+    return true;
+  }
+
 }

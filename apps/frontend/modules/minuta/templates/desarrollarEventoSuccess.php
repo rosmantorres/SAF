@@ -45,11 +45,11 @@
         </a> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="" id="remover_compromiso" style="display: none">
           <i class="icon-minus-sign"></i> Remover Último Compromiso
-        </a>
-      </h6>
+        </a>        
+      </h6>      
     </td>
     <td>
-      <form id="guardar_desarrollo_evento" action="<?php echo url_for('@procesar_evento_minuta?id=' . $evento->getId()) ?>" method="POST" enctype="multipart/form-data">        
+      <form id="guardar_desarrollo_evento" action="<?php echo url_for('@procesar_evento_minuta?id=' . $evento->getId() . '&id_convocatoria=' . $convocatoria) ?>" method="POST" enctype="multipart/form-data">        
 
         <pre><i class="icon-tag"></i> IMÁGENES: (Formatos válidos gif, jpeg, jpg, png)</pre>
         <div style="margin: 15px;" id="imagenes"> 
@@ -172,20 +172,27 @@
           <?php endif; ?>
 
         </div>
-
+        
         <hr>
+        <small style="color: red"> 
+          <abbr title="El status del evento cambia a analizado, por lo que ya no podrá ser agregado a otra convocatoria una vez terminada la minuta. ">
+            <i class="icon-warning-sign"></i><b> Evento ya analizado </b>
+            <input type="checkbox" name="terminar_evento" <?php if (Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->getEventoConvocatoria($evento, $convocatoria)->getStatus() == 'analizado') echo "checked" ?> />
+          </abbr>
+        </small>
+
         <div align="center">
           <button class="btn btn-small btn-primary" type="submit" >
             <i class="icon-briefcase"></i> GUARDAR DESARROLLO DEL EVENTO
           </button>
-          <a href="<?php echo url_for('@inicio_desarrollo?id=' . $evento->getIdConvocatoria()) ?>" id="cancelar_proceso" class="btn btn-small">
+          <a href="<?php echo url_for('@inicio_desarrollo?id=' . $convocatoria) ?>" id="cancelar_proceso" class="btn btn-small">
             <i class="icon-remove"></i> CANCELAR PROCESO
           </a>
         </div>
       </form>
       <small><b><u>Nota</u></b>: Es importante guardar solo cuando se piense que ya se tiene todo el
-      desarrollo del evento terminado, esto por razones de rendimiento. NUNCA se debe guardar
-      por cada sección (Imagenes, Razones, ect) desarrollada.</small>
+        desarrollo del evento terminado, esto por razones de rendimiento. NUNCA se debe guardar
+        por cada sección (Imagenes, Razones, ect) desarrollada.</small>
     </td>
   </tr>
 </table>

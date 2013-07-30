@@ -87,7 +87,7 @@
             </td>
           </tr>
         </table> 
-        
+
         <!-- 3. Revisión y Análisis de las siguientes interrupciones: -->
         <br>
         <h6 align="center" class="muted">3. Revisión y Análisis de las siguientes interrupciones: </h6> 
@@ -98,9 +98,12 @@
                 <?php $cont = 0 ?>
                 <?php foreach ($eventos as $evento) : ?>
                   <h6>
-                    <a href="<?php echo url_for('@desarrollar_evento?id=' . $evento) ?>">
+                    <a href="<?php echo url_for('@desarrollar_evento?id=' . $evento . '&id_convocatoria=' . $convocatoria) ?>">
                       <i class="icon-pencil"></i> Editar
                     </a>
+                    <?php if (Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->getEventoConvocatoria($evento, $convocatoria)->getStatus() == 'analizado'): ?> 
+                      (<i class="icon-ok"></i>) 
+                    <?php endif; ?>
                   </h6>
                   <?php $cabecera = "(" . ++$cont . ") RI. " . $evento->getCEventoD() . " en circuito " . $evento->getCircuito() . " con " . $evento->getMvaMin() . " MVAmin" ?>    
                   <?php include_partial('global/acordeon', array('id_acordeon' => $cont, 'cabecera' => $cabecera, 'contenido' => $evento, 'sin_incluir_partial' => true)) ?> 

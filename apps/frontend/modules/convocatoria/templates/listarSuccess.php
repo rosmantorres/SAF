@@ -3,11 +3,13 @@
 
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE CONVOCATORIAS </h5>
 
+<?php if ($crear_convocatorias == true) : ?>
 <h6>
   <a href="<?php echo url_for('@nueva_convocatoria') ?>">
     <i class="icon-plus"></i> Crear una nueva convocatoria
   </a>
 </h6>
+<?php endif; ?>
 
 <?php if (count($convocatorias) > 0) : ?>
   <br>

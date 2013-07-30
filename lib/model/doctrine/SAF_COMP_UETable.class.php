@@ -117,9 +117,10 @@ class SAF_COMP_UETable extends Doctrine_Table
       INNER JOIN SAF_UNIDAD_EQUIPO ue ON ue.id = comp_ue.id_ue
       INNER JOIN SAF_VARIO comp ON comp.id = comp_ue.id_compromiso
       INNER JOIN SAF_EVENTO evento ON evento.id = comp.id_evento
-      INNER JOIN SAF_CONVOCATORIA_CAF conv_caf ON conv_caf.id = evento.id_convocatoria
+      INNER JOIN SAF_EVENTO_CONVOCATORIA evento_conv ON evento_conv.id_evento = evento.id
+      INNER JOIN SAF_CONVOCATORIA_CAF conv_caf ON conv_caf.id = evento_conv.id_convocatoria
       INNER JOIN SAF_MINUTA minuta ON minuta.id_convocatoria = conv_caf.id
-      WHERE comp.tipo = 'COMPROMISO' AND comp_ue.id_ue = $id_unidad AND minuta.id_convocatoria = evento.id_convocatoria
+      WHERE comp.tipo = 'COMPROMISO' AND comp_ue.id_ue = $id_unidad 
       ";
     
     $consulta = $consulta . $agregar_a_consulta;

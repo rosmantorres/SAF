@@ -33,7 +33,21 @@
         <a href="<?php echo url_for('@vista_preliminar_convocatoria') ?>" >
           <i class="icon-eye-open"></i> vista preliminar de la convocatoria
         </a>
-      </h6>      
+      </h6> 
+      
+      <?php if (count($eventos_pendientes) != 0) : ?>
+        <br><hr>
+        <i class="icon-hand-right"></i> <small><b><u>Eventos Pendientes:</u></b></small>
+        <br>
+        <?php foreach ($eventos_pendientes as $evento_pendiente) : ?>
+          <small>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <?php echo $evento_pendiente->getCEventoD() . ' (Agenda n° ' . $evento_pendiente->getIdAgenda() . ')' ?>
+          </small>
+          <br>
+        <?php endforeach; ?>
+      <?php endif; ?>
+      
     </td>    
     <td valign="top"  width='975px'>       
       <form id="form_agregar_eventos_convocatoria" 

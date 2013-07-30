@@ -15,7 +15,7 @@ class MinutaPDF extends FPDF
     parent::FPDF($orientation, $unit, $size);
 
     $this->minuta = $minuta;
-    
+
     $this->convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
             ->find($this->minuta->getIdConvocatoria());
 
@@ -23,7 +23,7 @@ class MinutaPDF extends FPDF
             ->findByIdConvocatoria($this->convocatoria->getId());
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
-            ->getEventosConvocatoria($this->convocatoria->getId());    
+            ->getEventosConvocatoria($this->convocatoria->getId());
   }
 
   // Cabecera de página
@@ -95,15 +95,13 @@ class MinutaPDF extends FPDF
 
     if ($this->minuta->getImgCompromisos())
     {
-      $this->RellenarImagenesDeLaMinuta('1. Revisión del status de los compromisos:', 
-              $this->minuta->getImgCompromisos());
+      $this->RellenarImagenesDeLaMinuta('1. Revisión del status de los compromisos:', $this->minuta->getImgCompromisos());
       $this->Ln(100);
     }
-    
+
     if ($this->minuta->getImgAsistencias())
     {
-      $this->RellenarImagenesDeLaMinuta('2. Revisión del status de las asistencias:', 
-              $this->minuta->getImgAsistencias());     
+      $this->RellenarImagenesDeLaMinuta('2. Revisión del status de las asistencias:', $this->minuta->getImgAsistencias());
     }
   }
 
@@ -116,7 +114,7 @@ class MinutaPDF extends FPDF
 
     $this->Cell(155, 98, '', 1, 0, 'C');
 
-    $this->Image(sfConfig::get('sf_web_dir') . '/' . $dir_img , 33, $this->GetY() + 1, 153, 95);
+    $this->Image(sfConfig::get('sf_web_dir') . '/' . $dir_img, 33, $this->GetY() + 1, 153, 95);
   }
 
   // Rellena el indice de las interrupciones que se analizaran
@@ -132,11 +130,14 @@ class MinutaPDF extends FPDF
 
     foreach ($this->eventos as $evento)
     {
-      $this->ImprimirSubtituloIndice($evento, $cont_causa500, $cont_imp, $cont_pro);
+      if (Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->getEventoConvocatoria($evento, $this->convocatoria)->getStatus() == 'analizado')
+      {
+        $this->ImprimirSubtituloIndice($evento, $cont_causa500, $cont_imp, $cont_pro);
 
-      $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
-      $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
-      $this->Imprimir($text, 40, 10);
+        $fecha_evento = strftime("%A, %d/%m/%Y", strtotime($evento->getFHoraIni()));
+        $text = "RI. " . $evento->getCEventoD() . " - Circuito " . $evento->getCircuito() . ". " . $fecha_evento . '. MVAmin: ' . $evento->getMvaMin();
+        $this->Imprimir($text, 40, 10);
+      }
     }
   }
 
@@ -166,32 +167,34 @@ class MinutaPDF extends FPDF
   // Rellena el desarrollo de la reunion sobre los eventos
   function RellenarDesarrolloReunion()
   {
-    $this->AddPage();
-
-    $this->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 18);
-
-    $addPage = count($this->eventos);
+    $i = 1;
 
     foreach ($this->eventos as $evento)
     {
-      $addPage--;
-
-      $this->RellenarDescripcionDelEvento($evento);
-
-      $this->RellenarFotosDelEvento($evento);
-
-      $this->RellenarRazonesDelEvento($evento);
-
-      $varios = Doctrine_Core::getTable('SAF_VARIO')->findByIdEvento($evento->getID());
-
-      $this->RellenarBitacoraDelEvento($varios);
-
-      $this->RellenarAccionesYRecomendacionesDelEvento($varios);
-
-      $this->RellenarCompromisosDelEvento($varios);
-
-      if ($addPage > 0)
+      if (Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->getEventoConvocatoria($evento, $this->convocatoria)->getStatus() == 'analizado')
+      {
         $this->AddPage();
+
+        if ($i == 1)
+        {
+          $i++;
+          $this->Imprimir('DESARROLLO DE LA REUNIÓN', 10, 12, 18);
+        }
+
+        $this->RellenarDescripcionDelEvento($evento);
+
+        $this->RellenarFotosDelEvento($evento);
+
+        $this->RellenarRazonesDelEvento($evento);
+
+        $varios = Doctrine_Core::getTable('SAF_VARIO')->findByIdEvento($evento->getID());
+
+        $this->RellenarBitacoraDelEvento($varios);
+
+        $this->RellenarAccionesYRecomendacionesDelEvento($varios);
+
+        $this->RellenarCompromisosDelEvento($varios);
+      }
     }
   }
 

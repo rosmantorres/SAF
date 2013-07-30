@@ -82,7 +82,8 @@ SAF_EVENTO_CONVOCATORIA:
   tableName: SAF_EVENTO_CONVOCATORIA
   columns:
     id_evento: { type: integer, primary: true }
-    id_convocatoria: { type: integer, primary: true }
+    id_convocatoria: { type: integer, primary: true }       
+    status: { notnull: false, type: string(20) }
   relations:
     SAF_EVENTO:
       local: id_evento
@@ -115,8 +116,7 @@ SAF_EVENTO:
   columns:
     id: { type: integer, primary: true, sequence: true }
     descripcion: { type: string(500) }
-    id_agenda: { notnull: false, type: integer }   
-    status: { notnull: false, type: string(50) }
+    id_agenda: { notnull: false, type: integer }
     c_evento_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }
     f_hora_ini: { type: timestamp(7) }

@@ -19,6 +19,8 @@ class convocatoriaActions extends sfActions
   public function executeListar()
   {
     $this->convocatorias = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->getConvocatorias();
+
+    $this->crear_convocatorias = !$this->verificarSiHayConvocatoriasSinTerminar($this->convocatorias);
   }
 
   /**
@@ -28,8 +30,22 @@ class convocatoriaActions extends sfActions
    */
   public function executeNueva()
   {
+    if ($this->verificarSiHayConvocatoriasSinTerminar(Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->getConvocatorias()))
+    {
+      $this->redirect('@index_convocatoria');
+    }
+
     $this->agendas_pendientes = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->getAgendasPendientes();
+
+    $eventos_pendientes = Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->getEventosPendientes();
+
+    $this->eventos_pendientes = array();
+
+    foreach ($eventos_pendientes as $evento_pendiente)
+    {
+      array_push($this->eventos_pendientes, Doctrine_Core::getTable('SAF_EVENTO')->find($evento_pendiente['ID_EVENTO']));
+    }
   }
 
   /**
@@ -79,7 +95,7 @@ class convocatoriaActions extends sfActions
       $convocatoria->save();
 
       // ENVIANDO EL CORREO DE AVISO
-      $correo = new Correo('AVISO SAF: Convocatoria Suspendida', 'Motivo: ' . $convocatoria->getMotivoSuspencion() .' http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
+      $correo = new Correo('AVISO SAF: Convocatoria Suspendida', 'Motivo: ' . $convocatoria->getMotivoSuspencion() . ' http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
       $correo->enviarATodos();
       $this->getMailer()->send($correo);
 
@@ -187,6 +203,27 @@ class convocatoriaActions extends sfActions
   }
 
   /**
+   * Método que verifica una lista de convocatorias y retorna true si existe al 
+   * menos una que este en ejecución o activa para así poder quitar la opción de 
+   * seguir creando convocatorías.
+   * 
+   * @param Doctrine_Collection SAF_CONVOCATORIA_CAF $convocatorias
+   * @return boolean
+   */
+  private function verificarSiHayConvocatoriasSinTerminar($convocatorias)
+  {
+    foreach ($convocatorias as $convocatoria)
+    {
+      if ($convocatoria->getStatus() == 'EJECUCION' || $convocatoria->getStatus() == 'ACTIVA')
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Método que crea y guarda una convocatoria con toda sus descripciones hecha
    * por el usuario y los eventos elegidos en el tiempo de su sesion.
    * 
@@ -210,12 +247,14 @@ class convocatoriaActions extends sfActions
 
       foreach ($eventos_a_guardar as $evento)
       {
-        $evento->setIdConvocatoria($convocatoria);
-        $evento->save();
+        $evento_convocatoria = new SAF_EVENTO_CONVOCATORIA();
+        $evento_convocatoria->setIdEvento($evento);
+        $evento_convocatoria->setIdConvocatoria($convocatoria);
+        $evento_convocatoria->save();
       }
 
       // ENVIANDO EL CORREO DE AVISO
-      $correo = new Correo('AVISO SAF: Nueva Convocatoria Creada con fecha ' .$request->getParameter('f_convoca'), 'http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
+      $correo = new Correo('AVISO SAF: Nueva Convocatoria Creada con fecha ' . $request->getParameter('f_convoca'), 'http://' . sfConfig::get('app_servidor_web') . '/convocatoria/mostrar/' . $convocatoria);
       $correo->enviarATodos();
       $this->getMailer()->send($correo);
     }

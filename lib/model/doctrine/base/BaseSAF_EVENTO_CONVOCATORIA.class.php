@@ -9,15 +9,18 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_EVENTO_CONVOCATORIA', 'schem
  * 
  * @property integer $id_evento
  * @property integer $id_convocatoria
+ * @property string $status
  * @property SAF_EVENTO $SAF_EVENTO
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
  * 
  * @method integer                 getIdEvento()             Returns the current record's "id_evento" value
  * @method integer                 getIdConvocatoria()       Returns the current record's "id_convocatoria" value
+ * @method string                  getStatus()               Returns the current record's "status" value
  * @method SAF_EVENTO              getSAFEVENTO()            Returns the current record's "SAF_EVENTO" value
  * @method SAF_CONVOCATORIA_CAF    getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" value
  * @method SAF_EVENTO_CONVOCATORIA setIdEvento()             Sets the current record's "id_evento" value
  * @method SAF_EVENTO_CONVOCATORIA setIdConvocatoria()       Sets the current record's "id_convocatoria" value
+ * @method SAF_EVENTO_CONVOCATORIA setStatus()               Sets the current record's "status" value
  * @method SAF_EVENTO_CONVOCATORIA setSAFEVENTO()            Sets the current record's "SAF_EVENTO" value
  * @method SAF_EVENTO_CONVOCATORIA setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" value
  * 
@@ -38,6 +41,11 @@ abstract class BaseSAF_EVENTO_CONVOCATORIA extends sfDoctrineRecord
         $this->hasColumn('id_convocatoria', 'integer', null, array(
              'type' => 'integer',
              'primary' => true,
+             ));
+        $this->hasColumn('status', 'string', 20, array(
+             'notnull' => false,
+             'type' => 'string',
+             'length' => 20,
              ));
     }
 

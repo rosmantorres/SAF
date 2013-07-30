@@ -7,13 +7,57 @@
  */
 class SAF_EVENTO_CONVOCATORIATable extends Doctrine_Table
 {
-    /**
-     * Returns an instance of this class.
-     *
-     * @return object SAF_EVENTO_CONVOCATORIATable
-     */
-    public static function getInstance()
-    {
-        return Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA');
-    }
+
+  /**
+   * Returns an instance of this class.
+   *
+   * @return object SAF_EVENTO_CONVOCATORIATable
+   */
+  public static function getInstance()
+  {
+    return Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA');
+  }
+
+  /**
+   * Método que obtiene un objeto SAF_EVENTO_CONVOCATORIA según 
+   * el id del evento y el id de la convocatoria.
+   * 
+   * @param int $id_evento
+   * @param int $id_convocatoria
+   * @return SAF_EVENTO_CONVOCATORIA
+   */
+  public function getEventoConvocatoria($id_evento, $id_convocatoria)
+  {
+    return Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')
+                    ->createQuery()
+                    ->where('id_evento = ?', $id_evento)
+                    ->andWhere('id_convocatoria = ?', $id_convocatoria)
+                    ->fetchOne();
+  }
+
+  /**
+   * Método que obtiene un resultset de aquellos eventos que estan pendiente
+   * o que no han sido analizados en ningún comité.
+   * 
+   * @return resultset
+   */
+  public function getEventosPendientes()
+  {
+    $conexion = Doctrine_Manager::getInstance()->getConnection("schema_saf");
+
+    $consulta = "
+      SELECT ID_EVENTO
+      FROM SAF_EVENTO_CONVOCATORIA
+      WHERE ID_EVENTO NOT IN (
+          SELECT ID_EVENTO
+          FROM SAF_EVENTO_CONVOCATORIA
+          WHERE STATUS IS NOT NULL
+          GROUP BY ID_EVENTO
+          )
+      GROUP BY ID_EVENTO ";
+
+    $sentencia = $conexion->execute($consulta);
+
+    return $sentencia->fetchAll(PDO::FETCH_BOTH);
+  }
 }

@@ -13,9 +13,11 @@ abstract class BaseSAF_EVENTO_CONVOCATORIAFormFilter extends BaseFormFilterDoctr
   public function setup()
   {
     $this->setWidgets(array(
+      'status'          => new sfWidgetFormFilterInput(),
     ));
 
     $this->setValidators(array(
+      'status'          => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('saf_evento_convocatoria_filters[%s]');
@@ -37,6 +39,7 @@ abstract class BaseSAF_EVENTO_CONVOCATORIAFormFilter extends BaseFormFilterDoctr
     return array(
       'id_evento'       => 'Number',
       'id_convocatoria' => 'Number',
+      'status'          => 'Text',
     );
   }
 }

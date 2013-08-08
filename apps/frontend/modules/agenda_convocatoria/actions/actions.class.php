@@ -16,7 +16,7 @@ class agenda_convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeListar(sfWebRequest $request)
+  public function executeListar()
   {
     $this->agendas = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')->getAgendas();
   }
@@ -26,7 +26,7 @@ class agenda_convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeNueva(sfWebRequest $request)
+  public function executeNueva()
   {
     
   }
@@ -145,7 +145,7 @@ class agenda_convocatoriaActions extends sfActions
    * 
    * @param sfWebRequest $request
    */
-  public function executeVistaPreliminar(sfWebRequest $request)
+  public function executeVistaPreliminar()
   {
     $eventos = $this->getUser()->getAttribute('hist_eventos_agenda', array());
     $this->eventos = $eventos;

@@ -42,7 +42,8 @@ class agenda_convocatoriaActions extends sfActions
             ->find($request->getParameter('id'));
 
     $this->forward404Unless($this->agenda);
-
+    $this->forward404If($this->agenda->getDepartamento() != 'IOD');
+    
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosAgenda($request->getParameter('id'));
 

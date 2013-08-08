@@ -23,7 +23,10 @@ class SAF_CONVOCATORIA_CAFTable extends Doctrine_Table
    */
   public function getConvocatorias()
   {
-    return $this->createQuery('a')->orderBy('created_at desc')->execute();
+    return $this->createQuery('c')
+            ->where('DEPARTAMENTO = ?', 'IOD')
+            ->orderBy('created_at desc')
+            ->execute();
   }
 
 }

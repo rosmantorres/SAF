@@ -59,6 +59,7 @@ class convocatoriaActions extends sfActions
             ->find($request->getParameter('id'));
 
     $this->forward404Unless($this->convocatoria);
+    $this->forward404If($this->convocatoria->getDepartamento() != 'IOD');
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
             ->getEventosConvocatoria($request->getParameter('id'));
@@ -117,7 +118,7 @@ class convocatoriaActions extends sfActions
     $agenda = Doctrine_Core::getTable('SAF_AGENDA_CONVOCATORIA')
             ->find($request->getParameter('id_agenda'));
 
-    if ($agenda)
+    if ($agenda && $agenda->getDepartamento() == 'IOD')
     {
       $eventos = Doctrine_Core::getTable('SAF_EVENTO')
               ->getEventosAgenda($request->getParameter('id_agenda'));
@@ -237,6 +238,7 @@ class convocatoriaActions extends sfActions
     {
       $convocatoria = new SAF_CONVOCATORIA_CAF();
       $convocatoria->setAsunto($request->getParameter('asunto_convoca'));
+      $convocatoria->setDepartamento('IOD');
       $convocatoria->setFecha($request->getParameter('f_convoca'));
       $convocatoria->setHoraIni($request->getParameter('h_ini_convoca'));
       $convocatoria->setHoraFin($request->getParameter('h_fin_convoca'));

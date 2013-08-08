@@ -18,10 +18,14 @@ class SAF_UNIDAD_EQUIPOTable extends Doctrine_Table
     }
    
     /**
-     * Misma definición de la sobrescritura. Solo se le agregó el order by
+     * Misma definición del método sobrescrito (findAll). Solo se le agregó el 
+     * order by y que solo traiga los pertenecientes a un departamento.
      */
     public function findAll($hydrationMode = null)
     {
-      return $this->createQuery('dctrn_find')->orderBy('nombre')->execute(array(), $hydrationMode);
+      return $this->createQuery('dctrn_find')
+              ->where('departamento = ?','IOD')
+              ->orderBy('nombre')
+              ->execute(array(), $hydrationMode);
     }
 }

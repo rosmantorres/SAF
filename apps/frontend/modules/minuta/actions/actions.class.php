@@ -46,8 +46,10 @@ class minutaActions extends sfActions
    */
   public function executeInicioDesarrollo(sfWebRequest $request)
   {
-    $this->forward404Unless(Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
-                    ->findOneById($request->getParameter('id')));
+    $this->forward404Unless($convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->findOneById($request->getParameter('id')));
+
+    $this->forward404If($convocatoria->getDepartamento() != 'IOD');
 
     $minuta = Doctrine_Core::getTable('SAF_MINUTA')
             ->findOneByIdConvocatoria($request->getParameter('id'));
@@ -80,10 +82,13 @@ class minutaActions extends sfActions
    */
   public function executeDesarrollarEvento(sfWebRequest $request)
   {
-    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($request->getParameter('id'));
-
-    $this->forward404Unless($this->evento);
-
+    $this->forward404Unless($evento_convocatoria = Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')
+            ->getEventoConvocatoria($request->getParameter('id'), $request->getParameter('id_convocatoria')));                
+    
+    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')->find($request->getParameter('id_convocatoria'));
+    
+    $this->forward404If($convocatoria->getDepartamento() != 'IOD');
+    
     $minuta = Doctrine_Core::getTable('SAF_MINUTA')
             ->findOneByIdConvocatoria($request->getParameter('id_convocatoria'));
 
@@ -92,20 +97,14 @@ class minutaActions extends sfActions
       $this->visualizarMinuta($minuta);
     }
 
+    $this->evento = Doctrine_Core::getTable('SAF_EVENTO')->find($request->getParameter('id'));        
     $this->convocatoria = $request->getParameter('id_convocatoria');
-
     $this->fotos = $this->evento->getSAFFOTO();
-
     $this->razones = $this->evento->getSAFEVENTORAZON();
-
     $this->data_razones = $this->obtenerRazonesMVAmin();
-
     $this->resumen_bitacora = $this->evento->getResumenBitacora();
-
     $this->acciones_recomendaciones = $this->evento->getAccionesYRecomendaciones();
-
     $this->compromisos = $this->evento->getCompromisos();
-
     $this->data_ue = $this->obtenerUnidadesEquipos();
   }
 
@@ -271,8 +270,12 @@ class minutaActions extends sfActions
     // Estableciendo la hora a formato español
     setlocale(LC_ALL, "es_ES");
 
-    $this->forward404Unless($minuta = Doctrine_Core::getTable('SAF_MINUTA')
-            ->find($request->getParameter('id')));
+    $minuta = Doctrine_Core::getTable('SAF_MINUTA')->find($request->getParameter('id'));
+
+    $this->forward404Unless($minuta);
+    
+    $this->forward404If(Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($minuta->getIdConvocatoria())->getDepartamento() != 'IOD');
 
     $pdf = new MinutaPDF($minuta);
 

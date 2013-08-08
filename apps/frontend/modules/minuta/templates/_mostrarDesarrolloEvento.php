@@ -1,5 +1,3 @@
-<br>
-
 <?php if (count($fotos) > 0) : ?>
   <?php foreach ($fotos as $foto) : ?>
     <b><?php echo $foto->getTitulo() ?></b>

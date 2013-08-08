@@ -127,6 +127,13 @@ class myUser extends sfBasicSecurityUser
     return true;
   }
 
+  /**
+   * Método que verifica si un registro ya existe en base de datos con el mismo
+   * código de evento para asi no repetirlo.
+   * 
+   * @param int $cod_evento
+   * @return boolean
+   */
   private function verificarSiNoExisteEnBd($cod_evento)
   {
     // Se verifica si el evento no ha sido insertado en BD con anterioridad.
@@ -140,6 +147,14 @@ class myUser extends sfBasicSecurityUser
     return true;
   }
 
+   /**
+   * Método que verifica si un evento ya ha sido analizado para así poder agregarlo
+   * o no, a una convocatoria.
+   * 
+   * @param int $id_evento
+   * @param int $cod_evento
+   * @return boolean
+   */
   private function verificarSiNoHaSidoAnalizado($id_evento,$cod_evento)
   {
     $eventos = Doctrine_Core::getTable('SAF_EVENTO_CONVOCATORIA')->findByIdEvento($id_evento);

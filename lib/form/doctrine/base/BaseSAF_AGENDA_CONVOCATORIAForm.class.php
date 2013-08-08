@@ -25,7 +25,7 @@ abstract class BaseSAF_AGENDA_CONVOCATORIAForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'departamento' => new sfValidatorString(array('max_length' => 50)),
+      'departamento' => new sfValidatorString(array('max_length' => 10)),
       'observacion'  => new sfValidatorString(array('max_length' => 1000, 'required' => false)),
       'pendiente'    => new sfValidatorInteger(),
       'created_at'   => new sfValidatorDateTime(),

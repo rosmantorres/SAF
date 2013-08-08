@@ -39,10 +39,10 @@ abstract class BaseSAF_AGENDA_CONVOCATORIA extends sfDoctrineRecord
              'primary' => true,
              'sequence' => 'SAF_AGENDA_CONVOCATORIA',
              ));
-        $this->hasColumn('departamento', 'string', 50, array(
+        $this->hasColumn('departamento', 'string', 10, array(
              'notnull' => true,
              'type' => 'string',
-             'length' => 50,
+             'length' => 10,
              ));
         $this->hasColumn('observacion', 'string', 1000, array(
              'notnull' => false,

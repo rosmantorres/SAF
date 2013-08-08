@@ -16,6 +16,7 @@ abstract class BaseSAF_CONVOCATORIA_CAFForm extends BaseFormDoctrine
   {
     $this->setWidgets(array(
       'id'                => new sfWidgetFormInputHidden(),
+      'departamento'      => new sfWidgetFormInputText(),
       'asunto'            => new sfWidgetFormInputText(),
       'fecha'             => new sfWidgetFormDateTime(),
       'hora_ini'          => new sfWidgetFormInputText(),
@@ -31,6 +32,7 @@ abstract class BaseSAF_CONVOCATORIA_CAFForm extends BaseFormDoctrine
 
     $this->setValidators(array(
       'id'                => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'departamento'      => new sfValidatorString(array('max_length' => 10)),
       'asunto'            => new sfValidatorString(array('max_length' => 100)),
       'fecha'             => new sfValidatorDateTime(),
       'hora_ini'          => new sfValidatorString(array('max_length' => 7)),

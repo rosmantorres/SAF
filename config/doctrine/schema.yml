@@ -4,7 +4,7 @@ SAF_AGENDA_CONVOCATORIA:
   actAs: { Timestampable: ~ }
   columns:
     id: { type: integer, primary: true, sequence: true }
-    departamento: { notnull: true, type: string(50) }     
+    departamento: { notnull: true, type: string(10) }     
     observacion: { notnull: false, type: string(1000) }
     pendiente: { notnull: true, type: integer }
   relations:
@@ -54,6 +54,7 @@ SAF_CONVOCATORIA_CAF:
   actAs: { Timestampable: ~ }
   columns:
     id: {type: integer, primary: true, sequence: true }
+    departamento: { notnull: true, type: string(10) }
     asunto: { notnull: true, type: string(100) }
     fecha: { notnull: true, type: timestamp(7) }
     hora_ini: { notnull: true, type: string(7) }
@@ -115,7 +116,7 @@ SAF_EVENTO:
   tableName: SAF_EVENTO
   columns:
     id: { type: integer, primary: true, sequence: true }
-    descripcion: { type: string(500) }
+    descripcion: { type: string(4000) }
     id_agenda: { notnull: false, type: integer }
     c_evento_t: { notnull: false, type: integer }
     c_evento_d: { notnull: false, type: integer }

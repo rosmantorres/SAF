@@ -105,9 +105,9 @@ abstract class BaseSAF_EVENTO extends sfDoctrineRecord
              'primary' => true,
              'sequence' => 'SAF_EVENTO',
              ));
-        $this->hasColumn('descripcion', 'string', 500, array(
+        $this->hasColumn('descripcion', 'string', 4000, array(
              'type' => 'string',
-             'length' => 500,
+             'length' => 4000,
              ));
         $this->hasColumn('id_agenda', 'integer', null, array(
              'notnull' => false,

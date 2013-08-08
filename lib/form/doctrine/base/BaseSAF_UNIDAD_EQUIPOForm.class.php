@@ -15,15 +15,17 @@ abstract class BaseSAF_UNIDAD_EQUIPOForm extends BaseFormDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'id'     => new sfWidgetFormInputHidden(),
-      'nombre' => new sfWidgetFormInputText(),
-      'correo' => new sfWidgetFormInputText(),
+      'id'           => new sfWidgetFormInputHidden(),
+      'departamento' => new sfWidgetFormInputText(),
+      'nombre'       => new sfWidgetFormInputText(),
+      'correo'       => new sfWidgetFormInputText(),
     ));
 
     $this->setValidators(array(
-      'id'     => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
-      'nombre' => new sfValidatorString(array('max_length' => 50)),
-      'correo' => new sfValidatorString(array('max_length' => 50)),
+      'id'           => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
+      'departamento' => new sfValidatorString(array('max_length' => 10)),
+      'nombre'       => new sfValidatorString(array('max_length' => 50)),
+      'correo'       => new sfValidatorString(array('max_length' => 50)),
     ));
 
     $this->widgetSchema->setNameFormat('saf_unidad_equipo[%s]');

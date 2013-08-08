@@ -227,6 +227,7 @@ SAF_UNIDAD_EQUIPO:
   tableName: SAF_UNIDAD_EQUIPO
   columns:
     id: { type: integer, primary: true, sequence: true }
+    departamento: { notnull: true, type: string(10) }
     nombre: { notnull: true, type: string(50) }
     correo: { notnull: true, type: string(50) }
   relations:

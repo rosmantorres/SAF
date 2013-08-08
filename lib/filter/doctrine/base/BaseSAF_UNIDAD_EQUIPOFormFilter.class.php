@@ -13,13 +13,15 @@ abstract class BaseSAF_UNIDAD_EQUIPOFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'nombre' => new sfWidgetFormFilterInput(array('with_empty' => false)),
-      'correo' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'departamento' => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'nombre'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'correo'       => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
-      'nombre' => new sfValidatorPass(array('required' => false)),
-      'correo' => new sfValidatorPass(array('required' => false)),
+      'departamento' => new sfValidatorPass(array('required' => false)),
+      'nombre'       => new sfValidatorPass(array('required' => false)),
+      'correo'       => new sfValidatorPass(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('saf_unidad_equipo_filters[%s]');
@@ -39,9 +41,10 @@ abstract class BaseSAF_UNIDAD_EQUIPOFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'     => 'Number',
-      'nombre' => 'Text',
-      'correo' => 'Text',
+      'id'           => 'Number',
+      'departamento' => 'Text',
+      'nombre'       => 'Text',
+      'correo'       => 'Text',
     );
   }
 }

@@ -16,4 +16,13 @@ class SAF_PERSONALTable extends Doctrine_Table
     {
         return Doctrine_Core::getTable('SAF_PERSONAL');
     }
+    
+    // Misma documentacion del método sobrescrito findAll()
+    public function findAll($hydrationMode = null)
+    {
+      return $this->createQuery('dctrn_find personal')
+              ->innerJoin('personal.SAF_UNIDAD_EQUIPO unidad_equipo')
+              ->where('unidad_equipo.departamento = ?','IOD')
+              ->execute(array(), $hydrationMode);
+    }
 }

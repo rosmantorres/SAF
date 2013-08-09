@@ -35,7 +35,8 @@ class SAF_ASISTENCIATable extends Doctrine_Table
           FROM SAF_CONVOCATORIA_CAF conv
           INNER JOIN SAF_ASISTENCIA asis ON conv.id = asis.id_convocatoria
           INNER JOIN SAF_PERSONAL pers ON asis.id_personal = pers.ci
-          INNER JOIN SAF_UNIDAD_EQUIPO ue ON pers.id_ue = ue.id         
+          INNER JOIN SAF_UNIDAD_EQUIPO ue ON pers.id_ue = ue.id 
+          WHERE ue.departamento = 'IOD'
           GROUP BY (conv.id, ue.nombre)
         ) SAF_RESULT
       GROUP BY SAF_RESULT.UNIDAD_EQUIPO ";

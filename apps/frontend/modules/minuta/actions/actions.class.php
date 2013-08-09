@@ -199,7 +199,7 @@ class minutaActions extends sfActions
       $data_source = $data_source . '"' . $persona->getCI() . '",';
     }
 
-    // Enviamos todas las razones sin la ultima coma (,). Ejem: "r1","r2","r3"
+    // Enviamos a todas las personas sin la ultima coma (,). Ejem: "r1","r2","r3"
     return $this->renderText(substr($data_source, 0, -1));
   }
 

@@ -8,11 +8,14 @@
 <br>
 <small><i class="icon-info-sign"></i> 
   <?php if ($convocatoria->getStatus() == 'ACTIVA'): ?>
-    La convocatoria esta <b style="color: green">ACTIVA</b> para 
-    <a href="<?php echo url_for('@cambiar_status_convocatoria?id=' . $convocatoria . '&status=EJECUCION') ?>" id="realizar_comite"> 
-      <i class="icon-edit"></i> realizar el comité  
-    </a> 
-    en la fecha indicada.
+    La convocatoria esta <b style="color: green">ACTIVA</b> 
+    <?php if ($sf_user->hasCredential('crear_convocatoria')) : ?>
+      para 
+      <a href="<?php echo url_for('@cambiar_status_convocatoria?id=' . $convocatoria . '&status=EJECUCION') ?>" id="realizar_comite"> 
+        <i class="icon-edit"></i> realizar el comité  
+      </a> 
+      en la fecha indicada.
+    <?php endif; ?>
   <?php elseif ($convocatoria->getStatus() == 'EJECUCION'): ?>
     La convocatoria esta en <b style="color: #149bdf">EJECUCIÓN</b>. Se esta realizando el comité.
   <?php elseif ($convocatoria->getStatus() == 'TERMINADA'): ?>
@@ -45,7 +48,7 @@
     </td>
     <td width="260px">      
       <small>   
-        <?php if ($convocatoria->getStatus() == 'ACTIVA') : ?> 
+        <?php if ($convocatoria->getStatus() == 'ACTIVA' && $sf_user->hasCredential('crear_convocatoria')) : ?> 
           <i class="icon-warning-sign"></i><b> Suspender </b>
           <input type="checkbox" id="suspender_convocatoria" value="<?php echo url_for('@cambiar_status_convocatoria?id=' . $convocatoria->getId() . '&status=SUSPENDIDA') ?>" />
           <br>

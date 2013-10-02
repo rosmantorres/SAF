@@ -82,7 +82,7 @@ class MinutaPDF extends FPDF
       $i++;
       $asist = $asistente->getSAFPERSONAL();
       $this->Imprimir($i . ') ' . $asist->getSAFUNIDADEQUIPO(), 10, 9, 0);
-      $this->Imprimir($asist->getNombre() . ' ' . $asist->getApellido(), 80, 9);
+      $this->Imprimir($asist->getName(), 80, 9);
     }
 
     $this->Ln(8);

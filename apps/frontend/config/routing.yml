@@ -137,17 +137,26 @@ registrar_acciones_compromisos:
   url: /seguimiento_control/registrar_acciones_compromiso/:id_comp
   param: { module: seguimiento_control, action: registrarAccionesComprimiso }
 
+# Rutas para el plugin sfGuardPlugin
+sf_guard_signin:
+      url:   /iniciar_sesion
+      param: { module: sfGuardAuth, action: signin }
+
+sf_guard_signout:
+  url:   /cerrar_sesion
+  param: { module: sfGuardAuth, action: signout }
+
 # default rules
 homepage:
   url:   /
-  param: { module: default, action: index }
+  param: { module: agenda_convocatoria, action: listar }
 
 # generic rules
 # please, remove them by adding more specific rules
 
-default_index:
-  url:   /:module
-  param: { action: index }
-
-default:
-  url:   /:module/:action/*
+#default_index:
+#  url:   /:module
+#  param: { action: index }
+#
+#default:
+#  url:   /:module/:action/*

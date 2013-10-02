@@ -24,7 +24,7 @@ SAF_ASISTENCIA:
       local: id_convocatoria
       foreign: id
       type: one
-    SAF_PERSONAL:
+    sfGuardUser:
       local: id_personal
       foreign: ci
       type: one
@@ -173,25 +173,6 @@ SAF_FOTO:
       local: id_evento
       foreign: id
       type: one
-
-SAF_PERSONAL:
-  connection: schema_saf
-  tableName: SAF_PERSONAL
-  columns:
-    ci: { type: integer, primary: true }
-    id_ue: { notnull: true, type: integer }
-    nombre: { notnull: false, type: string(50) }
-    apellido: { notnull: false, type: string(50) }
-    correo: { notnull: false, type: string(50) }
-  relations:
-    SAF_UNIDAD_EQUIPO:
-      local: id_ue
-      foreign: id
-      type: one
-    SAF_ASISTENCIA:
-      local: ci
-      foreign: id_personal
-      type: many
       
 SAF_RAZON_MVAMIN:
   connection: schema_saf
@@ -231,7 +212,7 @@ SAF_UNIDAD_EQUIPO:
     nombre: { notnull: true, type: string(50) }
     correo: { notnull: true, type: string(50) }
   relations:
-    SAF_PERSONAL:
+    sfGuardUser:
       local: id
       foreign: id_ue
       type: many

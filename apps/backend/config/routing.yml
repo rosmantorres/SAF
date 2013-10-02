@@ -1,25 +1,37 @@
-saf_agenda_convocatoria:
-  class: sfDoctrineRouteCollection
-  options:
-    model:                SAF_AGENDA_CONVOCATORIA
-    module:               agenda_convocatoria
-    prefix_path:          /agenda_convocatoria
-    column:               id
-    with_wildcard_routes: true
-
 # You can find more information about this file on the symfony website:
 # http://www.symfony-project.org/reference/1_4/en/10-Routing
 
+# Rutas propias para el módulo administrador
+admin_usuarios:
+  url:  /usuarios
+  param: { module: sfGuardUser, action: index }
+  
+admin_grupos:
+  url:  /grupos
+  param: { module: sfGuardGroup, action: index }
+  
+admin_permisos:
+  url:  /permisos
+  param: { module: sfGuardPermission, action: index }
+
+sf_guard_signin:
+      url:   /iniciar_sesion
+      param: { module: sfGuardAuth, action: signin }
+
+sf_guard_signout:
+  url:   /cerrar_sesion
+  param: { module: sfGuardAuth, action: signout }
+  
 # default rules
 homepage:
   url:   /
-  param: { module: default, action: index }
+  param: { module: sfGuardUser, action: index }
 
 # generic rules
 # please, remove them by adding more specific rules
-default_index:
-  url:   /:module
-  param: { action: index }
-
-default:
-  url:   /:module/:action/*
+#default_index:
+#  url:   /:module
+#  param: { action: index }
+#
+#default:
+#  url:   /:module/:action/*

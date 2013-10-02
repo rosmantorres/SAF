@@ -10,16 +10,16 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_ASISTENCIA', 'schema_saf');
  * @property integer $id_convocatoria
  * @property integer $id_personal
  * @property SAF_CONVOCATORIA_CAF $SAF_CONVOCATORIA_CAF
- * @property SAF_PERSONAL $SAF_PERSONAL
+ * @property sfGuardUser $sfGuardUser
  * 
  * @method integer              getIdConvocatoria()       Returns the current record's "id_convocatoria" value
  * @method integer              getIdPersonal()           Returns the current record's "id_personal" value
  * @method SAF_CONVOCATORIA_CAF getSAFCONVOCATORIACAF()   Returns the current record's "SAF_CONVOCATORIA_CAF" value
- * @method SAF_PERSONAL         getSAFPERSONAL()          Returns the current record's "SAF_PERSONAL" value
+ * @method sfGuardUser          getSfGuardUser()          Returns the current record's "sfGuardUser" value
  * @method SAF_ASISTENCIA       setIdConvocatoria()       Sets the current record's "id_convocatoria" value
  * @method SAF_ASISTENCIA       setIdPersonal()           Sets the current record's "id_personal" value
  * @method SAF_ASISTENCIA       setSAFCONVOCATORIACAF()   Sets the current record's "SAF_CONVOCATORIA_CAF" value
- * @method SAF_ASISTENCIA       setSAFPERSONAL()          Sets the current record's "SAF_PERSONAL" value
+ * @method SAF_ASISTENCIA       setSfGuardUser()          Sets the current record's "sfGuardUser" value
  * 
  * @package    Proyecto_SAF
  * @subpackage model
@@ -48,7 +48,7 @@ abstract class BaseSAF_ASISTENCIA extends sfDoctrineRecord
              'local' => 'id_convocatoria',
              'foreign' => 'id'));
 
-        $this->hasOne('SAF_PERSONAL', array(
+        $this->hasOne('sfGuardUser', array(
              'local' => 'id_personal',
              'foreign' => 'ci'));
     }

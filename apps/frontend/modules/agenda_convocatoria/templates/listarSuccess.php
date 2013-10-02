@@ -3,11 +3,13 @@
 
 <h5 class="muted"><i class="icon-folder-open"></i> LISTA DE AGENDAS </h5>
 
-<h6>
-  <a href="<?php echo url_for('@nueva_agenda') ?>">
-    <i class="icon-plus"></i> Crear una nueva agenda
-  </a>
-</h6>
+<?php if ($sf_user->hasCredential('crear_agenda')) : ?>
+  <h6>
+    <a href="<?php echo url_for('@nueva_agenda') ?>">
+      <i class="icon-plus"></i> Crear una nueva agenda
+    </a>
+  </h6>
+<?php endif; ?>
 
 <?php if (count($agendas) > 0) : ?>
 

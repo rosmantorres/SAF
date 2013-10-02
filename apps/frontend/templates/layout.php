@@ -55,18 +55,13 @@
                 </ul>
               </li>-->
             </ul>
-            <form class="navbar-form pull-right">
-              <input class="span2" type="text" placeholder="Email">
-              <input class="span2" type="password" placeholder="Password">
-              <button type="submit" class="btn">iniciar sesión</button>
-            </form>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
     <!-- END MENÚ -->
     
-    <div class="container">
+    <div class="container">      
       
       <div class="flashes">
         <?php if ($sf_user->hasFlash('notice')): ?>
@@ -80,6 +75,12 @@
           </div>
         <?php endif ?>
       </div>
+      
+      <?php if ($sf_user->isAuthenticated()) : ?>                 
+        <a class="pull-right" href="<?php echo url_for('@sf_guard_signout') ?>" style="font-size: 11px">
+          <i class="icon-user"></i> Cerrar Sesión
+        </a>
+      <?php endif; ?>
       
       <hr>
       <div class="sf_content">

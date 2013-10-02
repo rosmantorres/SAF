@@ -59,6 +59,11 @@ class minutaActions extends sfActions
       $this->redirect('@visualizar_minuta?id=' . $minuta->getCodMin());
     }
 
+    if (!$this->getUser()->hasCredential('crear_minuta'))
+    {
+      $this->redirect('@index_minuta');
+    }
+
     $this->convocatoria = $request->getParameter('id');
 
     $this->eventos = Doctrine_Core::getTable('SAF_EVENTO')
@@ -67,11 +72,9 @@ class minutaActions extends sfActions
     $this->asistentes = Doctrine_Core::getTable('SAF_ASISTENCIA')
             ->findByIdConvocatoria($request->getParameter('id'));
 
-    $this->data_asistentes = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
-
+    $this->data_asistentes = Doctrine_Core::getTable('sfGuardUser')->findAll();
     $this->minuta = $request->getParameter('id');
-
-    $this->minuta_obj = $minuta;
+    $this->minuta_obj = $minuta;    
   }
 
   /**
@@ -190,7 +193,7 @@ class minutaActions extends sfActions
    */
   public function executePersonal()
   {
-    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
+    $personal = Doctrine_Core::getTable('sfGuardUser')->findAll();
 
     $data_source = '';
 
@@ -559,7 +562,7 @@ class minutaActions extends sfActions
   private function verificarMinutaYGuardar($request)
   {
     $num_persona = 1;
-    $personal = Doctrine_Core::getTable('SAF_PERSONAL')->findAll();
+    $personal = Doctrine_Core::getTable('sfGuardUser')->findAll();
 
     // Mientras existan personal agregados...
     while ($request->getParameter('ci_personal' . $num_persona))

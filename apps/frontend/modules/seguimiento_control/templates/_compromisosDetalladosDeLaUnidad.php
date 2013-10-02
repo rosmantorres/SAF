@@ -21,10 +21,7 @@
         </td>
         <td>
           <a href="<?php echo url_for('@visualizar_minuta?id=' . $resultset[$i]['COD_MIN']) ?>">
-            <?php
-            echo '(#' . $resultset[$i]['COD_MIN'] . ') ' .
-            strftime("%A %d de %B de %Y", strtotime($resultset[$i]['F_MINUTA']))
-            ?>
+            <?php echo '(#' . $resultset[$i]['COD_MIN'] . ') ' . utf8_encode(strftime("%A %d de %B de %Y", strtotime($resultset[$i]['F_MINUTA']))) ?>
           </a>
         </td>
         <td>

@@ -69,24 +69,38 @@ class seguimiento_controlActions extends sfActions
     $this->forward404Unless($comp_ue = Doctrine_Core::getTable('SAF_COMP_UE')
             ->find($request->getParameter('id_comp')));
 
-    $comp_ue->setAcciones($request->getParameter('acciones'));
-
+    $comp = Doctrine_Core::getTable('SAF_VARIO')->find($comp_ue->getIdCompromiso());
+    $evento = Doctrine_Core::getTable('SAF_EVENTO')->find($comp->getIdEvento());        
+    
     if ($request->getParameter('confirmar_comp') == true)
-    {
-      $und = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->find($comp_ue->getIdUe());
+    {      
+      $und = Doctrine_Core::getTable('SAF_UNIDAD_EQUIPO')->find($comp_ue->getIdUe());           
       
-      // ENVIANDO EL CORREO DE AVISO
-      $correo = new Correo('AVISO SAF: Confirmación de Compromiso por ' . $und->getNombre() , 'http://' . sfConfig::get('app_servidor_web') . '/seguimiento_control');
-      $correo->enviarA('ING. DE OPERACIONES');
+      if ($request->getParameter('confirmar_comp') == 'aprobado')
+      {
+        $comp_ue->setStatus('TERMINADO');
+        $correo = new Correo('AVISO SAF: Compromiso CASO: RI. ' . $evento->getCEventoD() . ' ' . $evento->getCircuito() . ' ' . $evento->getFHoraIni() . ' - APROBADO (Status = Terminado)', 'http://' . sfConfig::get('app_servidor_web') . '/seguimiento_control');
+        $correo->enviarA($und->getNombre()); 
+      }
+      elseif ($request->getParameter('confirmar_comp') == 'desaprobado')
+      {
+        $comp_ue->setStatus('PENDIENTE');
+        $correo = new Correo('AVISO SAF: Compromiso CASO: RI. ' . $evento->getCEventoD() . ' ' . $evento->getCircuito() . ' ' . $evento->getFHoraIni() . ' - NO APROBADO (Status = Pendiente)', 'http://' . sfConfig::get('app_servidor_web') . '/seguimiento_control');
+        $correo->enviarA($und->getNombre()); 
+      }
+      else
+      {
+        $comp_ue->setStatus('CONFIRMACION');        
+        $correo = new Correo('AVISO SAF: Confirmación del Compromiso CASO: RI. ' . $evento->getCEventoD() . ' ' . $evento->getCircuito() . ' ' . $evento->getFHoraIni() . ' - por ' . $und->getNombre(), 'http://' . sfConfig::get('app_servidor_web') . '/seguimiento_control');
+        $correo->enviarA('ING. DE OPERACIONES');        
+      }
+      
       $this->getMailer()->send($correo);
-      
-      $comp_ue->setStatus('CONFIRMACION');
     }
 
+    $comp_ue->setAcciones($request->getParameter('acciones'));
     $comp_ue->save();
-
     $this->getUser()->setFlash('notice', 'Compromiso modificado satisfactoriamente.');
-
     $this->redirect('seguimiento_control/inicio');
   }
 

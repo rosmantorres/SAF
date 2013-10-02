@@ -22,7 +22,7 @@ class SAF_ASISTENCIA extends BaseSAF_ASISTENCIA
    */
   public function getSAFPERSONAL()
   {
-    return Doctrine_Core::getTable('SAF_PERSONAL')->find($this->getIdPersonal());
+    return Doctrine_Core::getTable('sfGuardUser')->findOneByCi($this->getIdPersonal());
   }
 
 }

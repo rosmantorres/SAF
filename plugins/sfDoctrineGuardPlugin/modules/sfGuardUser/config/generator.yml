@@ -1,0 +1,36 @@
+generator:
+  class: sfDoctrineGenerator
+  param:
+    model_class:           sfGuardUser
+    theme:                 admin
+    non_verbose_templates: true
+    with_show:             false
+    singular:              ~
+    plural:                ~
+    route_prefix:          sf_guard_user
+    with_doctrine_route:   true
+
+    config:
+      fields:
+        password_again: { label: "Password (again)" }
+        ci: { label: "Cédula" }
+        id_ue: { label: "Unidad" }
+        
+      list:
+        title:   Lista de Usuarios SAF
+        display: [=username, first_name, last_name, email_address, last_login]        
+        
+      filter:
+        display: [username, first_name, last_name, email_address]
+        
+      form:
+        class: sfGuardUserAdminForm
+        display:
+          "DATOS DEL USUARIO":     [username, first_name, last_name, ci, email_address, id_ue, password, password_again]
+          "PERMISOLOGÍA Y GRUPOS": [is_active, is_super_admin, groups_list, permissions_list]
+
+      edit:
+        title: Editando %%username%% [%%first_name%% %%last_name%%]
+
+      new:
+        title: Nuevo Usuario

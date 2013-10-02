@@ -129,5 +129,20 @@ class SAF_COMP_UETable extends Doctrine_Table
 
     return $sentencia->fetchAll(PDO::FETCH_BOTH);
   }
-
+  
+  /**
+   * Método que busca si existe un registro para una unidad y compromiso específico
+   * 
+   * @param int $id_unidad
+   * @param int $id_compromiso
+   * @return SAF_COMP_UE
+   */
+  public function findCompromisoDeLaUnidad($id_unidad, $id_compromiso)
+  {
+    return Doctrine_Core::getTable('SAF_COMP_UE')
+            ->createQuery()
+            ->where('id = ?', $id_compromiso)
+            ->andWhere('id_ue = ?', $id_unidad)
+            ->fetchOne();
+  }
 }

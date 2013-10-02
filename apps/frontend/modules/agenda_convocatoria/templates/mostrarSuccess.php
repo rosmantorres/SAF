@@ -16,10 +16,12 @@
     </td>
     <td width="260px">
       <small>
+        <?php if ($sf_user->hasCredential('crear_agenda')) : ?>
         <i class="icon-flag"></i><b> Agenda Pendiente </b>
         <input type="checkbox" id="agenda_pendiente"
                <?php if ($agenda->getPendiente() == 1) echo "checked" ?> 
                value="<?php echo url_for('@colocar_pendiente_agenda?id='.$agenda->getId()) ?>" />
+        <?php endif; ?>
         
         <br>
         <u><b>Fecha de creación:</u></b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 

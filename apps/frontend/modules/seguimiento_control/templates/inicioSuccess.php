@@ -5,6 +5,7 @@
 <h5 class="muted"><i class="icon-search"></i> FILTROS DE COMPROMISOS </h5>
 
 <br>
+<?php $und_equipo = $sf_user->getUnidadEquipo() ?>
 
 <table border="0" width="100%">   
   <tr>      
@@ -13,10 +14,14 @@
       <form id="form_filtrar" action="<?php echo url_for('seguimiento_control/filtrar') ?>" method="POST">
         Busqueda por unidad:
         <select name="unidad">
-          <option value='TODAS'>----TODAS----</option>
-          <?php foreach ($unidades as $unidad) : ?>
-            <?php echo '<option value="' . $unidad->getId() . '">' . $unidad . '</option>' ?>
-          <?php endforeach; ?>
+          <?php if ($und_equipo == 'ING. DE OPERACIONES') : ?>
+            <option value='TODAS'>----TODAS----</option>
+            <?php foreach ($unidades as $unidad) : ?>
+              <?php echo '<option value="' . $unidad->getId() . '">' . $unidad . '</option>' ?>
+            <?php endforeach; ?>
+          <?php else : ?>
+            <?php echo '<option value="' . $und_equipo->getId() . '">' . $und_equipo . '</option>' ?>
+          <?php endif; ?>
         </select>
         <br>
 

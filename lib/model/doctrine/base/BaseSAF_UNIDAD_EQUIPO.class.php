@@ -11,20 +11,20 @@ Doctrine_Manager::getInstance()->bindComponent('SAF_UNIDAD_EQUIPO', 'schema_saf'
  * @property string $departamento
  * @property string $nombre
  * @property string $correo
- * @property Doctrine_Collection $SAF_PERSONAL
+ * @property Doctrine_Collection $sfGuardUser
  * @property Doctrine_Collection $SAF_COMP_UE
  * 
  * @method integer             getId()           Returns the current record's "id" value
  * @method string              getDepartamento() Returns the current record's "departamento" value
  * @method string              getNombre()       Returns the current record's "nombre" value
  * @method string              getCorreo()       Returns the current record's "correo" value
- * @method Doctrine_Collection getSAFPERSONAL()  Returns the current record's "SAF_PERSONAL" collection
+ * @method Doctrine_Collection getSfGuardUser()  Returns the current record's "sfGuardUser" collection
  * @method Doctrine_Collection getSAFCOMPUE()    Returns the current record's "SAF_COMP_UE" collection
  * @method SAF_UNIDAD_EQUIPO   setId()           Sets the current record's "id" value
  * @method SAF_UNIDAD_EQUIPO   setDepartamento() Sets the current record's "departamento" value
  * @method SAF_UNIDAD_EQUIPO   setNombre()       Sets the current record's "nombre" value
  * @method SAF_UNIDAD_EQUIPO   setCorreo()       Sets the current record's "correo" value
- * @method SAF_UNIDAD_EQUIPO   setSAFPERSONAL()  Sets the current record's "SAF_PERSONAL" collection
+ * @method SAF_UNIDAD_EQUIPO   setSfGuardUser()  Sets the current record's "sfGuardUser" collection
  * @method SAF_UNIDAD_EQUIPO   setSAFCOMPUE()    Sets the current record's "SAF_COMP_UE" collection
  * 
  * @package    Proyecto_SAF
@@ -62,7 +62,7 @@ abstract class BaseSAF_UNIDAD_EQUIPO extends sfDoctrineRecord
     public function setUp()
     {
         parent::setUp();
-        $this->hasMany('SAF_PERSONAL', array(
+        $this->hasMany('sfGuardUser', array(
              'local' => 'id',
              'foreign' => 'id_ue'));
 

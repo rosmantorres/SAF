@@ -74,8 +74,8 @@ class convocatoriaActions extends sfActions
    */
   public function executeCambiarStatus(sfWebRequest $request)
   {
-    $convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
-            ->find($request->getParameter('id'));
+    $this->forward404Unless($convocatoria = Doctrine_Core::getTable('SAF_CONVOCATORIA_CAF')
+            ->find($request->getParameter('id')));
 
     $convocatoria->setStatus($request->getParameter('status'));
 
